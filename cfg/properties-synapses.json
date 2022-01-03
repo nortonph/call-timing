@@ -1,0 +1,84 @@
+{
+    "ode": [
+        "dv/dt = ( El - v + Rm * (Ie + Ise + Isi) ) / taum : volt (unless refractory)",
+        "dIse/dt = ( (tau2e / tau1e) ** (tau1e / (tau2e - tau1e)) * se - Ise ) / tau1e : amp",
+        "dIsi/dt = ( (tau2i / tau1i) ** (tau1i / (tau2i - tau1i)) * si - Isi ) / tau1i : amp",
+        "dse/dt = -se/tau2e : amp",
+        "dsi/dt = -si/tau2i : amp",
+        "El : volt (constant)",
+        "Rm : ohm (constant)",
+        "Ie = I_input(t,i) : amp",
+        "taum : second (constant)",
+        "tau1e : second (constant)",
+        "tau1i : second (constant)",
+        "tau2e : second (constant)",
+        "tau2i : second (constant)",
+        "v_thresh : volt (constant)",
+        "v_reset : volt (constant)"
+    ],
+    "synapse": {
+        "model": ["w : amp"],
+        "on_pre": ["se += w", "si += w"],
+        "condition": ["", "", "", ""],
+        "syn_pre_idx": [],
+        "syn_post_idx": [],
+        "on_pre_idx_syn": [],
+        "connection_probability": []
+    },
+    "generator": {
+        "gen_pre_idx": [ 0, 0, 0],
+        "gen_post_idx": [ 0, 1, 2],
+        "on_pre_idx_gen": [ 0, 0, 1],
+        "connection_probability": [ 1, 1, 1]
+    },
+    "parameters_nrn": {
+        "v": [ -60, -75, -75],
+        "El": [ -60, -75, -75],
+        "v_thresh": [ -45, -40, -40],
+        "v_reset": [ -70, -50, -50],
+        "taum": [ 8, 16, 16],
+        "Rm": [ 200, 200, 200],
+        "tau1e": [ 0.6, 1.6, 1.6],
+        "tau1i": [ 0.6, 2.2, 2.2],
+        "tau2e": [ 0.5, 0.4, 0.4],
+        "tau2i": [ 0.5, 0.4, 0.4]
+    },
+    "parameters_syn": {
+        "delay": [],
+        "w": []
+    },
+    "parameters_gen": {
+        "delay": [ 0.5, 0.9, 0.4],
+        "w": [ 0.04, 0.02, -0.019]
+    },
+    "parameter_units": {
+        "v": "mV",
+        "El": "mV",
+        "v_thresh": "mV",
+        "v_reset": "mV",
+        "taum": "ms",
+        "Rm": "Mohm",
+        "tau1e": "ms",
+        "tau1i": "ms",
+        "tau2e": "ms",
+        "tau2i": "ms",
+        "delay": "ms",
+        "w": "nA",
+        "input_current": "nA"
+    },
+    "free_parameter_stepsize": {
+    },
+    "input_current": {
+    },
+    "misc": {
+        "sim_time": 100,
+        "population_id": ["Inh. neuron", "Exc. neuron", "Exc. neuron"],
+        "n_neurons_per_pop": [ 1, 1, 1],
+        "refractory_period": 1,
+        "integration_method": "exact"
+    },
+    "comments": ["Test of PSPs (biexponential). Provide spikes to SpikeGenerator",
+        " (input_spiketimes_ms in run_simulation()), using two synaptic formulas (Ise, Isi) for EPSP/IPSP provides",
+        "seperate time constants for excitatory/inhibitory synapses."
+    ]
+}

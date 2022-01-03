@@ -1,0 +1,103 @@
+{
+    "ode": [
+        "dv/dt = ( El - v + Rm * (Ie + Ise + Isi) ) / taum : volt (unless refractory)",
+        "dIse/dt = ( (tau2e / tau1e) ** (tau1e / (tau2e - tau1e)) * se - Ise ) / tau1e : amp",
+        "dIsi/dt = ( (tau2i / tau1i) ** (tau1i / (tau2i - tau1i)) * si - Isi ) / tau1i : amp",
+        "dse/dt = -se/tau2e : amp",
+        "dsi/dt = -si/tau2i : amp",
+        "El : volt (constant)",
+        "Rm : ohm (constant)",
+        "Ie = I_input(t,i) : amp",
+        "taum : second (constant)",
+        "tau1e : second (constant)",
+        "tau1i : second (constant)",
+        "tau2e : second (constant)",
+        "tau2i : second (constant)",
+        "v_thresh : volt (constant)",
+        "v_reset : volt (constant)"
+    ],
+    "synapse": {
+        "model": ["w : amp"],
+        "on_pre": ["se += w", "si += w"],
+        "syn_pre_idx": [ 0, 1, 0],
+        "syn_post_idx": [ 1, 2, 3],
+        "on_pre_idx_syn": [ 0, 1, 0],
+        "connection_probability": [ 0.3, 1, 0.4]
+    },
+    "parameters_nrn": {
+        "v": [ -75, -60, -75, -75],
+        "El": [ -75, -60, -75, -75],
+        "v_thresh": [ -40, -45, -40, -40],
+        "v_reset": [ -50, -70, -50, -50],
+        "taum": [ 16, 8, 16, 16],
+        "Rm": [ 200, 200, 200, 200],
+        "tau1e": [ 1.6, 0.6, 1.6, 1.6],
+        "tau1i": [ 2.2, 0.6, 2.2, 2.2],
+        "tau2e": [ 0.4, 0.5, 0.4, 0.4],
+        "tau2i": [ 0.4, 0.5, 0.4, 0.4]
+    },
+    "parameters_syn": {
+        "delay": [ 0.5, 0.4, 0.9],
+        "w": [ 0.04, -0.019, 0.02]
+    },
+    "parameter_units": {
+        "v": "mV",
+        "El": "mV",
+        "v_thresh": "mV",
+        "v_reset": "mV",
+        "taum": "ms",
+        "Rm": "Mohm",
+        "tau1e": "ms",
+        "tau1i": "ms",
+        "tau2e": "ms",
+        "tau2i": "ms",
+        "delay": "ms",
+        "w": "nA",
+        "input_current": "nA"
+    },
+    "free_parameter_stepsize": {
+    },
+    "input_current": {
+        "t_start": [[ 0, 120, 190, 200],
+            [ 0],
+            [ 0],
+            [ 0]
+        ],
+        "amp_start": [[ 0.17, 0.17, 0.22, 0.17],
+            [ 0.03],
+            [ 0.03],
+            [ 0.03]
+        ],
+        "amp_end": [[ 0.17, 0.22, 0.17, 0.17],
+            [],
+            [],
+            []
+        ],
+        "power_ramp": [[ 0, 1, 0, 0],
+            [ 0],
+            [ 0],
+            [ 0]
+        ],
+        "offset_range": [ 0.02, 0, 0, 0],
+        "wnoise_cv": [ 0.2, 0, 0, 0],
+        "wnoise_dt": 1.0
+    },
+    "misc": {
+        "sim_time": 350,
+        "playback_start": 200,
+        "playback_duration": 100,
+        "population_id": ["V", "Iv", "Hyp", "P"],
+        "n_neurons_per_pop": [ 150, 30, 1, 1],
+        "refractory_period": 1,
+        "rand_initial_v": [ 1, 1, 0, 0],
+        "rng_seed": [ 46, 0, 10, 8, 0],
+        "integration_method": "exact"
+    },
+    "plot": {
+        "idx_pop_oi": 3,
+        "idx_nrn_oi_relative": 0,
+        "idx_synpop_oi_for_fp": 1,
+        "idx_nrn_to_plot_trc": [ 6, 18, 0, 0]
+    },
+    "comments": []
+}

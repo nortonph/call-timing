@@ -1,0 +1,12 @@
+{
+    "synapse": {
+    },
+    "parameters_syn": {
+    },
+    "misc": {
+        "n_neurons_per_pop": [210, 40, 1]
+    },
+    "step_size": {
+        "n_neurons_per_pop": [10, 2, 0]
+    }
+}
