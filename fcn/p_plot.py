@@ -2342,7 +2342,7 @@ def plot_psths(t_values, psths=None, psths_smooth=None, labels=None, t_const_eve
     axis.set_ylim(0, axis.get_ylim()[1])
     axis.set_xlabel('t [ms]')
     if b_legend:
-        axis.legend(prop={'size': 8})
+        axis.legend(prop={'size': 9})
 
     if not h_ax:
         return fig, axis

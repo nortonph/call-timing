@@ -41,7 +41,7 @@ C_COLORS_LIGHT = [[0.300, 0.700, 1.000],  # 0 blue
                   [0.686, 0.400, 0.973],  # 6 purple
                   [0.0, 0.0, 0.0]]  # -1 black
 COL_SEQ = [5, 3, 4, 0, 1, -1, 6, 2]  # sequence of indices to C_COLORS used for populations by order of appearence
-FONTSIZE_XXS = 8
+FONTSIZE_XXS = 9
 FONTSIZE_XS = 9
 FONTSIZE_S = 10
 FONTSIZE_M = 12
@@ -306,20 +306,17 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     n_rows = 8
     n_cols = 18
     i_rows_trc = [2, 4, 6, 0, 2, 4, 6]
-    i_cols_trc = [0, 0, 0, 7, 7, 7, 7]
+    i_cols_trc = [0, 0, 0, 5, 5, 5, 5]
     n_cols_trc = 4
-    i_rows_txt = [0, 2, 4, 6]
-    i_cols_txt = [4, 4, 4, 4]
-    n_cols_txt = 2
     i_rows_crc = [0, 2, 4, 6]
-    i_cols_crc = [11, 11, 11, 11]
+    i_cols_crc = [9, 9, 9, 9]
     n_cols_crc = 2
-    i_col_psth = 14
+    i_col_psth = 12
     n_cols_psth = 4
     n_rows_default = 2
     x_lim_traces = [-100, 125]
     x_lim_psths = [-100, 125]
-    y_lim_traces = [None, None, None, (-55, -10), (-74, -5), (-65, 5), None]
+    y_lim_traces = [None, None, None, (-55, 0), (-74, 5), (-65, 15), (-85, -60)]
     linewidth = 2
     color_map_rec = p_plot.get_color_list(7, color_map_in=[C_COLORS_LIGHT[c] for c in COL_SEQ])
     color_map_mod = p_plot.get_color_list(7, color_map_in=[C_COLORS[c] for c in COL_SEQ])
@@ -369,7 +366,6 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     fig = plt.figure(1, figsize=(n_cols * 0.888, n_rows * 0.75))
     matplotlib.gridspec.GridSpec(n_rows, n_cols)
     ax_trc = []
-    ax_txt = []
     ax_crc = []
     ax_psth = []
 
@@ -405,7 +401,7 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     for xt in [0, 50, 100]:
         ax_call.plot((xt, xt), (y_lim_call[0], y_lim_call[0] - 0.1), '-k', clip_on=False, linewidth=0.8)
     ax_call.set_title('Observed neurons', fontweight='bold')
-    ax_call.text(0.5, 0.95, '(data from Benichov \& Vallentin, 2020)', ha='center', fontsize=FONTSIZE_XXS,
+    ax_call.text(0.5, 0.94, '(data from Benichov \& Vallentin, 2020)', ha='center', fontsize=FONTSIZE_XXS,
                  transform=ax_call.transAxes)
     # endregion
 
@@ -422,7 +418,12 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
         dur_sample = 1 / samp_freqs[i]
         dur_trace = dur_sample * trc.size
         x_values = np.linspace(0, dur_trace, trc.size)
-        ax_trc[i].axvline(0, color=[0, 0, 0], linewidth=1, linestyle='--')
+        if i < n_rec_traces:
+            ax_trc[i].axvline(0, color=[0, 0, 0], linewidth=1, linestyle='--')
+        else:
+            ax_trc[i].plot((0, 0),
+                           (y_lim_traces[i][1] - (y_lim_traces[i][1] - y_lim_traces[i][0]) * 0.15, y_lim_traces[i][0]),
+                           color=[0, 0, 0], linewidth=1, linestyle='--')
         ax_trc[i].plot(x_values - offset_ms[i], trc, color=color_map_trc[i], linewidth=linewidth)
         # format axis
         ax_trc[i].set_xlim(x_lim_traces)
@@ -438,17 +439,14 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     # endregion
 
     # region plot neuron descriptions ###########################################################################
-    text_nrn = ['Predicted\nVocal-related\nInput Neuron', 'Inhibitory\nInterneuron', 'Premotor\nNeuron',
-                'Premotor\nNeuron\n(silent)']
+    text_nrn = ['Predicted Vocal-related Input Neuron', 'Inhibitory Interneuron', 'Premotor Neuron',
+                'Premotor Neuron (silent)']
     i_txt_color = [0, 1, 3, 2]
+    i_mod_trc = list(range(n_rec_traces, n_rec_traces + len(text_nrn)))
     for i, txt in enumerate(text_nrn):
-        ax_txt.append(plt.subplot2grid((n_rows, n_cols), (i_rows_txt[i], i_cols_txt[i]),
-                                       colspan=n_cols_txt, rowspan=n_rows_default))
-        ax_txt[i].text(0, 0, text_nrn[i], va='center', ha='center',
-                       fontsize=FONTSIZE_M, fontweight='bold', color=color_map_mod[i_txt_color[i]])
-        ax_txt[i].axis('off')
-        ax_txt[i].set_xlim((-1.5, 1))
-        ax_txt[i].set_ylim((-1, 1))
+        ax_trc[i_mod_trc[i]].text((x_lim_traces[1] + x_lim_traces[0]) / 2, y_lim_traces[i_mod_trc[i]][1], text_nrn[i],
+                                  va='top', ha='center',
+                                  fontsize=FONTSIZE_S, fontweight='bold', color=color_map_mod[i_txt_color[i]])
     # endregion
 
     # region plot circuit diagrams ##############################################################################
@@ -552,7 +550,7 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     dur_trace = dur_sample * smoothed_timeseries_ag_avg.size
     x_values = np.linspace(0, dur_trace, smoothed_timeseries_ag_avg.size)
     h_mod, = ax_psa.plot(x_values - dur_prespike, smoothed_timeseries_ag_avg, color=color_map_mod[3], linewidth=2)
-    y_lim_psa = (min([min(v) for v in smoothed_prespike_averages]) - 7, 0)
+    y_lim_psa = (min([min(v) for v in smoothed_prespike_averages]) - 8, 0)
     ax_psa.legend(handles=(h_rec, h_mod), labels=('observed', 'model'))
     ax_psa.set_xlim((-dur_prespike, 0))
     ax_psa.set_ylim(y_lim_psa)
@@ -570,7 +568,7 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     ax_psth[0].annotate('D', xy=(-0.23, 1.08), xycoords='axes fraction', fontweight='bold', size=FONTSIZE_XL)
     ax_psa.annotate('E', xy=(-0.23, 1.08), xycoords='axes fraction', fontweight='bold', size=FONTSIZE_XL)
 
-    return fig, [ax_call] + ax_trc + ax_txt + ax_crc + ax_psth + [ax_psa]
+    return fig, [ax_call] + ax_trc + ax_crc + ax_psth + [ax_psa]
 
 
 def figure2(states_fw, spikes_fw, info_fw, config_fw, states_m0, spikes_m0, info_m0, config_m0,
@@ -729,7 +727,7 @@ def figure2(states_fw, spikes_fw, info_fw, config_fw, states_m0, spikes_m0, info
     ax_trc[-1].text(0.05, 0.8, 'gabazine', size=FONTSIZE_S, color=color_map_rec[4], transform=ax_trc[-1].transAxes)
     ax_trc[-2].text(0.35, 1.13, 'Observed neurons', fontweight='bold', ha='center', va='bottom',
                     fontsize=FONTSIZE_L, transform=ax_trc[-2].transAxes)
-    ax_trc[-2].text(1.1, 1.13, '(data from Benichov \& Vallentin, 2020)', ha='center', va='bottom',
+    ax_trc[-2].text(1.15, 1.12, '(data from Benichov \& Vallentin, 2020)', ha='center', va='bottom',
                     fontsize=FONTSIZE_XXS, transform=ax_trc[-2].transAxes)
     ax_trc[0].set_title('Model neurons', fontweight='bold')
     # endregion
@@ -1147,11 +1145,13 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
             [print(str(running + 1) + ': ' + str(i)) for running, i in enumerate(sort_order + 1)]
         if a == 2:
             print('sort order neuron ids for plot ' + str(a) + ': \n' + str(sort_order))
+            sort_order_pos = idx_responsive[idx_pos_responsive][sort_order] + 1
             print(idx_responsive[idx_pos_responsive][sort_order] + 1)
             [print(str(running + 1) + ': ' + str(i)) for running, i in
              enumerate(idx_responsive[idx_pos_responsive][sort_order] + 1)]
         elif a == 3:
             print('sort order neuron ids for plot ' + str(a) + ': \n' + str(sort_order))
+            sort_order_neg = idx_responsive[idx_neg_responsive][sort_order] + 1
             print(idx_responsive[idx_neg_responsive][sort_order] + 1)
             [print(str(running + 1) + ': ' + str(i)) for running, i in
              enumerate(idx_responsive[idx_neg_responsive][sort_order] + 1)]
@@ -1243,6 +1243,21 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
     # endregion
 
     # region horizontal bars ###########################################################################################
+    idx_mixed_responsive = np.intersect1d(idx_responsive[idx_neg_responsive], idx_responsive[idx_pos_responsive])
+    id_strictly_pos_responsive = sort_order_pos[[sort_order_pos[i] - 1 not in idx_mixed_responsive
+                                                 for i in range(len(sort_order_pos))]]
+    id_strictly_neg_responsive = sort_order_neg[[sort_order_neg[i] - 1 not in idx_mixed_responsive
+                                                 for i in range(len(sort_order_neg))]]
+    idx_strictly_pos_to_sorted_responsive = [np.where(sort_order_pos == sp)[0][0] for sp in id_strictly_pos_responsive]
+    idx_strictly_neg_to_sorted_responsive = [np.where(sort_order_neg == sn)[0][0] for sn in id_strictly_neg_responsive]
+    resp_onsets_strictly_pos_responders = np.array([nexus_responses['on_plus'][i][0]
+                                                    for i in range(len(nexus_responses['on_plus']))
+                                                    if nexus_responses['sort_order_pos'][i]
+                                                    in np.array(idx_strictly_pos_to_sorted_responsive) + 1])
+    resp_onsets_strictly_neg_responders = np.array([nexus_responses['on_minus'][i][0]
+                                                    for i in range(len(nexus_responses['on_minus']))
+                                                    if nexus_responses['sort_order_neg'][i]
+                                                    in np.array(idx_strictly_neg_to_sorted_responsive) + 1])
     for a in range(2):
         ax_bar.append(plt.subplot2grid((n_rows, n_cols), (i_rows_bar[a], i_cols_bar[a]),
                                        colspan=n_cols_bar, rowspan=n_rows_bar))
@@ -1255,6 +1270,13 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
             print('stdev onset time of all ' + str(len(on_cur)) + ' positive responses: ' + str(np.std(on_cur)))
             print('mean duration of all ' + str(len(dur_cur)) + ' positive responses: ' + str(np.mean(dur_cur)))
             print('stdev duration of all ' + str(len(dur_cur)) + ' positive responses: ' + str(np.std(dur_cur)))
+            print('n positive response onsets during playback: ' + str(sum(nexus_responses['on_plus'] <= 110)))
+            print('expected number (if response onsets uniformly distr. in time): ' +
+                  str(110 / 500 * len(np.unique(nexus_responses['sort_order_pos']))))
+            print('n positive response onsets during playback (only strictly positively responding neurons): '
+                  + str(sum(resp_onsets_strictly_pos_responders <= 110)))
+            print('expected number (if response onsets uniformly distr. in time): ' +
+                  str(110 / 500 * len(id_strictly_pos_responsive)))
         else:
             on_cur = nexus_responses['on_minus']
             dur_cur = nexus_responses['dur_minus']
@@ -1264,6 +1286,13 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
             print('stdev onset time of all ' + str(len(on_cur)) + ' negative responses: ' + str(np.std(on_cur)))
             print('mean duration of all ' + str(len(dur_cur)) + ' negative responses: ' + str(np.mean(dur_cur)))
             print('stdev duration of all ' + str(len(dur_cur)) + ' negative responses: ' + str(np.std(dur_cur)))
+            print('n negative response onsets during playback: ' + str(sum(nexus_responses['on_minus'] <= 110)))
+            print('expected number (if response onsets uniformly distr. in time): ' +
+                  str(110 / 500 * len(np.unique(nexus_responses['sort_order_neg']))))
+            print('n negative response onsets during playback (only strictly negatively responding neurons): '
+                  + str(sum(resp_onsets_strictly_neg_responders <= 110)))
+            print('expected number (if response onsets uniformly distr. in time): ' +
+                  str(110 / 500 * len(id_strictly_neg_responsive)))
         for b in range(len(on_cur)):
             hor_bar = matplotlib.patches.Rectangle((on_cur[b][0], order_cur[b][0] - 0.3), dur_cur[b][0], 0.6,
                                                    color=color_cur, fill=True, clip_on=True, linewidth=0)
@@ -1628,7 +1657,7 @@ def figure4(spikes_jam_only, info_jam_only, config_jam_only,
     ax_sub[0].set_xlabel('Time from playback onset [ms]')
     ax_sub[0].set_ylabel('$\mathrm{V_m}$ [mV]')
     ax_sub[0].set_xlim(x_lim_agg)
-    ax_sub[0].set_ylim((-5, 5))
+    ax_sub[0].set_ylim((-6, 4))
     # endregion
 
     # add sub-figure labels
@@ -2285,7 +2314,7 @@ def fig_s_prespike_ramp(states_ag0, spikes_ag0, info_ag0,
         h_mod, = ax_psa[p].plot(x_values - dur_prespike, smoothed_timeseries_ag_avg,
                                 color=color_map_mod[i_colors_psa[p]], linewidth=2)
         y_lim_psa = (-55, 0)
-        ax_psa[p].legend(handles=(h_rec, h_mod), labels=('obs', 'mod'), loc='lower right', handlelength=1, ncol=2)
+        ax_psa[p].legend(handles=(h_rec, h_mod), labels=('obs', 'mod'), loc='lower left', handlelength=1, ncol=2)
         ax_psa[p].set_xlim((-dur_prespike, 0))
         ax_psa[p].set_ylim(y_lim_psa)
         ax_psa[p].set_xlabel('Time from first spike [ms]')
