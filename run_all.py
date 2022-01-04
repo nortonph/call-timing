@@ -12,7 +12,7 @@ from pub import fig_ms
 # this will prevent the following code being executed when this module is imported
 if __name__ == "__main__":
     # flags for selectively running parts of the script
-    b_run_simulations = False
+    b_run_simulations = True
     b_generate_figures = True
     # run some simulations in parallel using multiple CPU cores (requires more RAM, ~32GB incl. swap)
     b_multiprocessing = False
