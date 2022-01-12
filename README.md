@@ -7,15 +7,25 @@ Requires Python 3.7 and the packages listed in requirements.txt.
 1. If not already installed, get the latest version of Python 3.7 (will not run in 3.8) through your package manager or download from https://www.python.org/downloads/
 2. Clone this repository and navigate to the main directory of your local copy (the directory containing run_all.py)
 3. Create a python environment (e.g. using pip):
+
 `python3.7 -m venv ctm_env`
-3. Activate the environment:
+
+4. Activate the environment:
+
 `source ctm_env/bin/activate`
-4. Update some packages:
-`pip install -U pip setuptools~=58.0 wheel`
+
+5. Update some packages:
+
+`pip install -U pip setuptools~=57.0 wheel`
+
 6. Install required packages:
-`pip install -r requirements.py`
+
+`pip install -r requirements.txt`
+
 7. To reproduce all simulations and figures run the script run_all.py (make sure the environment is active):
+
 `python3 run_all.py`
+
 8. Figures will be located in the subdirectory fig/figures
 
 Depending on your hardware, the whole simulation and figure generation process will take several hours.
