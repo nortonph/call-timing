@@ -1,0 +1,7 @@
+fig\_ms module
+==================
+
+.. automodule:: fig_ms
+   :members:
+   :undoc-members:
+   :show-inheritance:

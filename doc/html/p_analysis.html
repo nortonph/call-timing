@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_analysis module &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="p_input module" href="p_input.html" />
+    <link rel="prev" title="lif module" href="lif.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_all.html">run_all module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fig_ms.html">fig_ms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lif.html">lif module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">p_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_input.html">p_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_io.html">p_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_macro.html">p_macro module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_plot.html">p_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_util.html">p_util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>p_analysis module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/p_analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-p_analysis">
+<span id="p-analysis-module"></span><h1>p_analysis module<a class="headerlink" href="#module-p_analysis" title="Permalink to this headline">¶</a></h1>
+<p>Various data analysis functions, including spike detection and analysis of spike data. [call-time-model]</p>
+<dl class="py function">
+<dt id="p_analysis.check_conditions">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">check_conditions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_lo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_param_vals_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_param_vals_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_cond</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_spikes_cond</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_baseline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_spikes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#check_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.check_conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the baseline membrane potential of the neuron of interest (defined in config_lo[‘plot’]
+[‘idx_nrn_oi_relative’]) from a parameter exploration with two free parameters (or one parameter for two synapses/
+populations) is within a certain range, and if it fired a certain number of spikes within a certain timespan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemons</strong> (<em>list</em>) – list of dict(s) containing SpikeMonitor data from b2…get_states()</p></li>
+<li><p><strong>statemons</strong> (<em>list</em>) – list of dict(s) containing StateMonitor data from b2…get_states()</p></li>
+<li><p><strong>infos</strong> (<em>list</em>) – list of dict(s) containing additional information about simulation (as created by run_simulation())</p></li>
+<li><p><strong>config_lo</strong> (<em>dict</em>) – config dict as loaded from .json file (output directory), contains lower limits of all params</p></li>
+<li><p><strong>n_param_vals_x</strong> (<em>int</em>) – number of values for first free parameter</p></li>
+<li><p><strong>n_param_vals_y</strong> (<em>int</em>) – number of values for first free parameter</p></li>
+<li><p><strong>baseline_cond</strong> (<em>tuple</em><em> or </em><em>list</em>) – condition for baseline membrane potential. tuple of lower and upper limit for condition to
+be considered met.</p></li>
+<li><p><strong>n_spikes_cond</strong> (<em>tuple</em><em> or </em><em>list</em>) – condition for number of spikes. tuple of lower and upper limit for condition to
+be considered met.</p></li>
+<li><p><strong>t_baseline</strong> (<em>tuple</em><em> or </em><em>list</em>) – time window in which the baseline membrane potential condition was checked (start, end)</p></li>
+<li><p><strong>t_spikes</strong> (<em>tuple</em><em> or </em><em>list</em>) – time window in which the number of spikes condition was checked (start, end)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>conditions_met: numpy array of dimension c*x*y, where c is the number of conditions checked and x/y is a
+2d matrix of the space of the two varied parameters, in which 1=condition met, 0=not met.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>conditions_met: numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_average_potential">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_average_potential</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_abs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_average_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_average_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average membrane potential of a neuron over a given timespan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemon</strong> (<em>SimpleNamespace</em><em> or </em><em>b2.monitors.statemonitor.StateMonitor</em>) – brian2 StateMonitor or -like(!) SimpleNamespace from file</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – dictionary containing additional information about simulation</p></li>
+<li><p><strong>idx_nrn_abs</strong> (<em>int</em>) – index of neuron to be analyzed within statemon</p></li>
+<li><p><strong>t_start</strong> (<em>int</em><em> or </em><em>float</em>) – beginning of timespan to be analyzed in milliseconds</p></li>
+<li><p><strong>t_end</strong> (<em>int</em><em> or </em><em>float</em>) – end of timespan to be analyzed in milliseconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>avg_v: average of membrane potential</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>avg_v: float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_onset_of_spikes">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_onset_of_spikes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_khz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresh_ratio_to_derivative_peak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.066</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_filter_win_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">11</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_onset_of_spikes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_onset_of_spikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given voltage trace(s) and corresponding spiketimes (i.e. voltage peaks), determine onsets of each spike (and
+spike thresholds) by detecting threshold crossing of the derivative of the smoothed membrane voltage,
+backward from the spike.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traces</strong> (<em>np.ndarray</em><em> or </em><em>list</em>) – (list of) numpy ndarray(s) of voltage traces</p></li>
+<li><p><strong>spiketimes_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times of the neuron (one sublist per trial, i.e. array in traces)</p></li>
+<li><p><strong>sampling_frequency_khz</strong> (<em>int</em><em> or </em><em>float</em>) – [default=40] sampling frequency of traces in kHz</p></li>
+<li><p><strong>thresh_ratio_to_derivative_peak</strong> (<em>float</em>) – threshold for the prespike membrane voltage derivative for spike onset /
+spike threshold detection. this is the ratio of the derivative peak at which the spike is considered to be
+triggered. See e.g. Azouz &amp; Gray (2000), Trinh et al. (2019). See also Sekerli et al. (2004) for a comparison
+of detection methods and this and Fontaine et al. (2014) for an absolute threshold instead. Exchange
+thresh_derivative_mV_per_samp_relative with thresh…_absolute in code below for absolute threshold.</p></li>
+<li><p><strong>smooth_filter_win_len</strong> (<em>int</em>) – [default=11] length of window for Savitzky-Golay filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>spike_onset_times_ms: list of lists of spike onset times in milliseconds</p></li>
+<li><p>spike_thresholds_mV: list of lists of spike thresholds (voltages at corresponding spike onsets)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>spike_onset_times_ms: list</p></li>
+<li><p>spike_thresholds_mV: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_psp_count">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_psp_count</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_psp_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_psp_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of excitatory and inhibitory post-synaptic potentials (i.e. presynaptic spikes separated by
+positive/negative synaptic weights) of a neuron (idx_nrn_abs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemon</strong> (<em>SimpleNamespace</em>) – brian2 SpikeMonitor - like(!) SimpleNamespace from file</p></li>
+<li><p><strong>connectivity</strong> (<em>dict</em>) – dictionary containing synaptic connectivity information</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – dictionary containing additional information about simulation</p></li>
+<li><p><strong>idx_nrn_abs</strong> (<em>int</em>) – index of neuron to be analyzed within statemon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><dl class="simple">
+<dt>n_epsp: number of excitatory post synaptic potentials, i.e. presynaptic spikes in synapse groups that</dt><dd><p>have positive weights.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>n_ipsp: number of inhibitory post synaptic potentials, i.e. presynaptic spikes in synapse groups that</dt><dd><p>have negative weights.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>n_epsp: int</p></li>
+<li><p>n_ipsp: int</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_psth">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_psth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psth_dt_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_smoothed_psth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_filter_win_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_psth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_psth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate peri-stimulus time histogram from spiketimes over several aligned trials or neurons. Returns bin edges
+in milliseconds and average local spike rate in Hertz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spiketimes_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times of the recorded neurons (one sublist per neuron or trial)</p></li>
+<li><p><strong>duration_ms</strong> (<em>int</em><em> or </em><em>float</em>) – total duration of recording / simulation and therefore of returned psth</p></li>
+<li><p><strong>t_start_ms</strong> (<em>int</em><em> or </em><em>float</em>) – (optional) start time of recording / simulation and therefore of returned psth. default: 0</p></li>
+<li><p><strong>psth_dt_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=5] time bin in milliseconds for the peri-stimulus-time histogram (psth)</p></li>
+<li><p><strong>b_smoothed_psth</strong> (<em>bool</em>) – [default=True] also return smoothed psth (using Savitzky-Golay filter)</p></li>
+<li><p><strong>smooth_filter_win_len</strong> (<em>int</em>) – [default=9] length of window for Savitzky-Golay filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>t_values: list of time values of psth bins (left edges) in milliseconds</p></li>
+<li><p>psth: list of estimated local spike rates in Hertz per time bin</p></li>
+<li><p>psth_smooth: same as psth, but smoothed using Savitzky-Golay filter</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>t_values: [float]</p></li>
+<li><p>psth: [float]</p></li>
+<li><p>psth_smooth: [float]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_rise_time">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_rise_time</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_peak</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_onset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_khz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_rise_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_rise_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the index of a peak (e.g. PSP or spike) in a trace and the index of the onset of the rise (i.e. spike
+or PSP onset), return the time in ms it takes to reach a certain amplitude percentage from baseline (i.e. value of
+trace at onset, e.g. in mV). Also return the index in the trace that corresponds to this timepoint.
+percent == 100: peak amplitude</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trace</strong> (<em>np.ndarray</em>) – numpy ndarray of e.g. voltage trace</p></li>
+<li><p><strong>i_peak</strong> (<em>int</em>) – index of the peak of interest in trace</p></li>
+<li><p><strong>i_onset</strong> (<em>int</em>) – index of the onset of the event of interest in trace (e.g. PSP or spike onset)</p></li>
+<li><p><strong>percent</strong> (<em>int</em><em> or </em><em>float</em>) – [default=100] percentage of peak amplitude relative to baseline (amplitude at i_onset) to reach</p></li>
+<li><p><strong>sampling_frequency_khz</strong> (<em>int</em><em> or </em><em>float</em>) – [default=40] sampling frequency of traces in kHz</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>t_rise: time from onset to reach x percent of the peak amplitude in milliseconds</p></li>
+<li><p>i_percent: index to trace of the timepoint when trace reaches x percent of the peak</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>t_rise: float</p></li>
+<li><p>i_percent: int</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_spiketimes">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_spiketimes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_khz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_filter_win_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ms_thresh_to_peak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samp_above_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_spiketimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_spiketimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect spiketimes in voltage traces by taking derivative (gradient) of the smoothed trace first.
+Smoothing uses Savitzky-Golay filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traces</strong> (<em>np.ndarray</em><em> or </em><em>list</em>) – (list of) numpy ndarray(s) of voltage traces</p></li>
+<li><p><strong>sampling_frequency_khz</strong> (<em>int</em><em> or </em><em>float</em>) – [default=40] sampling frequency of traces in kHz</p></li>
+<li><p><strong>smooth_filter_win_len</strong> (<em>int</em>) – [default=11] length of window for Savitzky-Golay filter</p></li>
+<li><p><strong>threshold_factor</strong> (<em>int</em><em> or </em><em>float</em>) – [default=14] gradient of smoothed trace must cross this factor times the estimated standard
+deviation of the noise in the absolute values of the gradient for a spike to be detected
+(see Quian Quiroga et al. (2004), doi:10.1162/089976604774201631)</p></li>
+<li><p><strong>max_ms_thresh_to_peak</strong> (<em>int</em><em> or </em><em>float</em>) – [default=1] spike peak has to be within this number of milliseconds after threshold
+crossing of the gradient. Otherwise it will be considered an artifact</p></li>
+<li><p><strong>min_samp_above_thresh</strong> (<em>int</em>) – [default=2] gradient must be above threshold for this many consecutive samples to
+not be considered an artifact</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>spiketimes_samp: list of lists of spike times (in samples). One sublist per trace.</p></li>
+<li><p>b_spike_matrix: two-dimensional matrix of samples (columns) of traces (rows), where 0 == no spike &amp; 1 == spike</p></li>
+<li><p>thresholds: voltage threshold per trace for spike detection: trace crosses this from below prior to spike peak</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>spiketimes_samp: [[int]]</p></li>
+<li><p>b_spike_matrix: np.ndarray</p></li>
+<li><p>thresholds: [float]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_stdev_potential">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_stdev_potential</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_abs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_stdev_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_stdev_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard deviation of the membrane potential of a neuron over a given timespan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemon</strong> (<em>SimpleNamespace</em><em> or </em><em>b2.monitors.statemonitor.StateMonitor</em>) – brian2 StateMonitor or -like(!) SimpleNamespace from file</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – dictionary containing additional information about simulation</p></li>
+<li><p><strong>idx_nrn_abs</strong> (<em>int</em>) – index of neuron to be analyzed within statemon</p></li>
+<li><p><strong>t_start</strong> (<em>int</em><em> or </em><em>float</em>) – beginning of timespan to be analyzed in milliseconds</p></li>
+<li><p><strong>t_end</strong> (<em>int</em><em> or </em><em>float</em>) – end of timespan to be analyzed in milliseconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>stdev_v: standard deviation of membrane potential</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>stdev_v: float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.get_t_first_spike_mod">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">get_t_first_spike_mod</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_abs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_from_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#get_t_first_spike_mod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.get_t_first_spike_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the timepoint in the simulation when neuron idx_nrn_abs fired its first spike.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>idx_nrn_abs</strong> (<em>int</em>) – absolute index to the neuron</p></li>
+<li><p><strong>search_from_ms</strong> (<em>int</em><em> or </em><em>float</em>) – if greater than 0, look for the first spike after this time in milliseconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spike_time: list of times of first spike of neuron given by idx_nrn_abs. One entry per monitor (run)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>spike_time: list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.prespike_trace_average">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">prespike_trace_average</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_khz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_filter_win_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_spiketime_is_onset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#prespike_trace_average"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.prespike_trace_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average membrane potential of all smoothed traces of a neuron over the timecourse from duration
+before and up to the first spike onset in the the trace. Returns all smoothed time series (len=duration) and average</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traces</strong> (<em>np.ndarray</em><em> or </em><em>list</em>) – (list of) numpy ndarray(s) of voltage traces</p></li>
+<li><p><strong>spiketimes_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times of the neuron (one sublist per trial, i.e. array in traces)</p></li>
+<li><p><strong>sampling_frequency_khz</strong> (<em>int</em><em> or </em><em>float</em>) – [default=40] sampling frequency of traces in kHz</p></li>
+<li><p><strong>duration</strong> (<em>int</em><em> or </em><em>float</em>) – [default=100] duration of the returned time series relative to the first spike in each trace,
+in ms. negative value: timespan after spike.</p></li>
+<li><p><strong>smooth_filter_win_len</strong> (<em>int</em>) – [default=11] length of window for Savitzky-Golay filter</p></li>
+<li><p><strong>b_normalize</strong> (<em>bool</em><em> or </em><em>int</em>) – if True,, normalize returned timesieries so that final value (spike onset) is 0 mV</p></li>
+<li><p><strong>b_spiketime_is_onset</strong> (<em>bool</em><em> or </em><em>int</em>) – if True, spiketimes_ms is considered onset of spike (e.g. LIF model neurons)</p></li>
+<li><p><strong>b_smooth</strong> (<em>bool</em><em> or </em><em>int</em>) – if True, smooth traces first</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><dl class="simple">
+<dt>timeseries_average: average time series of all traces that contain a spike and in which the time series</dt><dd><p>before/after the first spike fully lies within the duration of the trace</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>all_timeseries: list containing all timeseries that were included in the average (i.e. section of trace</dt><dd><p>of length duration before/after the first spike in each trace)</p>
+</dd>
+</dl>
+</li>
+<li><p>n_traces_included: number of traces that were included in the average (i.e. that fit the above criteria)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>timeseries_average: numpy.ndarray</p></li>
+<li><p>all_timeseries: list</p></li>
+<li><p>n_traces_included: int</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.remove_spikes">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">remove_spikes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename_pkl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_nrs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spike_nrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#remove_spikes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.remove_spikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens .pkl file that contains spiketimes of a recording, deletes the spiketimes given by the trace and spike
+indices, overwrites the .pkl file with the modified spiketimes. Call manually to remove false positives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename_pkl</strong> (<em>str</em>) – filename of .pkl file containing spiketimes</p></li>
+<li><p><strong>trace_nrs</strong> (<em>[</em><em>int</em><em>]</em>) – list of integer indices to traces in which spikes are to be deleted. 1-based indexing, i.e. [1]
+refers to the first trace and therefore to spiketimes[0]</p></li>
+<li><p><strong>spike_nrs</strong> (<em>[</em><em>[</em><em>int</em><em>]</em><em>]</em>) – list of list of indices to the chronologically ordered spikes. one sublist per trace in i_traces.
+1-based indexing. Example: remove_spikes(‘bla.pkl’, [1, 3], [[1, 2], [1, 2, 3]]) removes the first two spikes in
+the first trace and the first three spikes in the third trace, i.e. spiketimes[0][0:2] and spiketimes[2][0:3]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>spiketimes_ms_modified: the list of spiketimes with spikes removed</p></li>
+<li><p>spiketimes_ms_loaded: the original (unmodified) list of spiketimes (in milliseconds) from the .pkl file</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>spiketimes_ms_modified: [[float]]</p></li>
+<li><p>spiketimes_ms_loaded: [[float]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.subthreshold_wiggliness">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">subthreshold_wiggliness</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_abs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#subthreshold_wiggliness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.subthreshold_wiggliness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard deviation of the membrane potential derivative of a neuron over a given timespan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemon</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em>) – brian2 StateMonitor - like(!) SimpleNamespace from file or dict from b2…get_states()</p></li>
+<li><p><strong>spikemon</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em>) – brian2 SpikeMonitor - like(!) SimpleNamespace from file or dict from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – dictionary containing additional information about simulation</p></li>
+<li><p><strong>idx_nrn_abs</strong> (<em>int</em>) – index of neuron to be analyzed within statemon</p></li>
+<li><p><strong>t_start</strong> (<em>int</em><em> or </em><em>float</em>) – beginning of timespan to be analyzed in milliseconds</p></li>
+<li><p><strong>t_end</strong> (<em>int</em><em> or </em><em>float</em>) – end of timespan to be analyzed in milliseconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>std_diff_v: standard deviation of membrane potential derivative</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>std_diff_v: float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_analysis.sum_psths">
+<code class="sig-prename descclassname"><span class="pre">p_analysis.</span></code><code class="sig-name descname"><span class="pre">sum_psths</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_smoothed_psth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_filter_win_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_analysis.html#sum_psths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_analysis.sum_psths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sums up multiple psths and returns the sum, as well as (optionally) a smoothed version. All input psths must have
+the same bin size and all offsets (if any) must be an integer multiple of the bin size. If the psths have different
+alignments, supplying a list of offset values (offset_ms) will shift the psths by this amount prior to summation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_values</strong> (<em>[</em><em>[</em><em>int</em><em>]</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of time values in milliseconds of the psth bins (left side).</p></li>
+<li><p><strong>psths</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of non-smoothed psth values (average spike rate as returned by p_analysis.get_psth())</p></li>
+<li><p><strong>offset_ms</strong> (<em>[</em><em>int</em><em>] or </em><em>[</em><em>float</em><em>]</em>) – [default=None] list of time values at which to align each psth (0 will be at this timepoint)</p></li>
+<li><p><strong>b_smoothed_psth</strong> (<em>bool</em>) – [default=True] also return smoothed psth (using Savitzky-Golay filter)</p></li>
+<li><p><strong>smooth_filter_win_len</strong> (<em>int</em>) – [default=9] length of window for Savitzky-Golay filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>t_val_for_all: list of time values in milliseconds of the psth bins of the summed psth (left side).</p></li>
+<li><p>psth_summed: summed psth</p></li>
+<li><p>psth_summed_smoothed: summed and smoothed psth</p></li>
+<li><p>t_values_offset: t_values aligned to offset_ms</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>t_val_for_all: [int] or [float]</p></li>
+<li><p>psth_summed: [float]</p></li>
+<li><p>psth_summed_smoothed: [float]</p></li>
+<li><p>t_values_offset: [[int]] or [[float]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="p_input.html" class="btn btn-neutral float-right" title="p_input module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lif.html" class="btn btn-neutral float-left" title="lif module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

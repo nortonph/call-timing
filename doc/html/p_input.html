@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_input module &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="p_io module" href="p_io.html" />
+    <link rel="prev" title="p_analysis module" href="p_analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_all.html">run_all module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fig_ms.html">fig_ms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lif.html">lif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_analysis.html">p_analysis module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">p_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_io.html">p_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_macro.html">p_macro module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_plot.html">p_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_util.html">p_util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>p_input module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/p_input.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-p_input">
+<span id="p-input-module"></span><h1>p_input module<a class="headerlink" href="#module-p_input" title="Permalink to this headline">¶</a></h1>
+<p>Functions generating input for brian2 model neurons: spike times for SpikeGenerator and step and ramp currents.
+(generate_current partly reuses code from <a class="reference external" href="http://neuronaldynamics.epfl.ch">http://neuronaldynamics.epfl.ch</a>) [call-time-model]</p>
+<dl class="py function">
+<dt id="p_input.generate_current">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">generate_current</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_time_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neurons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span> <span class="pre">*</span> <span class="pre">amp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wnoise_cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wnoise_dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_power_ramp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#generate_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.generate_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate input current as numpy.array. t_start and amplitude_start must be ints/Quantities or lists with the same
+number of elements. Each element corresponds to one step current or ramp current in a sequence of currents.
+Elements must be ordered ascending in time. Returned array has n_neurons. Columns are identical if offset_range==0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_start</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>list</em>) – integer or float or list of integers/floats with start times of current</p></li>
+<li><p><strong>sim_time_ms</strong> (<em>int</em><em> or </em><em>float</em>) – duration of simulation in milliseconds</p></li>
+<li><p><strong>unit_time</strong> (<em>b2.units.fundamentalunits.Quantity</em><em> [</em><em>unit=sec</em><em>]</em>) – brian2 unit of time step (dt between successive current values), e.g. 0.1*b2.ms. Ideally, to have
+the same time step as the simulation, set this to b2.defaultclock.dt. Can be set to longer, esp. without ramps.</p></li>
+<li><p><strong>amplitude_start</strong> (<em>b2.units.fundamentalunits.Quantity</em><em> [</em><em>unit=amp</em><em>] or </em><em>list</em>) – quantity or list of quantities (unit: ampere) of amplitudes at t_start.</p></li>
+<li><p><strong>amplitude_end</strong> (<em>b2.units.fundamentalunits.Quantity</em><em> [</em><em>unit=amp</em><em>] or </em><em>list</em><em> or </em><em>None</em>) – [default=None] quantity or list of quantities of amplitudes at t_end. Generated current
+ramps from amplitude_start at t_start to amplitude_end at t_end. If amplitude_end is None, [] or empty np.array,
+it is set to amplitude_start, i.e. only constant step currents are generated.</p></li>
+<li><p><strong>n_neurons</strong> (<em>int</em>) – [default=1] number of neurons == number of columns in the returned current array</p></li>
+<li><p><strong>offset_range</strong> (<em>b2.units.fundamentalunits.Quantity</em><em> [</em><em>unit=amp</em><em>]</em>) – [default=0] the given current amplitude gets offset by a random value within offset_range.
+Random values are normally distributed and can exceed these limits! (code for uniformly
+distributed random offsets commented out below)</p></li>
+<li><p><strong>offset_noise</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – [default=None] numpy array of random numbers used in randomly offsetting current amplitudes.
+Empty list: no offsets</p></li>
+<li><p><strong>wnoise_cv</strong> (<em>float</em>) – [default=0] coefficient of variation for white noise added to full current</p></li>
+<li><p><strong>wnoise_dt</strong> (<em>float</em><em> or </em><em>int</em>) – time in milliseconds between successive random changes in input current according to white_noise</p></li>
+<li><p><strong>white_noise</strong> (<em>list</em>) – [default=None] list of numpy arrays (n_neurons) of random numbers used for additive white noise</p></li>
+<li><p><strong>b_power_ramp</strong> (<em>list</em><em> or </em><em>None</em>) – [default=None] None or list of bools of len(t_start). where True or 1, ramp currents increase
+with power 2 instead of a linear ramp</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>current: numpy.array to be used as input_current to model neurons. Convert to b2.TimedArray before use,
+using p_input.timedarray_from_current()</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>brian2.units.fundamentalunits.Quantity [unit=amp]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_input.get_offset_noise">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">get_offset_noise</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#get_offset_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.get_offset_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get as many random numbers sampled from the standard normal distribution (using brian2.randn()) as needed for
+noise offsets during current generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters, as loaded from .json configuration file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>offset_noise: list of numpy arrays of random numbers for current generation, one array per population</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>offset_noise: [numpy.ndarray] or [[], [], ..]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_input.get_rates_for_poisson_group">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">get_rates_for_poisson_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_time_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#get_rates_for_poisson_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.get_rates_for_poisson_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and return brian2.TimedArray of spike rates for a Poisson Group, based on specifications in
+config (e.g. loaded from .json config file), namely config[‘poisson_group’].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters as loaded from .json configuration file</p></li>
+<li><p><strong>log_name</strong> (<em>str</em>) – name of logger object (standard python logging) created earlier, e.g. through p_io.set_up_loggers()</p></li>
+<li><p><strong>sim_time_ms</strong> (<em>int</em><em> or </em><em>None</em>) – [default=None] duration of simulation in milliseconds. if None: load from config file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>timed_array_poisson_rate: Timed Array of spike rates at each time point of the simulation in Hz</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>brian2.TimedArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_input.get_white_noise">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">get_white_noise</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#get_white_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.get_white_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get as many random numbers sampled from the standard normal distribution (using brian2.randn()) as needed for
+white noise during current generation (within step/ramp random sample-to-sample variability)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters, as loaded from .json configuration file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>white_noise: list list(s) of numpy arrays of random numbers for current generation. one sublist per
+population, one array per neuron. list of Nones if no numbers were generated (one None per population)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>white_noise: list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_input.load_spiketimes_for_gen">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">load_spiketimes_for_gen</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_spiketimes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron_nrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_nrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_nrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recording_offsets_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_single_population</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#load_spiketimes_for_gen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.load_spiketimes_for_gen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load spiketimes from recordings of specific neurons to use as input for SpikegeneratorGroups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_spiketimes</strong> (<em>str</em>) – path to directory containing spiketimes pickle files (.pkl)</p></li>
+<li><p><strong>neuron_nrs</strong> (<em>[</em><em>int</em><em>] or </em><em>None</em>) – [default=None] list of integer indices to neurons from which spiketimes should be loaded.
+1-based indexing of alphanumerically sorted .pkl filenames in path_to_spiketimes. None: load from all files</p></li>
+<li><p><strong>trace_nrs</strong> (<em>[</em><em>[</em><em>int</em><em>]</em><em>] or </em><em>None</em>) – [default=None] list of list(s) of integer indices to traces of the respective neuron (one sublist
+per neuron) from which spiketimes should be loaded. 1-based indexing. None: load from all traces</p></li>
+<li><p><strong>population_nrs</strong> (<em>[</em><em>int</em><em>] or </em><em>None</em>) – [default=None] list of integer identifiers for grouping neurons into populations (used for
+spikegenerator populations), one integer per neuron. Must be in ascending order. None: either all neurons belong
+to the same population, or each neuron is part of its own population, depending on b_single_population</p></li>
+<li><p><strong>recording_offsets_ms</strong> (<em>[</em><em>float</em><em>] or </em><em>None</em>) – [default=None] list of offsets in milliseconds, which will be added to spiketimes to
+account for differential alignment. one offset per neuron. if None, offset will be zero for all neurons</p></li>
+<li><p><strong>b_single_population</strong> (<em>bool</em>) – [default=False] if True, all neurons will be put in a single sublist, i.e. will belong
+to a single spikegenerator population when passed to run_simulation(). Otherwise each .pkl file will (e.g.
+recorded neuron) will make up a seperate sublist / spikegenerator population. If population_nrs is not None,
+this parameter is ignored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>input_spiketimes_ms: list of list(s) of list(s) of spike times in milliseconds. one sublist per
+generator population (corresponds to model neuron population), one subsublist per trace, i.e. generator
+neuron. To be passed to run_simulation() for creation of spikegenerator groups</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[[float]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_input.setup_currents">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">setup_currents</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_noise</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_noise</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_time_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_gen_curr_per_pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I_input_prev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#setup_currents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.setup_currents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and return time series of currents to be used as input onto model neurons, based on specifications in
+config (e.g. loaded from .json config file).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters as loaded from .json configuration file</p></li>
+<li><p><strong>offset_noise</strong> (<em>list</em>) – list of numpy arrays of random numbers used in randomly offsetting current amplitudes.
+one array per population. empty list instead of array where no numbers were generated (one [] per pop)</p></li>
+<li><p><strong>white_noise</strong> (<em>list</em>) – list of list(s) of numpy arrays of random numbers used for additive noise in current generation.
+one sublist per population, one array per neuron. list of Nones if no numbers were generated (one None per pop)</p></li>
+<li><p><strong>log_name</strong> (<em>str</em>) – name of logger object (standard python logging) created earlier, e.g. through p_io.set_up_loggers()</p></li>
+<li><p><strong>sim_time_ms</strong> (<em>int</em><em> or </em><em>None</em>) – [default=None] duration of simulation in milliseconds. if None: load from config file</p></li>
+<li><p><strong>b_gen_curr_per_pop</strong> (<em>list</em><em> or </em><em>None</em>) – [default=None] list of one bool per population. if true, generate currents only for the
+respective population and overwrite I_input_prev for those. if None, generate currents for all populations.</p></li>
+<li><p><strong>I_input_prev</strong> (<em>brian2.TimedArray</em><em> or </em><em>None</em>) – [default=None] output of this function from the previous run. Supply if b_gen_curr_per_pop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>I_input: brian2.TimedArray containing all generated currents. (May be used in ode as Ie)</p></li>
+<li><p>log_message: string containing message to be printed/logged</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>I_input: brian2.input.timedarray.TimedArray</p></li>
+<li><p>log_message: string</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_input.timedarray_from_current">
+<code class="sig-prename descclassname"><span class="pre">p_input.</span></code><code class="sig-name descname"><span class="pre">timedarray_from_current</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_to_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_input.html#timedarray_from_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_input.timedarray_from_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bundle multiple current arrays returned by p_input.generate_current() into a brian2.TimedArray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currents</strong> (<em>b2.units.fundamentalunits.Quantity</em><em> [</em><em>unit=amp</em><em>] or </em><em>list</em>) – (list of) numpy.array(s) returned by p_input.generate_current(), one for each neuron/-group</p></li>
+<li><p><strong>unit_time</strong> (<em>b2.units.fundamentalunits.Quantity</em><em> [</em><em>unit=sec</em><em>]</em>) – brian2 unit of time step (dt between successive current values), e.g. 0.1*b2.ms. Ideally, to have
+the same time step as the simulation, set this to b2.defaultclock.dt (might not work otherwise).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em> or </em><em>None</em>) – [default: None] sets name parameter for returned brian2.TimedArray</p></li>
+<li><p><strong>pad_to_length</strong> (<em>int</em><em> or </em><em>None</em>) – [default=None] currents will be padded with zeros to this length (i.e. number of time steps)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>timed_array_current: brian2.TimedArray containing all passed currents</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>brian2.input.timedarray.TimedArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="p_io.html" class="btn btn-neutral float-right" title="p_io module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="p_analysis.html" class="btn btn-neutral float-left" title="p_analysis module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

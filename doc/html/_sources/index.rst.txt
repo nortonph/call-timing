@@ -1,0 +1,26 @@
+.. call-time-model documentation master file, created by
+   sphinx-quickstart on Tue Nov 12 16:27:34 2019.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+call-time-model
+===============
+
+Documentation of all functions and the config file format for the simulation code used for Norton et al. (2022)
+
+Code can be downloaded from https://github.com/nortonph/call-timing
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   config_files.rst
+   modules.rst
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

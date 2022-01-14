@@ -1,0 +1,7 @@
+p\_input module
+===============
+
+.. automodule:: p_input
+   :members:
+   :undoc-members:
+   :show-inheritance:

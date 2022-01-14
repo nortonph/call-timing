@@ -1,0 +1,153 @@
+Config Files
+============
+
+Config files are .json files in the subdirectory cfg/ that contain equations and parameters for a particular model.
+These are read by the function :func:`lif.run_simulation()` as a dictionary.
+The following describes the structure of this file and the resulting dictionary with its required and optional contents.
+
+Abreviations:
+
+    *cbe* = can be empty
+
+    *cb""* = can be a list of empty strings
+
+Parameters derived from cfg structure:
+
+    *n_synapses*: number of synaptic connections between populations. determined to be len(config['synapse']['syn_pre_idx'])
+
+    *n_gens*: n_generators in .py. number of spike generators. determined by len(input_spiketimes_ms), arg to run_simulation()
+
+    *n_gen_syns*: n_gen_synapses in .py. number of synapses from generators onto populations. determined by
+    len(config['generator']['gen_pre_idx']) if supplied. if not, generators are connected to populations
+    one-to-one if n_generators == n_populations, all-to-one if n_populations == 1, or all-to-all otherwise
+
+    *n_psn_syns*: n_psn_synapses in .py. number of synapses from poisson group onto populations. determined by
+    len(config['poisson_group']['psn_syn_post_idx'])
+
+    *n_pops*: n_popualations in .py. number of model neuron populations, determined by len(config['misc']['population_id'])
+
+Top Level Entries
+*****************
+.. code-block:: python
+
+    #   name (i.e. key)         type []=list    required?   description
+    1.  "ode":                  [str(s)]        yes         'equations for brian2 (b2) neuron model'
+    2.  "synapse":              {dict}          yes         'synapse equations, conditions, indices, etc.'
+    3.  "generator":            {dict}          no          '^ (almost) same for spike generators if input_spiketimes passed'
+    4.  "parameters_nrn":       {dict}          yes         'parameter values for neurons used in b2 / equations'
+    5.  "parameters_syn":       {dict}          yes         'parameter values for synapses used in b2 / equations'
+    6.  "parameters_gen":       {dict}          no          'parameter values for generator synapses used in b2 / eqtns'
+    7.  "parameters_psn":       {dict}          no          'parameter values for poisson group synapses used in b2 / eqtns'
+    8.  "parameter_units":      {dict}          yes         'brian2 units for all parameters in above 3 dicts'
+    9.  "free_parameter_stepsize": {dict}       yes (cbe)   'name of & stepsize for param to be varied over runs'
+    10. "free_parameter_combination_type": [str] no         'how to combine free_param values: "serial" or default: "product"'
+    11. "input_current":        {dict}          yes (cbe)   'times and amplitudes of input (electrode) currents'
+    12. "poisson_group":        {dict}          no          'times and firing rates [Hz] for a single poisson group'
+    13. "misc":                 {dict}          yes         'several other parameters, e.g. population ids and n'
+    14. "plot":                 {dict}          no          'indices to nrn/pop/syn of interest; can be set in code instead'
+    15. "comment"               [str(s)]        no          'any comments describing the configuration'
+
+Sub-Entries by Top Level Entry #
+********************************
+.. code-block:: python
+
+    #   name (i.e. key)         type []=list    required?   n entries   description
+    2.  "model":                [str(s)]        yes         arbitrary   'model equation(s) for b2.Synapse()'
+        "on_pre":               [str(s)]        yes (cb"")  arbitrary   'on_pre equation(s) for b2.Synapse(), e.g. exc & inh'
+        "condition":            [str(s)]        no  (cb"")  n_synapses  'condition statement(s) for b2.Synapse.connect()'
+        "syn_pre_idx":          [int(s)]        yes (cbe)   n_synapses  'population indices of pre-synaptic neurons (*)'
+        "syn_post_idx":         [int(s)]        yes (cbe)   n_synapses  'population indices of post-synaptic neurons (*)'
+        "on_pre_idx_syn":       [int(s)]        no          n_synpases  'indices to on_pre equations per synapse, if multiple'
+        "connection_probability": [float(s)]    no          n_synapses  'parameter p for b2.Synapses.connect() (default = 1)'
+    3.  "condition":            [str(s)]        no          n_gen_syns  'condition statement(s) for generator synapses'
+        "gen_pre_idx":          [int(s)]        no          n_gen_syns  'generator indices, if none: all-to-all or 1-to-1 (*)'
+        "gen_post_idx":         [int(s)]        no          n_gen_syns  'population indices of post-synaptic neurons (*)'
+        "on_pre_idx_gen":       [int(s)]        no          n_gen_syns  'indices to "synapse" on_pre eqtns per generator'
+        "connection_probability": [float(s)]    no          n_gen_syns  'parameter p for b2.Synapses.connect() (default = 1)'
+    4.  'all parameters of neuron model equations that need values (e.g. "v", "Rm", "tau1e", ...). general form:'
+        param_name_as_in_ode:   [float(s)]      yes         n_pops
+    5.  'all parameters of synapse model equations that need values (e.g. "w") and variables (e.g. "delay"). general form:'
+        param / variable name:  [float(s)]      yes         n_synapses
+    6.  '^ same for generator synapses. generator synapses use synapse model and on_pre equations. general form:'
+        param / variable name:  [float(s)]      yes         n_gen_syns
+    7.  '^ same for poisson group synapses. poisson group synapses use synapse model and on_pre equations. general form:'
+        param / variable name:  [float(s)]      yes         n_psn_syns
+    8.  'brian2 units (e.g. "ms") for parameters in parameters_nrn, _syn and _gen. params not included here get unit 1. form:'
+        param_name_as_in_4-6:   str             no          1
+    9.  param_name_as_in_4-6:   float           no          1           'value of the named parameter is incremented by float'
+    11. "t_start":              [[float]]       no          n_pops      'one sublist per pop of one or more start times [ms]'
+        "amp_start":            [[float]]       no          n_pops      'current amplitude [nA] at respective t_start'
+        "amp_end":              [[float]]       no          n_pops      'if sublist empty or =amp_start: step, otherwise ramp'
+        "power_ramp":           [[int (1/0)]]   no          n_pops      'as t_start. where 1, ramp currents curved not linear'
+        "offset_range":         [float(s)]      no          n_pops      'variance for randn() amplitude offset (0: no offset)'
+        "wnoise_cv":            [float(s)]      no          n_pops      'coefficient of variation for white noise on current'
+        "wnoise_dt":            int             if ^        1           'duration in [ms] between changes in white noise'
+        "fI_amp_stepsize":      float           no          1           'amp_start gets incremented by float btw. 1st and 2nd'
+          '... value of amp_start. first values of t_start, duration, populations, -sizes etc get repeated (one pop per amp).'
+    12. "t_start":              [float(s)]      no          n_steps     'list of 1 or more start times of rate step/ramp [ms]'
+        "duration":             [float(s)]      no          n_steps     '^ same for duration. rates may not overlap'
+        "rate_start":           [float(s)]      no          n_steps     'firing rate [Hz] at respective t_start'
+        "rate_end":             [float(s)]      no          n_steps     'if empty or =rate_start: step, otherwise ramp'
+        "syn_post_idx" :        [int(s)]        no          n_psn_syns  'pop indices of post-synaptic neurons (not incl. psn)'
+        "on_pre_idx_syn" :      [int(s)]        no          n_psn_syns  'indices to on_pre equations per synapse, if multiple'
+        "connection_probability": [float(s)]    no          n_psn_syns  'parameter p for b2.Synapses.connect() (default = 1)'
+        "n_neurons" :           int             no          1           'number of neurons in poisson group'
+    13. "integration_method" :  str             no          1           'explicitly set NeuronGroup(method=) e.g. exact/euler'
+        "sim_time" :            float           no          1           'simulation duration [ms] if no arg in run_sim..()'
+        "playback_start" :      float           no          1           '[ms] used in plots to mark call playback or prodctn'
+        "playback_duration" :   float           no          1           '^ same'
+        "population_id" :       [str(s)]        yes         n_pops      'names for populations, mostly for plots'
+        "n_neurons_per_pop" :   [int(s)]        yes         n_pops      'number of model neurons in respective population'
+        "refractory_period" :   float           yes         1           'b2.NeuronGroup param refractory. todo: one per pop'
+        "rand_initial_v" :      [int(s)]        no          n_pops      'if 1, nrns of pop start with rand v btw. thresh & El'
+        "rng_seed" :            int | [5*int]   no          1 | 5       'rng seeds for offset_noise, wnoise, rand_initial_v,'
+                                                                        'connectivity and generator/poisson in that order.'
+                                                                        'default=1 for all.'
+    14. "idx_pop_oi" :          int             no          1           'idx to population of interest'
+        "idx_nrn_oi_relative" : int             no          1           'idx to nrn in pop e.g. t_first_spike/tracecomp'
+        "idx_synpop_oi_for_fp": int             no          1           'idx to syn|pop for free param plot, eg t_first_spike'
+        "idx_nrn_to_plot_trc" : [int(s)]        no          n_pops      'idx to nrn of each pop for which to plot a trace'
+
+(*) pre_idx and post_idx have must have same order, i.e. pre_idx [0, 0, 1] & post_idx [1, 2, 3] produces connections from population/generator 0 to population 1, 0 to 2 and 1 to 3.
+
+Free parameters
+***************
+To run multiple simulations in batch, with the values of one parameter incrementally changed between runs, select it as a "free parameter".
+This runs a single instance of run_simulation() (loops within) and generates one ouput file (.pkl) containing one SpikeMonitor for each run in list spikes, etc.
+To declare a **neuron, synapse or generator parameter** or an **input current parameter** a free parameter:
+
+    1.a) Change parameter values in config entries *parameters_nrn*, *parameters_syn* or *parameters_gen* from a single list to a list of two lists,
+    the first sublist containing the lower limits for parameter values and the second sublist the upper limits, e.g. [[1, 1], [2, 2]].
+    For populations/synapses that should keep the same value for that parameter across runs, set the the same value in both lists, e.g. [[1, 1], [1, 2]].
+
+    1.b) Some *input_current* parameters are lists of list(s) (each sublist corresponds to a population and can have multiple values, e.g. multiple step currents).
+    If chosen as a free parameter, these must contain a 3-level nested list, with the first level of two sublists corresponding to lower and upper range limits.
+    E.g. *t_start* values of [[[1, 1], [1]], [[1, 2], [2]]] in "serial" with stepsize 1 (see below) will produce two runs with values [[1, 1], [1]] and [[1, 2], [2]].
+
+    2.) Set the value by which this parameter should increment across consecutive runs: add the name of the parameter (as referred to e.g. in *parameters_nrn*) as a key to
+    config entry *free_parameter_stepsize*, with the value by which to increment.
+
+    3. (optional) If the parameter is changed for multiple populations/synapses, you can choose how the values are chosen for consecutive rounds by adding either
+    the string "product" (default) or "serial" to config entry *free_parameter_combination_type*. With "product", all possible permutations will be simulated,
+    e.g. [1,1], [1,2], [2,1], [2.2]. With "serial" values will be iterated in series, e.g. [1,1], [2,2].
+
+To generate a wide range of **input current amplitudes**, specifically to generate an **f-I curve**:
+
+    1.) Generate a config file with a single neuron population consisting of one neuron and enter two values in config['input_current']['amp_start'], e.g. [[0, 2]].
+    The first is the lower and the second the upper limit for the range of current amplitudes.
+
+    2.) Add value of increment to config['input_current']['fI_amp_stepsize']. Number of populations will be extended before the simulation (single run),
+    so that each population will recieve current of a different amplitude. All populations will have the same name and parameter values.
+    Such a model can additionally have a free neuron/synapse/... parameter as described above.
+
+Parameter exploration
+*********************
+To run many simulations in batch, with a range of parameter values for many different parameters, run :func:`routine.parameter_exploration()`.
+This runs one call to :func:`lif.run_simulation()` for each combination of parameter values from the predefined ranges. These can run in parallel by calling :func:`lif.run_multiprocess()`.
+Each :func:`lif.run_simulation()` instance saves output to a separate .pkl file named "parex_******.pkl" - ****** being the simulation id - unless the results don't meet a condition predefined in :func:`lif.is_worth_saving()`.
+:func:`routine.parameter_exploration()` reads in two .json config files:
+
+    1.) config_lo: Regular config file, containing lower limits of all parameters.
+
+    2.) config_hi: Config file containing the upeer limits for only those parameters that should be varied.
+    Needs to contain an additional dict *step_size* that has names of all explored parameters as keys and as values the amount by which the parameter values are to be interpolated between those in config_lo and config_hi

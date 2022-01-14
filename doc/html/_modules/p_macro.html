@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_macro &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>p_macro</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for p_macro</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions for quick repetitive manual tasks to be called from the console for parex analysis. [call-time-model]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">brian2</span> <span class="k">as</span> <span class="nn">b2</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">reload</span>
+<span class="kn">from</span> <span class="nn">fcn</span> <span class="kn">import</span> <span class="n">p_io</span><span class="p">,</span> <span class="n">p_plot</span><span class="p">,</span> <span class="n">p_util</span>
+
+<span class="c1"># &quot;global&quot; variables</span>
+<span class="n">DEFAULT_PATH</span> <span class="o">=</span> <span class="s1">&#39;/extra/Seafile/ctm/out/param_exp_lo/&#39;</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="n">DEFAULT_PATH</span>
+
+
+<div class="viewcode-block" id="setpath"><a class="viewcode-back" href="../p_macro.html#p_macro.setpath">[docs]</a><span class="k">def</span> <span class="nf">setpath</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sets global variable p_macro.PATH used in all other functions to the directory containing descriptive_stats.json</span>
+
+<span class="sd">    :param pathname: full PATH to directory</span>
+<span class="sd">    :type pathname: str</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">PATH</span>
+
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">pathname</span><span class="p">),</span> <span class="s1">&#39;ERROR: directory &#39;</span> <span class="o">+</span> <span class="n">pathname</span> <span class="o">+</span> <span class="s1">&#39; was not found.&#39;</span>
+    <span class="n">pathname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pathname</span> <span class="o">+</span> <span class="s2">&quot;descriptive_stats.json&quot;</span><span class="p">):</span>
+        <span class="n">PATH</span> <span class="o">=</span> <span class="n">pathname</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;global PATH set to &quot;</span> <span class="o">+</span> <span class="n">PATH</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: pathname &quot;</span> <span class="o">+</span> <span class="n">pathname</span> <span class="o">+</span> <span class="s2">&quot; doesn&#39;t contain file descriptive_stats.json. keeping original PATH &quot;</span>
+              <span class="o">+</span> <span class="n">PATH</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parex2d"><a class="viewcode-back" href="../p_macro.html#p_macro.parex2d">[docs]</a><span class="k">def</span> <span class="nf">parex2d</span><span class="p">(</span><span class="n">stat_x</span><span class="p">,</span> <span class="n">stat_y</span><span class="p">,</span> <span class="n">colorparam</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">i_colorparam</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mark</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">identity_line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mark all simulations with results in PATH in 2d space of the destrciptive stats (.json) given by stat_x &amp; stat_y.</span>
+
+<span class="sd">    :param stat_x: name of key in descriptive_stats.json to be mapped to the x-axis</span>
+<span class="sd">    :type stat_x: str</span>
+<span class="sd">    :param stat_y: name of key in descriptive_stats.json to be mapped to the y-axis</span>
+<span class="sd">    :type stat_y: str</span>
+<span class="sd">    :param colorparam: name of explored parameter, whose values should be used as a color code for dots/text</span>
+<span class="sd">    :type colorparam: str</span>
+<span class="sd">    :param i_colorparam: index to parameter given by colorparam (i.e. population/synapse index)</span>
+<span class="sd">    :type i_colorparam: int</span>
+<span class="sd">    :param mark: (list of) sim_id(s) to highlight on plot</span>
+<span class="sd">    :type mark: int or list or None</span>
+<span class="sd">    :param identity_line: if True, add an identity line (line through x==y)</span>
+<span class="sd">    :type identity_line: bool</span>
+<span class="sd">    :param labels: if True, add text labels of simulation ids next to points</span>
+<span class="sd">    :type labels: bool</span>
+<span class="sd">    :return: id_sims_all: list of ids of all simulations</span>
+<span class="sd">    :rtype: id_sims_all: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">PATH</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">if</span> <span class="n">mark</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mark</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">mark</span> <span class="o">=</span> <span class="p">[</span><span class="n">mark</span><span class="p">]</span>
+
+    <span class="c1"># load .json</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;descriptive_stats.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="c1"># create a list of colors for dots/text based on the value of each sim for one parameter</span>
+    <span class="k">if</span> <span class="n">colorparam</span><span class="p">:</span>
+        <span class="c1"># load config files and get a list combinations of the explored parameters for all simulations</span>
+        <span class="n">config_lo</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;config_lo.json&#39;</span><span class="p">)</span>
+        <span class="n">config_hi</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;config_hi.json&#39;</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">exp_param_names</span><span class="p">,</span> <span class="n">all_values_per_param</span> <span class="o">=</span> \
+            <span class="n">p_io</span><span class="o">.</span><span class="n">get_param_exploration_configs</span><span class="p">(</span><span class="n">config_lo</span><span class="p">,</span> <span class="n">config_hi</span><span class="p">,</span> <span class="n">b_generate_configs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">colorparam</span> <span class="ow">in</span> <span class="n">exp_param_names</span><span class="p">,</span> <span class="s2">&quot;parameter &quot;</span> <span class="o">+</span> <span class="n">colorparam</span> <span class="o">+</span> <span class="s2">&quot; is not one of the in explored parameters&quot;</span>
+        <span class="n">idx_colorparam_in_combo_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">exp_param_names</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">colorparam</span><span class="p">]</span>
+        <span class="n">idx_colorparam_in_combo</span> <span class="o">=</span> <span class="n">idx_colorparam_in_combo_all</span><span class="p">[</span><span class="n">i_colorparam</span><span class="p">]</span>
+        <span class="n">colorparam_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">combinations</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">idx_colorparam_in_combo</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">combinations</span><span class="p">))]</span>
+        <span class="n">unique_vals</span><span class="p">,</span> <span class="n">unique_inverse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">colorparam_values</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n_unique_vals</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_vals</span><span class="p">)</span>
+        <span class="n">colormap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">n_unique_vals</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># set up figure</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">identity_line</span><span class="p">:</span>
+        <span class="n">total_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">]])</span>
+        <span class="n">total_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">total_min</span><span class="p">,</span> <span class="n">total_max</span><span class="p">],</span> <span class="p">[</span><span class="n">total_min</span><span class="p">,</span> <span class="n">total_max</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">])</span>
+
+    <span class="c1"># plot sim ids as text</span>
+    <span class="k">if</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">]))]</span>
+
+    <span class="c1"># plot dots</span>
+    <span class="k">if</span> <span class="n">colorparam</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">unq_val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_unique_vals</span><span class="p">):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">]))</span>
+                      <span class="k">if</span> <span class="n">unique_inverse</span><span class="p">[</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">][</span><span class="n">s</span><span class="p">]]</span> <span class="o">==</span> <span class="n">unq_val</span><span class="p">],</span>
+                     <span class="p">[</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">]))</span>
+                      <span class="k">if</span> <span class="n">unique_inverse</span><span class="p">[</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">][</span><span class="n">s</span><span class="p">]]</span> <span class="o">==</span> <span class="n">unq_val</span><span class="p">],</span>
+                     <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colormap</span><span class="p">(</span><span class="n">unq_val</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">unique_vals</span><span class="p">[</span><span class="n">unq_val</span><span class="p">],</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">colorparam</span> <span class="o">+</span> <span class="s1">&#39; [&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_colorparam</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">],</span> <span class="s1">&#39;.k&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mark</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">mark</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">]):</span>
+        <span class="n">i_mark</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="n">m</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mark</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">i_mark</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">labels</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">][</span><span class="n">m</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">][</span><span class="n">m</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">][</span><span class="n">m</span><span class="p">]),</span>
+                         <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fc</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">],</span> <span class="s1">&#39;.r&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">])),</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">]))])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">])),</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">]))])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">stat_x</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">stat_y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="comborect"><a class="viewcode-back" href="../p_macro.html#p_macro.comborect">[docs]</a><span class="k">def</span> <span class="nf">comborect</span><span class="p">(</span><span class="n">stat_x</span><span class="p">,</span> <span class="n">stat_y</span><span class="p">,</span> <span class="n">b_skip_fully_represented_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Select rectangular subspace in parex2d plot with two clicks (upper left and lower right corner) and print all</span>
+<span class="sd">    parameter values in the combinations of simulations contained in that space. Returns ids of those simulations.</span>
+
+<span class="sd">    :param stat_x: name of key in descriptive_stats.json mapped to the x-axis in the plot</span>
+<span class="sd">    :type stat_x: str</span>
+<span class="sd">    :param stat_y: name of key in descriptive_stats.json mapped to the y-axis in the plot</span>
+<span class="sd">    :type stat_y: str</span>
+<span class="sd">    :param b_skip_fully_represented_params: if True, don&#39;t print parameters for which all values are represented in rect</span>
+<span class="sd">    :type b_skip_fully_represented_params: bool</span>
+<span class="sd">    :param fignum: figure number of the figure containing the parex plot to be targeted. If None, will use plt.gcf()</span>
+<span class="sd">    :type fignum: int or None</span>
+<span class="sd">    :return: id_sims_in_rect: list of ids of the simulations that fall within the rectangle in 2d stats space</span>
+<span class="sd">    :rtype: id_sims_in_rect: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">PATH</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fignum</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">plt</span><span class="o">.</span><span class="n">fignum_exists</span><span class="p">(</span><span class="n">fignum</span><span class="p">):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fignum</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no figure with number &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fignum</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; found -&gt; using gcf()&#39;</span><span class="p">)</span>
+
+    <span class="c1"># load .json</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;descriptive_stats.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="c1"># get coordinates of top left and lower right rectangle corner</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ginput</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">((</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">((</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x (&#39;</span> <span class="o">+</span> <span class="n">stat_x</span> <span class="o">+</span> <span class="s1">&#39;): </span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">y (&#39;</span> <span class="o">+</span> <span class="n">stat_y</span> <span class="o">+</span> <span class="s1">&#39;): </span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="c1"># find simulations that fall within the rectangle in 2d stats space</span>
+    <span class="n">id_sims_in_rect</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">])):</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_x</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">stats</span><span class="p">[</span><span class="n">stat_y</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">id_sims_in_rect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># create and print dictionary of all unique parameter values of simulations within the rectangle</span>
+    <span class="n">params</span><span class="p">(</span><span class="n">id_sims_in_rect</span><span class="p">,</span> <span class="n">b_skip_fully_represented_params</span><span class="o">=</span><span class="n">b_skip_fully_represented_params</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Simulations in rectangle: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">id_sims_in_rect</span><span class="p">),</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">id_sims_in_rect</span></div>
+
+
+<div class="viewcode-block" id="trace"><a class="viewcode-back" href="../p_macro.html#p_macro.trace">[docs]</a><span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="n">id_sims</span><span class="p">,</span> <span class="n">sortby</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;plots trace of neuron of interest (as defined by config[&#39;plot&#39;]) of the parex simulation file in PATH,</span>
+<span class="sd">    identified by id_sims (e.g. id_sims==23 =&gt; opens PATH/parex_000023.pkl)</span>
+
+<span class="sd">    :param id_sims: (list of) id(s) of simulation(s) in parameter exploration, contained in .pkl file name</span>
+<span class="sd">    :type id_sims: int or list</span>
+<span class="sd">    :param sortby: name of descriptive stats parameter by which to sort the subplots, e.g. &#39;t_spike1&#39;</span>
+<span class="sd">    :type sortby: str or None</span>
+<span class="sd">    :param hline: y-value of gray horizontal line to add to each subplot</span>
+<span class="sd">    :type hline: int or float</span>
+<span class="sd">    :param xlims: x-axis limits (lower, upper)</span>
+<span class="sd">    :type xlims: tuple or list</span>
+<span class="sd">    :param figsize: size of figure in inches (width, height)</span>
+<span class="sd">    :type figsize: tuple or list</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">PATH</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">id_sims</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">id_sims</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_sims</span><span class="p">]</span>
+
+    <span class="c1"># load .json</span>
+    <span class="k">if</span> <span class="n">sortby</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;descriptive_stats.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="n">n_traces</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_sims</span><span class="p">)</span>
+    <span class="n">n_gridcols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_traces</span> <span class="o">/</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="n">n_gridrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_traces</span> <span class="o">/</span> <span class="n">n_gridcols</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">})</span>
+
+    <span class="c1"># sort list of sims by a certain stat (if passed as argument)</span>
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">id_sims</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sortby</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sortby</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">i_sims_oi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">],</span> <span class="n">sims</span><span class="p">)</span>
+            <span class="n">to_sort</span> <span class="o">=</span> <span class="p">[</span><span class="n">stats</span><span class="p">[</span><span class="n">sortby</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i_sims_oi</span><span class="p">]</span>
+            <span class="n">sims</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">to_sort</span><span class="p">,</span> <span class="n">sims</span><span class="p">))]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sortby</span> <span class="o">+</span> <span class="s1">&#39; not found in descriptive stats -&gt; traces not sorted!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># loop through sims and plot trace</span>
+    <span class="n">axs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i_sim</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sims</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;parex_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.pkl&quot;</span>
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
+            <span class="c1"># load simulation ouput</span>
+            <span class="n">states</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_monitors</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">b_silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># get index to neuron of interest</span>
+            <span class="n">nrn_oi</span> <span class="o">=</span> <span class="n">p_util</span><span class="o">.</span><span class="n">get_abs_from_rel_nrn_idx</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;plot&#39;</span><span class="p">][</span><span class="s1">&#39;idx_nrn_oi_relative&#39;</span><span class="p">],</span>
+                                                     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;plot&#39;</span><span class="p">][</span><span class="s1">&#39;idx_pop_oi&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">][</span><span class="s1">&#39;n_neurons_per_pop&#39;</span><span class="p">])</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_gridrows</span><span class="p">,</span> <span class="n">n_gridcols</span><span class="p">,</span> <span class="n">i_sim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="c1"># plot horizontal line</span>
+            <span class="k">if</span> <span class="n">hline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">hline</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># plot trace</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">nrn_oi</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">mV</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">sim</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handlelength</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># plot artificial spikes</span>
+            <span class="n">spiketimes</span> <span class="o">=</span> <span class="n">spikes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">spikes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">nrn_oi</span><span class="p">]</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span>
+            <span class="n">thresh</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;v_thresh&#39;</span><span class="p">][</span><span class="n">nrn_oi</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i_sim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">n_traces</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+            <span class="k">if</span> <span class="n">i_sim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spiketimes</span><span class="p">)):</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">spiketimes</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">spiketimes</span><span class="p">[</span><span class="n">s</span><span class="p">]],</span> <span class="p">[</span><span class="n">thresh</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">+</span> <span class="mi">30</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FILE &quot;</span> <span class="o">+</span> <span class="n">full_path</span> <span class="o">+</span> <span class="s2">&quot; NOT FOUND&quot;</span><span class="p">)</span>
+
+    <span class="c1"># share y-axes</span>
+    <span class="p">[</span><span class="n">axs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get_shared_x_axes</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">axs</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">axs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">axs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get_shared_y_axes</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">axs</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">axs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">xlims</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlims</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="params"><a class="viewcode-back" href="../p_macro.html#p_macro.params">[docs]</a><span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="n">id_sims</span><span class="p">,</span> <span class="n">b_skip_fully_represented_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">b_combos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print values of the explored parameters in the combinations of simulations is_sims</span>
+
+<span class="sd">    :param id_sims: (list of) integer id(s) of the simulations of interest</span>
+<span class="sd">    :type id_sims: int or list</span>
+<span class="sd">    :param b_skip_fully_represented_params: if True, don&#39;t print parameters for which all values are represented</span>
+<span class="sd">        in id_sims</span>
+<span class="sd">    :type b_skip_fully_represented_params: bool</span>
+<span class="sd">    :param b_combos: if True, print explored parameter combinations of all sims</span>
+<span class="sd">    :type b_combos: bool</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">PATH</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">id_sims</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">id_sims</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_sims</span><span class="p">]</span>
+
+    <span class="c1"># load config files and get a list combinations of the explored parameters for all simulations</span>
+    <span class="n">config_lo</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;config_lo.json&#39;</span><span class="p">)</span>
+    <span class="n">config_hi</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;config_hi.json&#39;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">exp_param_names</span><span class="p">,</span> <span class="n">all_values_per_param</span> <span class="o">=</span> \
+        <span class="n">p_io</span><span class="o">.</span><span class="n">get_param_exploration_configs</span><span class="p">(</span><span class="n">config_lo</span><span class="p">,</span> <span class="n">config_hi</span><span class="p">,</span> <span class="n">b_generate_configs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># get parameter value combinations of all simulations within the passed selection (id_sims)</span>
+    <span class="n">combinations_of_sims_oi</span> <span class="o">=</span> <span class="p">[</span><span class="n">combinations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">id_sims</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">b_combos</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;param_values.txt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">param_lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">param_lines_of_sims_oi</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">id_sims</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">param_lines_of_sims_oi</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># create and print dictionary of all unique parameter values of simulations within the selection</span>
+    <span class="n">unique_vals_in_selection</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i_par</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">combinations</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        <span class="n">unique_vals_cur_par</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span><span class="n">combinations_of_sims_oi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i_par</span><span class="p">]</span>
+                                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">combinations_of_sims_oi</span><span class="p">))])</span>
+        <span class="n">idx_values_of_param</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">([</span><span class="n">p</span> <span class="o">==</span> <span class="n">exp_param_names</span><span class="p">[</span><span class="n">i_par</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">exp_param_names</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">nth_value_of_param</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">idx_values_of_param</span> <span class="o">==</span> <span class="n">i_par</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># first sublist in each dictionary key holds values of sims in selection, second holds all explored values</span>
+        <span class="n">all_explored_vals_cur_param</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">all_values_per_param</span><span class="p">[</span><span class="n">i_par</span><span class="p">]]</span>
+        <span class="n">vals_in_selection</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">unique_vals_cur_par</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">vals_in_selection</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_explored_vals_cur_param</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b_skip_fully_represented_params</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">unique_vals_in_selection</span><span class="p">[</span><span class="n">exp_param_names</span><span class="p">[</span><span class="n">i_par</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nth_value_of_param</span><span class="p">)]</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">vals_in_selection</span><span class="p">,</span> <span class="n">all_explored_vals_cur_param</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">b_skip_fully_represented_params</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Parameters for which all values are represented in selection are not printed.&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selection of sims: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">id_sims</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[[Parameter values of sims in selection], [All explored values of that parameter]]:&quot;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">unique_vals_in_selection</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="allsims"><a class="viewcode-back" href="../p_macro.html#p_macro.allsims">[docs]</a><span class="k">def</span> <span class="nf">allsims</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns id_sims list of all simulations</span>
+
+<span class="sd">    :return: id_sims_all: list of ids of all recorded simulations</span>
+<span class="sd">    :rtype: id_sims_all: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;descriptive_stats.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="n">id_sims_all</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;id_sim&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">id_sims_all</span></div>
+
+
+<div class="viewcode-block" id="config"><a class="viewcode-back" href="../p_macro.html#p_macro.config">[docs]</a><span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="n">id_sims</span><span class="p">,</span> <span class="n">b_save</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print the config(s) of one or more parex simulations</span>
+
+<span class="sd">    :param id_sims: (list of) integer id(s) of the simulations of interest</span>
+<span class="sd">    :type id_sims: int or list</span>
+<span class="sd">    :param b_save: if True, save config to .json file</span>
+<span class="sd">    :type b_save: bool or int</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">PATH</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">id_sims</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">id_sims</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_sims</span><span class="p">]</span>
+
+    <span class="c1"># load lo and hi config files and get a list of config dixtionaries of all simulations</span>
+    <span class="n">config_lo</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;config_lo.json&#39;</span><span class="p">)</span>
+    <span class="n">config_hi</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;config_hi.json&#39;</span><span class="p">)</span>
+    <span class="n">configs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p_io</span><span class="o">.</span><span class="n">get_param_exploration_configs</span><span class="p">(</span><span class="n">config_lo</span><span class="p">,</span> <span class="n">config_hi</span><span class="p">)</span>
+
+    <span class="c1"># get only the configs of the relevant simulations and print them to console or .json file</span>
+    <span class="n">configs_of_sims_oi</span> <span class="o">=</span> <span class="p">[</span><span class="n">configs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">id_sims</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configs_of_sims_oi</span><span class="p">):</span>
+        <span class="c1"># save to .json file</span>
+        <span class="k">if</span> <span class="n">b_save</span><span class="p">:</span>
+            <span class="n">run_id_str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">PATH</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;parex_cfg_&#39;</span> <span class="o">+</span> <span class="n">run_id_str</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">id_sims</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_cfg</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">file_cfg</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sim #: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">id_sims</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; - config saved as &#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sim #: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">id_sims</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

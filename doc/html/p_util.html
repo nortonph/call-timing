@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_util module &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="p_plot module" href="p_plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_all.html">run_all module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fig_ms.html">fig_ms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lif.html">lif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_analysis.html">p_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_input.html">p_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_io.html">p_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_macro.html">p_macro module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_plot.html">p_plot module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">p_util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>p_util module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/p_util.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-p_util">
+<span id="p-util-module"></span><h1>p_util module<a class="headerlink" href="#module-p_util" title="Permalink to this headline">¶</a></h1>
+<p>Various utility functions. (call-time-model)</p>
+<dl class="py function">
+<dt id="p_util.downsample_trace">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">downsample_trace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsampling_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#downsample_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.downsample_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Down-sample traces by returning traces with only every nth sample preserved, where n = downsampling_factor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traces</strong> (<em>list</em>) – (list of) voltage traces (or any other time series)</p></li>
+<li><p><strong>downsampling_factor</strong> (<em>int</em>) – factor by which to compress trace, e.g. 4 means returned trace contains every 4th sample</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>traces_out: list of downsampled traces</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>traces_out: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.get_abs_from_rel_nrn_idx">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">get_abs_from_rel_nrn_idx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_nrn_relative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_pop_of_nrn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_sizes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#get_abs_from_rel_nrn_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.get_abs_from_rel_nrn_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the absolute neuron index of a model neuron in its population from its relative index in its population.
+Example: the simulation consists of two population, two neurons each. The third neuron has the absolute index 2
+(0-based indexing) and the relative index 0, as it is the first index of the second population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx_nrn_relative</strong> (<em>int</em>) – relative index to the neuron in its population</p></li>
+<li><p><strong>idx_pop_of_nrn</strong> (<em>int</em>) – index to the population, the neuron of interest is in, ie. 1 in the above example (2nd pop)</p></li>
+<li><p><strong>population_sizes</strong> (<em>[</em><em>int</em><em>]</em>) – list of numbers of neurons in all populations of the simulation,
+i.e. [2, 2] in the above example</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>idx_nrn_absolute: absolute index to the neuron</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.get_rel_from_abs_nrn_idx">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">get_rel_from_abs_nrn_idx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_nrn_absolute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_sizes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#get_rel_from_abs_nrn_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.get_rel_from_abs_nrn_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the neuron index of a model neuron in its population from its absolute index. Example: the simulation
+consists of two population, two neurons each. The third neuron has the absolute index 2 (0-based indexing) and the
+relative index 0, as it is the first index of the second population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx_nrn_absolute</strong> (<em>int</em>) – absolute index to the neuron</p></li>
+<li><p><strong>population_sizes</strong> (<em>[</em><em>int</em><em>]</em>) – list of numbers of neurons in all populations of the simulation,
+i.e. [2, 2] in the above example</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>idx_nrn_relative: relative index to the neuron in its population</p></li>
+<li><p>idx_pop_of_nrn: index to the population, the neuron of interest is in, ie. 1 in the above example (2nd pop)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>idx_nrn_relative: int</p></li>
+<li><p>idx_pop_of_nrn: int</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.get_spiketimes_from_monitor">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">get_spiketimes_from_monitor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#get_spiketimes_from_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.get_spiketimes_from_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract spiketimes from output of simulation (data from single spikemon; either from sim or loaded from .pkl).
+Return as list of lists of spiketimes (in milliseconds; one sublist per neuron).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemon</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em>) – brian2 SpikeMonitor - like(!) SimpleNamespace from out/…pkl file or dict from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – dictionary containing additional information about simulation (as created by run_simulation())</p></li>
+<li><p><strong>i_pops</strong> (<em>int</em><em> or </em><em>list</em>) – [default=None] index or list of indices of the model neuron population(s) whose spiketimes are to be
+returned. default: all populations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spiketimes_ms: list of lists of spike times (in milliseconds; one sublist per neuron, independent of source
+population)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.get_traces_from_monitors">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">get_traces_from_monitors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_keep_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#get_traces_from_monitors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.get_traces_from_monitors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of arrays (one array per neuron) in the format of recorded traces from statemons (simulation output).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>b_keep_unit</strong> (<em>bool</em><em> or </em><em>int</em>) – if False, get rid of brian2 unit (i.e. divide by brian2.mV)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><dl class="simple">
+<dt>traces: list of list(s) of numpy ndarray(s) of voltage traces. one sublist per monitor, one array per</dt><dd><p>neuron. Either with brian2 unit preserved, or without unit in millivolts (depends on b_keep_unit)</p>
+</dd>
+</dl>
+</li>
+<li><p>sampling_frequency_kHz: sampling frequency of the ouput traces in kHz</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>traces: [numpy.ndarray]</p></li>
+<li><p>sampling_frequency_kHz: float</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.integer_linspace">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">integer_linspace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_include_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#integer_linspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.integer_linspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of evenly spaced values between start (included) and end. Values will be integers. b_include_end
+determines whether end will be included. If so, the final value in the list can be larger than end if end &gt; start or
+smaller than end if end &lt; start.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em>) – First value of the returned sequence.</p></li>
+<li><p><strong>end</strong> (<em>int</em><em> or </em><em>float</em>) – End of the sequence. If b_round_up == True, the final sequence value will be &gt;= end, otherwise &lt;= end.</p></li>
+<li><p><strong>step_size</strong> (<em>int</em>) – Integer value of the difference between two consecutive sequence values.</p></li>
+<li><p><strong>b_include_end</strong> (<em>bool</em>) – [default=True] If True, the absolute of the final value of the sequence will be the next
+larger integer &gt;= abs(end), that is divisible by step_size. If False, it will be the next integer &lt;= abs(end),
+that is divisible by step_size. If end is an integer that is divisible by step_size, it will be the final value
+if b_include_end == True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sequence</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.integrate_poisson_group_into_pops">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">integrate_poisson_group_into_pops</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemon_poisson</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_id_poisson</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#integrate_poisson_group_into_pops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.integrate_poisson_group_into_pops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate poisson group into neuron populations for spike monitor data and info dict (synapse indices and pop id)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>spikemon_poisson</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – single(!) SimpleNamespace from file or dict from b2…get_states() w/ poisson group spikes</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters, as loaded from .json configuration file</p></li>
+<li><p><strong>pop_id_poisson</strong> (<em>str</em>) – [default=None] ID (name) for poisson group population. Default: load fron config</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>spikemons_integrated: spike monitor data with integrated poisson group spikes</p></li>
+<li><p>info_integrated: info dict with integrated poisson group info</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>spikemons_integrated: SimpleNamespace or dict or list</p></li>
+<li><p>info_integrated: dict or list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.subset_neuron_from_monitors">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">subset_neuron_from_monitors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#subset_neuron_from_monitors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.subset_neuron_from_monitors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get membrane potential, spiketimes etc. of a specific model neuron out of brian2 Monitors and return new monitors
+containing only this neuron. Monitors will be returned as dictionaries and will probably have to be saved and loaded
+first using p_io.save_monitors &amp; p_io.load_monitors before they can be used in some analysis/plotting functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>list</em>) – list of brian2 StateMonitor-like(!) SimpleNamespace from .pkl file</p></li>
+<li><p><strong>spikemons</strong> (<em>list</em>) – list of brian2 SpikeMonitor-like(!) SimpleNamespace from .pkl file</p></li>
+<li><p><strong>info</strong> (<em>list</em>) – list of dicts containing additional information about simulation (as created by run_simulation())</p></li>
+<li><p><strong>idx_nrn_abs</strong> (<em>int</em>) – absolute index to the neuron to be extracted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>statemons_out: list of dictionaries containining statemonitor data for only the single neuron.</p></li>
+<li><p>spikemons_out: list of dictionaries containining spikemonitor data for only the single neuron.</p></li>
+<li><p>info_out: list of dictionaries containing additional information about the simulation</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>statemons_out: list</p></li>
+<li><p>spikemons_out: list</p></li>
+<li><p>info_out: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.trim_monitors_to_time_span">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">trim_monitors_to_time_span</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_span_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statemons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#trim_monitors_to_time_span"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.trim_monitors_to_time_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes (list of) State- and SpikeMonitors, removes all values (t, v, spiketimes) that lie outside of a supplied
+time span and returns the trimmed monitors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_span_ms</strong> (<em>list</em><em> or </em><em>tuple</em>) – start and end point of time span to be trimmed to in milliseconds</p></li>
+<li><p><strong>statemons</strong> (<em>list</em><em> or </em><em>SimpleNamespace</em>) – (list of) brian2 StateMonitor-like(!) SimpleNamespace from .pkl file</p></li>
+<li><p><strong>spikemons</strong> (<em>list</em><em> or </em><em>SimpleNamespace</em>) – (list of) brian2 SpikeMonitor-like(!) SimpleNamespace from .pkl file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>statemons_out: list of namespaces containining statemonitor data containing only data within time_span</p></li>
+<li><p>spikemons_out: list of namespaces containining spikemonitor data containing only data within time_span</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>statemons_out: list</p></li>
+<li><p>spikemons_out: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_util.trim_traces_to_time_span">
+<code class="sig-prename descclassname"><span class="pre">p_util.</span></code><code class="sig-name descname"><span class="pre">trim_traces_to_time_span</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_span_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samp_freq_khz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_util.html#trim_traces_to_time_span"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_util.trim_traces_to_time_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes (list of) traces, removes all values that lie outside of a supplied
+time span and returns the trimmed monitors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_span_ms</strong> (<em>list</em><em> or </em><em>tuple</em>) – start and end point of time span to be trimmed to in milliseconds</p></li>
+<li><p><strong>traces</strong> (<em>list</em>) – (list of) voltage traces (or any other time series)</p></li>
+<li><p><strong>samp_freq_khz</strong> (<em>float</em><em> or </em><em>int</em>) – sampling frequency in kilo-Hertz of the trace data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>traces_out: list of traces containing only data within time_span</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>traces_out: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="p_plot.html" class="btn btn-neutral float-left" title="p_plot module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

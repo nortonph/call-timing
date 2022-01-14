@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Config Files &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modules" href="modules.html" />
+    <link rel="prev" title="call-time-model" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Config Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#top-level-entries">Top Level Entries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sub-entries-by-top-level-entry">Sub-Entries by Top Level Entry #</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#free-parameters">Free parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-exploration">Parameter exploration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Config Files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/config_files.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="config-files">
+<h1>Config Files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h1>
+<p>Config files are .json files in the subdirectory cfg/ that contain equations and parameters for a particular model.
+These are read by the function <a class="reference internal" href="lif.html#lif.run_simulation" title="lif.run_simulation"><code class="xref py py-func docutils literal notranslate"><span class="pre">lif.run_simulation()</span></code></a> as a dictionary.
+The following describes the structure of this file and the resulting dictionary with its required and optional contents.</p>
+<p>Abreviations:</p>
+<blockquote>
+<div><p><em>cbe</em> = can be empty</p>
+<p><em>cb””</em> = can be a list of empty strings</p>
+</div></blockquote>
+<p>Parameters derived from cfg structure:</p>
+<blockquote>
+<div><p><em>n_synapses</em>: number of synaptic connections between populations. determined to be len(config[‘synapse’][‘syn_pre_idx’])</p>
+<p><em>n_gens</em>: n_generators in .py. number of spike generators. determined by len(input_spiketimes_ms), arg to run_simulation()</p>
+<p><em>n_gen_syns</em>: n_gen_synapses in .py. number of synapses from generators onto populations. determined by
+len(config[‘generator’][‘gen_pre_idx’]) if supplied. if not, generators are connected to populations
+one-to-one if n_generators == n_populations, all-to-one if n_populations == 1, or all-to-all otherwise</p>
+<p><em>n_psn_syns</em>: n_psn_synapses in .py. number of synapses from poisson group onto populations. determined by
+len(config[‘poisson_group’][‘psn_syn_post_idx’])</p>
+<p><em>n_pops</em>: n_popualations in .py. number of model neuron populations, determined by len(config[‘misc’][‘population_id’])</p>
+</div></blockquote>
+<div class="section" id="top-level-entries">
+<h2>Top Level Entries<a class="headerlink" href="#top-level-entries" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#   name (i.e. key)         type []=list    required?   description</span>
+<span class="mf">1.</span>  <span class="s2">&quot;ode&quot;</span><span class="p">:</span>                  <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span>         <span class="s1">&#39;equations for brian2 (b2) neuron model&#39;</span>
+<span class="mf">2.</span>  <span class="s2">&quot;synapse&quot;</span><span class="p">:</span>              <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">yes</span>         <span class="s1">&#39;synapse equations, conditions, indices, etc.&#39;</span>
+<span class="mf">3.</span>  <span class="s2">&quot;generator&quot;</span><span class="p">:</span>            <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">no</span>          <span class="s1">&#39;^ (almost) same for spike generators if input_spiketimes passed&#39;</span>
+<span class="mf">4.</span>  <span class="s2">&quot;parameters_nrn&quot;</span><span class="p">:</span>       <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">yes</span>         <span class="s1">&#39;parameter values for neurons used in b2 / equations&#39;</span>
+<span class="mf">5.</span>  <span class="s2">&quot;parameters_syn&quot;</span><span class="p">:</span>       <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">yes</span>         <span class="s1">&#39;parameter values for synapses used in b2 / equations&#39;</span>
+<span class="mf">6.</span>  <span class="s2">&quot;parameters_gen&quot;</span><span class="p">:</span>       <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">no</span>          <span class="s1">&#39;parameter values for generator synapses used in b2 / eqtns&#39;</span>
+<span class="mf">7.</span>  <span class="s2">&quot;parameters_psn&quot;</span><span class="p">:</span>       <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">no</span>          <span class="s1">&#39;parameter values for poisson group synapses used in b2 / eqtns&#39;</span>
+<span class="mf">8.</span>  <span class="s2">&quot;parameter_units&quot;</span><span class="p">:</span>      <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">yes</span>         <span class="s1">&#39;brian2 units for all parameters in above 3 dicts&#39;</span>
+<span class="mf">9.</span>  <span class="s2">&quot;free_parameter_stepsize&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>       <span class="n">yes</span> <span class="p">(</span><span class="n">cbe</span><span class="p">)</span>   <span class="s1">&#39;name of &amp; stepsize for param to be varied over runs&#39;</span>
+<span class="mf">10.</span> <span class="s2">&quot;free_parameter_combination_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="n">no</span>         <span class="s1">&#39;how to combine free_param values: &quot;serial&quot; or default: &quot;product&quot;&#39;</span>
+<span class="mf">11.</span> <span class="s2">&quot;input_current&quot;</span><span class="p">:</span>        <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">yes</span> <span class="p">(</span><span class="n">cbe</span><span class="p">)</span>   <span class="s1">&#39;times and amplitudes of input (electrode) currents&#39;</span>
+<span class="mf">12.</span> <span class="s2">&quot;poisson_group&quot;</span><span class="p">:</span>        <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">no</span>          <span class="s1">&#39;times and firing rates [Hz] for a single poisson group&#39;</span>
+<span class="mf">13.</span> <span class="s2">&quot;misc&quot;</span><span class="p">:</span>                 <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">yes</span>         <span class="s1">&#39;several other parameters, e.g. population ids and n&#39;</span>
+<span class="mf">14.</span> <span class="s2">&quot;plot&quot;</span><span class="p">:</span>                 <span class="p">{</span><span class="nb">dict</span><span class="p">}</span>          <span class="n">no</span>          <span class="s1">&#39;indices to nrn/pop/syn of interest; can be set in code instead&#39;</span>
+<span class="mf">15.</span> <span class="s2">&quot;comment&quot;</span>               <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="s1">&#39;any comments describing the configuration&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sub-entries-by-top-level-entry">
+<h2>Sub-Entries by Top Level Entry #<a class="headerlink" href="#sub-entries-by-top-level-entry" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#   name (i.e. key)         type []=list    required?   n entries   description</span>
+<span class="mf">2.</span>  <span class="s2">&quot;model&quot;</span><span class="p">:</span>                <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span>         <span class="n">arbitrary</span>   <span class="s1">&#39;model equation(s) for b2.Synapse()&#39;</span>
+    <span class="s2">&quot;on_pre&quot;</span><span class="p">:</span>               <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span> <span class="p">(</span><span class="n">cb</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="n">arbitrary</span>   <span class="s1">&#39;on_pre equation(s) for b2.Synapse(), e.g. exc &amp; inh&#39;</span>
+    <span class="s2">&quot;condition&quot;</span><span class="p">:</span>            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>  <span class="p">(</span><span class="n">cb</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="n">n_synapses</span>  <span class="s1">&#39;condition statement(s) for b2.Synapse.connect()&#39;</span>
+    <span class="s2">&quot;syn_pre_idx&quot;</span><span class="p">:</span>          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span> <span class="p">(</span><span class="n">cbe</span><span class="p">)</span>   <span class="n">n_synapses</span>  <span class="s1">&#39;population indices of pre-synaptic neurons (*)&#39;</span>
+    <span class="s2">&quot;syn_post_idx&quot;</span><span class="p">:</span>         <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span> <span class="p">(</span><span class="n">cbe</span><span class="p">)</span>   <span class="n">n_synapses</span>  <span class="s1">&#39;population indices of post-synaptic neurons (*)&#39;</span>
+    <span class="s2">&quot;on_pre_idx_syn&quot;</span><span class="p">:</span>       <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_synpases</span>  <span class="s1">&#39;indices to on_pre equations per synapse, if multiple&#39;</span>
+    <span class="s2">&quot;connection_probability&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>    <span class="n">no</span>          <span class="n">n_synapses</span>  <span class="s1">&#39;parameter p for b2.Synapses.connect() (default = 1)&#39;</span>
+<span class="mf">3.</span>  <span class="s2">&quot;condition&quot;</span><span class="p">:</span>            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_gen_syns</span>  <span class="s1">&#39;condition statement(s) for generator synapses&#39;</span>
+    <span class="s2">&quot;gen_pre_idx&quot;</span><span class="p">:</span>          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_gen_syns</span>  <span class="s1">&#39;generator indices, if none: all-to-all or 1-to-1 (*)&#39;</span>
+    <span class="s2">&quot;gen_post_idx&quot;</span><span class="p">:</span>         <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_gen_syns</span>  <span class="s1">&#39;population indices of post-synaptic neurons (*)&#39;</span>
+    <span class="s2">&quot;on_pre_idx_gen&quot;</span><span class="p">:</span>       <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_gen_syns</span>  <span class="s1">&#39;indices to &quot;synapse&quot; on_pre eqtns per generator&#39;</span>
+    <span class="s2">&quot;connection_probability&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>    <span class="n">no</span>          <span class="n">n_gen_syns</span>  <span class="s1">&#39;parameter p for b2.Synapses.connect() (default = 1)&#39;</span>
+<span class="mf">4.</span>  <span class="s1">&#39;all parameters of neuron model equations that need values (e.g. &quot;v&quot;, &quot;Rm&quot;, &quot;tau1e&quot;, ...). general form:&#39;</span>
+    <span class="n">param_name_as_in_ode</span><span class="p">:</span>   <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">yes</span>         <span class="n">n_pops</span>
+<span class="mf">5.</span>  <span class="s1">&#39;all parameters of synapse model equations that need values (e.g. &quot;w&quot;) and variables (e.g. &quot;delay&quot;). general form:&#39;</span>
+    <span class="n">param</span> <span class="o">/</span> <span class="n">variable</span> <span class="n">name</span><span class="p">:</span>  <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">yes</span>         <span class="n">n_synapses</span>
+<span class="mf">6.</span>  <span class="s1">&#39;^ same for generator synapses. generator synapses use synapse model and on_pre equations. general form:&#39;</span>
+    <span class="n">param</span> <span class="o">/</span> <span class="n">variable</span> <span class="n">name</span><span class="p">:</span>  <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">yes</span>         <span class="n">n_gen_syns</span>
+<span class="mf">7.</span>  <span class="s1">&#39;^ same for poisson group synapses. poisson group synapses use synapse model and on_pre equations. general form:&#39;</span>
+    <span class="n">param</span> <span class="o">/</span> <span class="n">variable</span> <span class="n">name</span><span class="p">:</span>  <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">yes</span>         <span class="n">n_psn_syns</span>
+<span class="mf">8.</span>  <span class="s1">&#39;brian2 units (e.g. &quot;ms&quot;) for parameters in parameters_nrn, _syn and _gen. params not included here get unit 1. form:&#39;</span>
+    <span class="n">param_name_as_in_4</span><span class="o">-</span><span class="mi">6</span><span class="p">:</span>   <span class="nb">str</span>             <span class="n">no</span>          <span class="mi">1</span>
+<span class="mf">9.</span>  <span class="n">param_name_as_in_4</span><span class="o">-</span><span class="mi">6</span><span class="p">:</span>   <span class="nb">float</span>           <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;value of the named parameter is incremented by float&#39;</span>
+<span class="mf">11.</span> <span class="s2">&quot;t_start&quot;</span><span class="p">:</span>              <span class="p">[[</span><span class="nb">float</span><span class="p">]]</span>       <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;one sublist per pop of one or more start times [ms]&#39;</span>
+    <span class="s2">&quot;amp_start&quot;</span><span class="p">:</span>            <span class="p">[[</span><span class="nb">float</span><span class="p">]]</span>       <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;current amplitude [nA] at respective t_start&#39;</span>
+    <span class="s2">&quot;amp_end&quot;</span><span class="p">:</span>              <span class="p">[[</span><span class="nb">float</span><span class="p">]]</span>       <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;if sublist empty or =amp_start: step, otherwise ramp&#39;</span>
+    <span class="s2">&quot;power_ramp&quot;</span><span class="p">:</span>           <span class="p">[[</span><span class="nb">int</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">)]]</span>   <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;as t_start. where 1, ramp currents curved not linear&#39;</span>
+    <span class="s2">&quot;offset_range&quot;</span><span class="p">:</span>         <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;variance for randn() amplitude offset (0: no offset)&#39;</span>
+    <span class="s2">&quot;wnoise_cv&quot;</span><span class="p">:</span>            <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;coefficient of variation for white noise on current&#39;</span>
+    <span class="s2">&quot;wnoise_dt&quot;</span><span class="p">:</span>            <span class="nb">int</span>             <span class="k">if</span> <span class="o">^</span>        <span class="mi">1</span>           <span class="s1">&#39;duration in [ms] between changes in white noise&#39;</span>
+    <span class="s2">&quot;fI_amp_stepsize&quot;</span><span class="p">:</span>      <span class="nb">float</span>           <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;amp_start gets incremented by float btw. 1st and 2nd&#39;</span>
+      <span class="s1">&#39;... value of amp_start. first values of t_start, duration, populations, -sizes etc get repeated (one pop per amp).&#39;</span>
+<span class="mf">12.</span> <span class="s2">&quot;t_start&quot;</span><span class="p">:</span>              <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">no</span>          <span class="n">n_steps</span>     <span class="s1">&#39;list of 1 or more start times of rate step/ramp [ms]&#39;</span>
+    <span class="s2">&quot;duration&quot;</span><span class="p">:</span>             <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">no</span>          <span class="n">n_steps</span>     <span class="s1">&#39;^ same for duration. rates may not overlap&#39;</span>
+    <span class="s2">&quot;rate_start&quot;</span><span class="p">:</span>           <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">no</span>          <span class="n">n_steps</span>     <span class="s1">&#39;firing rate [Hz] at respective t_start&#39;</span>
+    <span class="s2">&quot;rate_end&quot;</span><span class="p">:</span>             <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>      <span class="n">no</span>          <span class="n">n_steps</span>     <span class="s1">&#39;if empty or =rate_start: step, otherwise ramp&#39;</span>
+    <span class="s2">&quot;syn_post_idx&quot;</span> <span class="p">:</span>        <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_psn_syns</span>  <span class="s1">&#39;pop indices of post-synaptic neurons (not incl. psn)&#39;</span>
+    <span class="s2">&quot;on_pre_idx_syn&quot;</span> <span class="p">:</span>      <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_psn_syns</span>  <span class="s1">&#39;indices to on_pre equations per synapse, if multiple&#39;</span>
+    <span class="s2">&quot;connection_probability&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>    <span class="n">no</span>          <span class="n">n_psn_syns</span>  <span class="s1">&#39;parameter p for b2.Synapses.connect() (default = 1)&#39;</span>
+    <span class="s2">&quot;n_neurons&quot;</span> <span class="p">:</span>           <span class="nb">int</span>             <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;number of neurons in poisson group&#39;</span>
+<span class="mf">13.</span> <span class="s2">&quot;integration_method&quot;</span> <span class="p">:</span>  <span class="nb">str</span>             <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;explicitly set NeuronGroup(method=) e.g. exact/euler&#39;</span>
+    <span class="s2">&quot;sim_time&quot;</span> <span class="p">:</span>            <span class="nb">float</span>           <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;simulation duration [ms] if no arg in run_sim..()&#39;</span>
+    <span class="s2">&quot;playback_start&quot;</span> <span class="p">:</span>      <span class="nb">float</span>           <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;[ms] used in plots to mark call playback or prodctn&#39;</span>
+    <span class="s2">&quot;playback_duration&quot;</span> <span class="p">:</span>   <span class="nb">float</span>           <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;^ same&#39;</span>
+    <span class="s2">&quot;population_id&quot;</span> <span class="p">:</span>       <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span>         <span class="n">n_pops</span>      <span class="s1">&#39;names for populations, mostly for plots&#39;</span>
+    <span class="s2">&quot;n_neurons_per_pop&quot;</span> <span class="p">:</span>   <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">yes</span>         <span class="n">n_pops</span>      <span class="s1">&#39;number of model neurons in respective population&#39;</span>
+    <span class="s2">&quot;refractory_period&quot;</span> <span class="p">:</span>   <span class="nb">float</span>           <span class="n">yes</span>         <span class="mi">1</span>           <span class="s1">&#39;b2.NeuronGroup param refractory. todo: one per pop&#39;</span>
+    <span class="s2">&quot;rand_initial_v&quot;</span> <span class="p">:</span>      <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;if 1, nrns of pop start with rand v btw. thresh &amp; El&#39;</span>
+    <span class="s2">&quot;rng_seed&quot;</span> <span class="p">:</span>            <span class="nb">int</span> <span class="o">|</span> <span class="p">[</span><span class="mi">5</span><span class="o">*</span><span class="nb">int</span><span class="p">]</span>   <span class="n">no</span>          <span class="mi">1</span> <span class="o">|</span> <span class="mi">5</span>       <span class="s1">&#39;rng seeds for offset_noise, wnoise, rand_initial_v,&#39;</span>
+                                                                    <span class="s1">&#39;connectivity and generator/poisson in that order.&#39;</span>
+                                                                    <span class="s1">&#39;default=1 for all.&#39;</span>
+<span class="mf">14.</span> <span class="s2">&quot;idx_pop_oi&quot;</span> <span class="p">:</span>          <span class="nb">int</span>             <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;idx to population of interest&#39;</span>
+    <span class="s2">&quot;idx_nrn_oi_relative&quot;</span> <span class="p">:</span> <span class="nb">int</span>             <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;idx to nrn in pop e.g. t_first_spike/tracecomp&#39;</span>
+    <span class="s2">&quot;idx_synpop_oi_for_fp&quot;</span><span class="p">:</span> <span class="nb">int</span>             <span class="n">no</span>          <span class="mi">1</span>           <span class="s1">&#39;idx to syn|pop for free param plot, eg t_first_spike&#39;</span>
+    <span class="s2">&quot;idx_nrn_to_plot_trc&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>        <span class="n">no</span>          <span class="n">n_pops</span>      <span class="s1">&#39;idx to nrn of each pop for which to plot a trace&#39;</span>
+</pre></div>
+</div>
+<p>(*) pre_idx and post_idx have must have same order, i.e. pre_idx [0, 0, 1] &amp; post_idx [1, 2, 3] produces connections from population/generator 0 to population 1, 0 to 2 and 1 to 3.</p>
+</div>
+<div class="section" id="free-parameters">
+<h2>Free parameters<a class="headerlink" href="#free-parameters" title="Permalink to this headline">¶</a></h2>
+<p>To run multiple simulations in batch, with the values of one parameter incrementally changed between runs, select it as a “free parameter”.
+This runs a single instance of run_simulation() (loops within) and generates one ouput file (.pkl) containing one SpikeMonitor for each run in list spikes, etc.
+To declare a <strong>neuron, synapse or generator parameter</strong> or an <strong>input current parameter</strong> a free parameter:</p>
+<blockquote>
+<div><p>1.a) Change parameter values in config entries <em>parameters_nrn</em>, <em>parameters_syn</em> or <em>parameters_gen</em> from a single list to a list of two lists,
+the first sublist containing the lower limits for parameter values and the second sublist the upper limits, e.g. [[1, 1], [2, 2]].
+For populations/synapses that should keep the same value for that parameter across runs, set the the same value in both lists, e.g. [[1, 1], [1, 2]].</p>
+<p>1.b) Some <em>input_current</em> parameters are lists of list(s) (each sublist corresponds to a population and can have multiple values, e.g. multiple step currents).
+If chosen as a free parameter, these must contain a 3-level nested list, with the first level of two sublists corresponding to lower and upper range limits.
+E.g. <em>t_start</em> values of [[[1, 1], [1]], [[1, 2], [2]]] in “serial” with stepsize 1 (see below) will produce two runs with values [[1, 1], [1]] and [[1, 2], [2]].</p>
+<p>2.) Set the value by which this parameter should increment across consecutive runs: add the name of the parameter (as referred to e.g. in <em>parameters_nrn</em>) as a key to
+config entry <em>free_parameter_stepsize</em>, with the value by which to increment.</p>
+<p>3. (optional) If the parameter is changed for multiple populations/synapses, you can choose how the values are chosen for consecutive rounds by adding either
+the string “product” (default) or “serial” to config entry <em>free_parameter_combination_type</em>. With “product”, all possible permutations will be simulated,
+e.g. [1,1], [1,2], [2,1], [2.2]. With “serial” values will be iterated in series, e.g. [1,1], [2,2].</p>
+</div></blockquote>
+<p>To generate a wide range of <strong>input current amplitudes</strong>, specifically to generate an <strong>f-I curve</strong>:</p>
+<blockquote>
+<div><p>1.) Generate a config file with a single neuron population consisting of one neuron and enter two values in config[‘input_current’][‘amp_start’], e.g. [[0, 2]].
+The first is the lower and the second the upper limit for the range of current amplitudes.</p>
+<p>2.) Add value of increment to config[‘input_current’][‘fI_amp_stepsize’]. Number of populations will be extended before the simulation (single run),
+so that each population will recieve current of a different amplitude. All populations will have the same name and parameter values.
+Such a model can additionally have a free neuron/synapse/… parameter as described above.</p>
+</div></blockquote>
+</div>
+<div class="section" id="parameter-exploration">
+<h2>Parameter exploration<a class="headerlink" href="#parameter-exploration" title="Permalink to this headline">¶</a></h2>
+<p>To run many simulations in batch, with a range of parameter values for many different parameters, run <code class="xref py py-func docutils literal notranslate"><span class="pre">routine.parameter_exploration()</span></code>.
+This runs one call to <a class="reference internal" href="lif.html#lif.run_simulation" title="lif.run_simulation"><code class="xref py py-func docutils literal notranslate"><span class="pre">lif.run_simulation()</span></code></a> for each combination of parameter values from the predefined ranges. These can run in parallel by calling <a class="reference internal" href="lif.html#lif.run_multiprocess" title="lif.run_multiprocess"><code class="xref py py-func docutils literal notranslate"><span class="pre">lif.run_multiprocess()</span></code></a>.
+Each <a class="reference internal" href="lif.html#lif.run_simulation" title="lif.run_simulation"><code class="xref py py-func docutils literal notranslate"><span class="pre">lif.run_simulation()</span></code></a> instance saves output to a separate .pkl file named “parex_******.pkl” - <strong>**</strong> being the simulation id - unless the results don’t meet a condition predefined in <code class="xref py py-func docutils literal notranslate"><span class="pre">lif.is_worth_saving()</span></code>.
+<code class="xref py py-func docutils literal notranslate"><span class="pre">routine.parameter_exploration()</span></code> reads in two .json config files:</p>
+<blockquote>
+<div><p>1.) config_lo: Regular config file, containing lower limits of all parameters.</p>
+<p>2.) config_hi: Config file containing the upeer limits for only those parameters that should be varied.
+Needs to contain an additional dict <em>step_size</em> that has names of all explored parameters as keys and as values the amount by which the parameter values are to be interpolated between those in config_lo and config_hi</p>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="call-time-model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

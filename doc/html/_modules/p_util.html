@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_util &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>p_util</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for p_util</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Various utility functions. (call-time-model)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">brian2</span> <span class="k">as</span> <span class="nn">b2</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
+
+
+<div class="viewcode-block" id="get_rel_from_abs_nrn_idx"><a class="viewcode-back" href="../p_util.html#p_util.get_rel_from_abs_nrn_idx">[docs]</a><span class="k">def</span> <span class="nf">get_rel_from_abs_nrn_idx</span><span class="p">(</span><span class="n">idx_nrn_absolute</span><span class="p">,</span> <span class="n">population_sizes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the neuron index of a model neuron in its population from its absolute index. Example: the simulation</span>
+<span class="sd">    consists of two population, two neurons each. The third neuron has the absolute index 2 (0-based indexing) and the</span>
+<span class="sd">    relative index 0, as it is the first index of the second population.</span>
+
+<span class="sd">    :param idx_nrn_absolute: absolute index to the neuron</span>
+<span class="sd">    :type idx_nrn_absolute: int</span>
+<span class="sd">    :param population_sizes: list of numbers of neurons in all populations of the simulation,</span>
+<span class="sd">        i.e. [2, 2] in the above example</span>
+<span class="sd">    :type population_sizes: [int]</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - idx_nrn_relative: relative index to the neuron in its population</span>
+<span class="sd">        - idx_pop_of_nrn: index to the population, the neuron of interest is in, ie. 1 in the above example (2nd pop)</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">        - idx_nrn_relative: int</span>
+<span class="sd">        - idx_pop_of_nrn: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># initialize output to None =&gt; produce error if these don&#39;t get overwritten</span>
+    <span class="n">idx_nrn_relative</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">idx_pop_of_nrn</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># if the index is negative (i.e. index relative to the end), convert it to positive</span>
+    <span class="k">if</span> <span class="n">idx_nrn_absolute</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">idx_nrn_absolute</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">)</span> <span class="o">+</span> <span class="n">idx_nrn_absolute</span>
+
+    <span class="c1"># loop through populations</span>
+    <span class="k">for</span> <span class="n">i_pop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">)):</span>
+        <span class="c1"># if sum of neurons in all populations up to (incl.) the current one is larger than the absolute neuron idx ...</span>
+        <span class="k">if</span> <span class="n">idx_nrn_absolute</span> <span class="o">&lt;</span> <span class="nb">sum</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i_pop</span><span class="o">+</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="c1"># ... then the neuron is in the current population =&gt; get population index</span>
+            <span class="n">idx_pop_of_nrn</span> <span class="o">=</span> <span class="n">i_pop</span>
+            <span class="c1">#</span>
+            <span class="k">if</span> <span class="n">i_pop</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">idx_nrn_relative</span> <span class="o">=</span> <span class="n">idx_nrn_absolute</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i_pop</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">idx_nrn_relative</span> <span class="o">=</span> <span class="n">idx_nrn_absolute</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">idx_nrn_relative</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">idx_pop_of_nrn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;p_util.get_rel_from_abs_nrn_idx() did not succeed in finding relative neuron index and/or &#39;</span> <span class="o">+</span>
+                         <span class="s1">&#39;population for absolute neuron index &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx_nrn_absolute</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and population sizes &#39;</span> <span class="o">+</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">idx_nrn_relative</span><span class="p">,</span> <span class="n">idx_pop_of_nrn</span></div>
+
+
+<div class="viewcode-block" id="get_abs_from_rel_nrn_idx"><a class="viewcode-back" href="../p_util.html#p_util.get_abs_from_rel_nrn_idx">[docs]</a><span class="k">def</span> <span class="nf">get_abs_from_rel_nrn_idx</span><span class="p">(</span><span class="n">idx_nrn_relative</span><span class="p">,</span> <span class="n">idx_pop_of_nrn</span><span class="p">,</span> <span class="n">population_sizes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the absolute neuron index of a model neuron in its population from its relative index in its population.</span>
+<span class="sd">    Example: the simulation consists of two population, two neurons each. The third neuron has the absolute index 2</span>
+<span class="sd">    (0-based indexing) and the relative index 0, as it is the first index of the second population.</span>
+
+<span class="sd">    :param idx_nrn_relative: relative index to the neuron in its population</span>
+<span class="sd">    :type idx_nrn_relative: int</span>
+<span class="sd">    :param idx_pop_of_nrn: index to the population, the neuron of interest is in, ie. 1 in the above example (2nd pop)</span>
+<span class="sd">    :type idx_pop_of_nrn: int</span>
+<span class="sd">    :param population_sizes: list of numbers of neurons in all populations of the simulation,</span>
+<span class="sd">        i.e. [2, 2] in the above example</span>
+<span class="sd">    :type population_sizes: [int]</span>
+<span class="sd">    :return: idx_nrn_absolute: absolute index to the neuron</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="n">idx_pop_of_nrn</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">),</span> <span class="s1">&#39;population &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx_pop_of_nrn</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; is not in &#39;</span> <span class="o">+</span>\
+        <span class="s1">&#39;population_sizes, which has &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39; elements. (indices follow 0-based indexing!)&#39;</span>
+    <span class="n">size_pop_of_nrn</span> <span class="o">=</span> <span class="n">population_sizes</span><span class="p">[</span><span class="n">idx_pop_of_nrn</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">idx_nrn_relative</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">size_pop_of_nrn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;p_util.get_abs_from_rel_nrn_idx(): relative neuron index &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx_nrn_relative</span><span class="p">)</span> <span class="o">+</span>
+                         <span class="s1">&#39; lies outside of population &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx_pop_of_nrn</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; with size &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">size_pop_of_nrn</span><span class="p">)</span> <span class="o">+</span>
+                         <span class="s1">&#39; (indices follow 0-based indexing!)&#39;</span><span class="p">)</span>
+
+    <span class="n">idx_nrn_absolute</span> <span class="o">=</span> <span class="n">idx_nrn_relative</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">population_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">idx_pop_of_nrn</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">idx_nrn_absolute</span></div>
+
+
+<div class="viewcode-block" id="get_traces_from_monitors"><a class="viewcode-back" href="../p_util.html#p_util.get_traces_from_monitors">[docs]</a><span class="k">def</span> <span class="nf">get_traces_from_monitors</span><span class="p">(</span><span class="n">statemons</span><span class="p">,</span> <span class="n">b_keep_unit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get list of arrays (one array per neuron) in the format of recorded traces from statemons (simulation output).</span>
+
+<span class="sd">    :param statemons: (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2...get_states()</span>
+<span class="sd">    :type statemons: SimpleNamespace or dict or list</span>
+<span class="sd">    :param b_keep_unit: if False, get rid of brian2 unit (i.e. divide by brian2.mV)</span>
+<span class="sd">    :type b_keep_unit: bool or int</span>
+<span class="sd">    :return:    - traces: list of list(s) of numpy ndarray(s) of voltage traces. one sublist per monitor, one array per</span>
+<span class="sd">                    neuron. Either with brian2 unit preserved, or without unit in millivolts (depends on b_keep_unit)</span>
+<span class="sd">                - sampling_frequency_kHz: sampling frequency of the ouput traces in kHz</span>
+<span class="sd">    :rtype:     - traces: [numpy.ndarray]</span>
+<span class="sd">                - sampling_frequency_kHz: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if statemons and spikemons contain a single object, convert them to lists</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">statemons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">statemons</span> <span class="o">=</span> <span class="p">[</span><span class="n">statemons</span><span class="p">]</span>
+
+    <span class="c1"># get sampling rate of input data</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">statemons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">statemons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">sampling_frequency_khz</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">kHz</span>
+
+    <span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">mon</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">statemons</span><span class="p">)):</span>
+        <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="n">n_neurons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">nrn</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_neurons</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">b_keep_unit</span><span class="p">:</span>
+                <span class="n">traces</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">nrn</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">traces</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">nrn</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">mV</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">traces</span><span class="p">,</span> <span class="n">sampling_frequency_khz</span></div>
+
+
+<div class="viewcode-block" id="get_spiketimes_from_monitor"><a class="viewcode-back" href="../p_util.html#p_util.get_spiketimes_from_monitor">[docs]</a><span class="k">def</span> <span class="nf">get_spiketimes_from_monitor</span><span class="p">(</span><span class="n">spikemon</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">i_pops</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract spiketimes from output of simulation (data from single spikemon; either from sim or loaded from .pkl).</span>
+<span class="sd">    Return as list of lists of spiketimes (in milliseconds; one sublist per neuron).</span>
+
+<span class="sd">    :param spikemon: brian2 SpikeMonitor - like(!) SimpleNamespace from out/...pkl file or dict from b2...get_states()</span>
+<span class="sd">    :type spikemon: SimpleNamespace or dict</span>
+<span class="sd">    :param info: dictionary containing additional information about simulation (as created by run_simulation())</span>
+<span class="sd">    :type info: dict</span>
+<span class="sd">    :param i_pops: [default=None] index or list of indices of the model neuron population(s) whose spiketimes are to be</span>
+<span class="sd">        returned. default: all populations</span>
+<span class="sd">    :type i_pops: int or list</span>
+<span class="sd">    :return: spiketimes_ms: list of lists of spike times (in milliseconds; one sublist per neuron, independent of source</span>
+<span class="sd">        population)</span>
+<span class="sd">    :rtype: [[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">i_pops</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">i_pops</span> <span class="o">=</span> <span class="p">[</span><span class="n">i_pops</span><span class="p">]</span>
+
+    <span class="c1"># check input</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemon</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SimpleNamespace</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemon</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s2">&quot;spikemon must be a dict from dict from&quot;</span> <span class="o">+</span> \
+        <span class="s2">&quot;b2...get_states() or (if loaded through p_io.load_monitors) a SimpleNamespace object&quot;</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">info</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">,</span> <span class="s2">&quot;info must be a dictionary&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">i_pops</span><span class="p">),</span> <span class="s2">&quot;i_pops must be an integer or list of integers&quot;</span>
+
+    <span class="c1"># if i_pops is None, get indices of all populations</span>
+    <span class="k">if</span> <span class="n">i_pops</span> <span class="o">==</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
+        <span class="n">i_pops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;population_ids&#39;</span><span class="p">])))</span>
+
+    <span class="c1"># loop through populations of interest and add all spiketimes to output list</span>
+    <span class="n">spiketimes_ms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">i_pops</span><span class="p">:</span>
+        <span class="n">i_first_nrn_of_pop</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">pop</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemon</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SimpleNamespace</span><span class="p">:</span>
+            <span class="n">spiketimes_ms</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">spikemon</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">spikemon</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">nrn</span><span class="p">]</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">nrn</span> <span class="ow">in</span>
+                              <span class="nb">range</span><span class="p">(</span><span class="n">i_first_nrn_of_pop</span><span class="p">,</span> <span class="n">i_first_nrn_of_pop</span> <span class="o">+</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">][</span><span class="n">pop</span><span class="p">])]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">spiketimes_ms</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">spikemon</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="n">spikemon</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nrn</span><span class="p">]</span> <span class="o">/</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">nrn</span> <span class="ow">in</span>
+                              <span class="nb">range</span><span class="p">(</span><span class="n">i_first_nrn_of_pop</span><span class="p">,</span> <span class="n">i_first_nrn_of_pop</span> <span class="o">+</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">][</span><span class="n">pop</span><span class="p">])]</span>
+
+    <span class="k">return</span> <span class="n">spiketimes_ms</span></div>
+
+
+<div class="viewcode-block" id="subset_neuron_from_monitors"><a class="viewcode-back" href="../p_util.html#p_util.subset_neuron_from_monitors">[docs]</a><span class="k">def</span> <span class="nf">subset_neuron_from_monitors</span><span class="p">(</span><span class="n">statemons</span><span class="p">,</span> <span class="n">spikemons</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">idx_nrn_abs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get membrane potential, spiketimes etc. of a specific model neuron out of brian2 Monitors and return new monitors</span>
+<span class="sd">    containing only this neuron. Monitors will be returned as dictionaries and will probably have to be saved and loaded</span>
+<span class="sd">    first using p_io.save_monitors &amp; p_io.load_monitors before they can be used in some analysis/plotting functions.</span>
+
+<span class="sd">    :param statemons: list of brian2 StateMonitor-like(!) SimpleNamespace from .pkl file</span>
+<span class="sd">    :type statemons: list</span>
+<span class="sd">    :param spikemons: list of brian2 SpikeMonitor-like(!) SimpleNamespace from .pkl file</span>
+<span class="sd">    :type spikemons: list</span>
+<span class="sd">    :param info: list of dicts containing additional information about simulation (as created by run_simulation())</span>
+<span class="sd">    :type info: list</span>
+<span class="sd">    :param idx_nrn_abs: absolute index to the neuron to be extracted</span>
+<span class="sd">    :type idx_nrn_abs: int</span>
+<span class="sd">    :return:    - statemons_out: list of dictionaries containining statemonitor data for only the single neuron.</span>
+<span class="sd">                - spikemons_out: list of dictionaries containining spikemonitor data for only the single neuron.</span>
+<span class="sd">                - info_out: list of dictionaries containing additional information about the simulation</span>
+<span class="sd">    :rtype:     - statemons_out: list</span>
+<span class="sd">                - spikemons_out: list</span>
+<span class="sd">                - info_out: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># todo: deepcopy the namespace instead of making a dictionary? -&gt; wouldn&#39;t have to be saved and loaded then...</span>
+
+    <span class="n">statemons_out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spikemons_out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">info_out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">mon</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">statemons</span><span class="p">)):</span>
+        <span class="c1"># if the index is negative (i.e. index relative to the end), convert it to positive</span>
+        <span class="k">if</span> <span class="n">idx_nrn_abs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">idx_nrn_abs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">idx_nrn_abs</span>
+        <span class="n">idx_nrn_rel</span><span class="p">,</span> <span class="n">idx_pop_of_nrn</span> <span class="o">=</span> <span class="n">get_rel_from_abs_nrn_idx</span><span class="p">(</span><span class="n">idx_nrn_abs</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">])</span>
+        <span class="c1"># get states and spikes of the neuron of interest from the monitors</span>
+        <span class="n">statemons_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">())</span>
+        <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span>
+        <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">N</span>
+        <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b2</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">idx_nrn_abs</span><span class="p">]])</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">volt</span>
+        <span class="n">spikemons_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">())</span>
+        <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spikemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">spikemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">idx_nrn_abs</span><span class="p">]</span>
+        <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;i&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b2</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">spikemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">idx_nrn_abs</span><span class="p">])</span>
+        <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b2</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">spikemons</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">idx_nrn_abs</span><span class="p">]])</span>
+        <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b2</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+        <span class="c1"># update info dict</span>
+        <span class="n">info_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">]))]</span>
+        <span class="n">info_out</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">][</span><span class="n">idx_pop_of_nrn</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">statemons_out</span><span class="p">,</span> <span class="n">spikemons_out</span><span class="p">,</span> <span class="n">info_out</span></div>
+
+
+<div class="viewcode-block" id="trim_monitors_to_time_span"><a class="viewcode-back" href="../p_util.html#p_util.trim_monitors_to_time_span">[docs]</a><span class="k">def</span> <span class="nf">trim_monitors_to_time_span</span><span class="p">(</span><span class="n">time_span_ms</span><span class="p">,</span> <span class="n">statemons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spikemons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes (list of) State- and SpikeMonitors, removes all values (t, v, spiketimes) that lie outside of a supplied</span>
+<span class="sd">    time span and returns the trimmed monitors.</span>
+
+<span class="sd">    :param time_span_ms: start and end point of time span to be trimmed to in milliseconds</span>
+<span class="sd">    :type time_span_ms: list or tuple</span>
+<span class="sd">    :param statemons: (list of) brian2 StateMonitor-like(!) SimpleNamespace from .pkl file</span>
+<span class="sd">    :type statemons: list or SimpleNamespace</span>
+<span class="sd">    :param spikemons: (list of) brian2 SpikeMonitor-like(!) SimpleNamespace from .pkl file</span>
+<span class="sd">    :type spikemons: list or SimpleNamespace</span>
+<span class="sd">    :return:    - statemons_out: list of namespaces containining statemonitor data containing only data within time_span</span>
+<span class="sd">                - spikemons_out: list of namespaces containining spikemonitor data containing only data within time_span</span>
+<span class="sd">    :rtype:     - statemons_out: list</span>
+<span class="sd">                - spikemons_out: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if statemons and spikemons contain a single object, convert them to lists</span>
+    <span class="k">if</span> <span class="n">statemons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">statemons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">statemons</span> <span class="o">=</span> <span class="p">[</span><span class="n">statemons</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">spikemons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">spikemons</span> <span class="o">=</span> <span class="p">[</span><span class="n">spikemons</span><span class="p">]</span>
+
+    <span class="c1"># trim states</span>
+    <span class="k">if</span> <span class="n">statemons</span><span class="p">:</span>
+        <span class="n">statemons_out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">statemons</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">mon</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">statemons_out</span><span class="p">)):</span>
+            <span class="n">idx_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">time_span_ms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span>
+                                            <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="n">time_span_ms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">idx_t</span><span class="p">]</span>
+            <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">idx_t</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">v</span><span class="p">))])</span>\
+                <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">volt</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">statemons</span><span class="p">[</span><span class="n">mon</span><span class="p">],</span> <span class="s1">&#39;Ie&#39;</span><span class="p">):</span>
+                <span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">Ie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">Ie</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">idx_t</span><span class="p">]</span>
+                                                  <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">statemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">Ie</span><span class="p">))])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">statemons_out</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># trim spikes</span>
+    <span class="k">if</span> <span class="n">spikemons</span><span class="p">:</span>
+        <span class="n">spikemons_out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">mon</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spikemons_out</span><span class="p">)):</span>
+            <span class="n">idx_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">time_span_ms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span>
+                                            <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="n">time_span_ms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">ms</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">idx_t</span><span class="p">]</span>
+            <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">spikemons_out</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">idx_t</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spikemons_out</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">statemons_out</span><span class="p">,</span> <span class="n">spikemons_out</span></div>
+
+
+<div class="viewcode-block" id="trim_traces_to_time_span"><a class="viewcode-back" href="../p_util.html#p_util.trim_traces_to_time_span">[docs]</a><span class="k">def</span> <span class="nf">trim_traces_to_time_span</span><span class="p">(</span><span class="n">time_span_ms</span><span class="p">,</span> <span class="n">traces</span><span class="p">,</span> <span class="n">samp_freq_khz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes (list of) traces, removes all values that lie outside of a supplied</span>
+<span class="sd">    time span and returns the trimmed monitors.</span>
+
+<span class="sd">    :param time_span_ms: start and end point of time span to be trimmed to in milliseconds</span>
+<span class="sd">    :type time_span_ms: list or tuple</span>
+<span class="sd">    :param traces: (list of) voltage traces (or any other time series)</span>
+<span class="sd">    :type traces: list</span>
+<span class="sd">    :param samp_freq_khz: sampling frequency in kilo-Hertz of the trace data</span>
+<span class="sd">    :type samp_freq_khz: float or int</span>
+<span class="sd">    :return:    - traces_out: list of traces containing only data within time_span</span>
+<span class="sd">    :rtype:     - traces_out: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if traces is a single list, convert it to list of list</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">traces</span> <span class="o">=</span> <span class="p">[</span><span class="n">traces</span><span class="p">]</span>
+
+    <span class="c1"># trim traces</span>
+    <span class="n">traces_out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">trc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traces_out</span><span class="p">)):</span>
+        <span class="n">idx_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">time_span_ms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">samp_freq_khz</span><span class="p">,</span> <span class="n">time_span_ms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">samp_freq_khz</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">traces_out</span><span class="p">[</span><span class="n">trc</span><span class="p">]</span> <span class="o">=</span> <span class="n">traces_out</span><span class="p">[</span><span class="n">trc</span><span class="p">][</span><span class="n">idx_t</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">traces_out</span></div>
+
+
+<div class="viewcode-block" id="downsample_trace"><a class="viewcode-back" href="../p_util.html#p_util.downsample_trace">[docs]</a><span class="k">def</span> <span class="nf">downsample_trace</span><span class="p">(</span><span class="n">traces</span><span class="p">,</span> <span class="n">downsampling_factor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Down-sample traces by returning traces with only every nth sample preserved, where n = downsampling_factor</span>
+
+<span class="sd">    :param traces: (list of) voltage traces (or any other time series)</span>
+<span class="sd">    :type traces: list</span>
+<span class="sd">    :param downsampling_factor: factor by which to compress trace, e.g. 4 means returned trace contains every 4th sample</span>
+<span class="sd">    :type downsampling_factor: int</span>
+<span class="sd">    :return:    - traces_out: list of downsampled traces</span>
+<span class="sd">    :rtype:     - traces_out: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">downsampling_factor</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span> <span class="ow">and</span> <span class="n">downsampling_factor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;downsampling_factor must be a positive int&quot;</span>
+    <span class="c1"># if traces is a single list, convert it to list of list</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">traces</span> <span class="o">=</span> <span class="p">[</span><span class="n">traces</span><span class="p">]</span>
+
+    <span class="c1"># trim traces</span>
+    <span class="n">traces_out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">trc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">)):</span>
+        <span class="n">traces_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="n">trc</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="n">trc</span><span class="p">]),</span> <span class="n">downsampling_factor</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="n">traces_out</span></div>
+
+
+<div class="viewcode-block" id="integer_linspace"><a class="viewcode-back" href="../p_util.html#p_util.integer_linspace">[docs]</a><span class="k">def</span> <span class="nf">integer_linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">b_include_end</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of evenly spaced values between start (included) and end. Values will be integers. b_include_end</span>
+<span class="sd">    determines whether end will be included. If so, the final value in the list can be larger than end if end &gt; start or</span>
+<span class="sd">    smaller than end if end &lt; start.</span>
+
+<span class="sd">    :param start: First value of the returned sequence.</span>
+<span class="sd">    :type start: int</span>
+<span class="sd">    :param end: End of the sequence. If b_round_up == True, the final sequence value will be &gt;= end, otherwise &lt;= end.</span>
+<span class="sd">    :type end: int or float</span>
+<span class="sd">    :param step_size: Integer value of the difference between two consecutive sequence values.</span>
+<span class="sd">    :type step_size: int</span>
+<span class="sd">    :param b_include_end: [default=True] If True, the absolute of the final value of the sequence will be the next</span>
+<span class="sd">        larger integer &gt;= abs(end), that is divisible by step_size. If False, it will be the next integer &lt;= abs(end),</span>
+<span class="sd">        that is divisible by step_size. If end is an integer that is divisible by step_size, it will be the final value</span>
+<span class="sd">        if b_include_end == True.</span>
+<span class="sd">    :type b_include_end: bool</span>
+<span class="sd">    :return: sequence</span>
+<span class="sd">    :rtype: [int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">step_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;p_util.integer_linspace(): step_size has to be larger than zero&quot;</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: p_util.integer_linspace(): start == end =&gt; returned sequence will be [start] if &quot;</span> <span class="o">+</span>
+              <span class="s2">&quot;b_include_end==True or [] if b_include_end==False&quot;</span><span class="p">)</span>
+
+    <span class="c1"># this flag determines whether np.linspace() should include the rounded end value. Will only be set to false if</span>
+    <span class="c1"># end == end_rounded and argument b_include_end was set to False</span>
+    <span class="n">b_include_end_rounded</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># round end value to be divisible by step size, either up or down, depending on whether it should be in the sequence</span>
+    <span class="k">if</span> <span class="n">b_include_end</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+            <span class="n">end_rounded</span> <span class="o">=</span> <span class="p">(</span><span class="n">step_size</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step_size</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end_rounded</span> <span class="o">=</span> <span class="p">(</span><span class="n">step_size</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="n">step_size</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+            <span class="n">end_rounded</span> <span class="o">=</span> <span class="p">(</span><span class="n">step_size</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step_size</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end_rounded</span> <span class="o">=</span> <span class="p">(</span><span class="n">step_size</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step_size</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span>
+        <span class="c1"># if end is divisible by stepsize (i.e. equal to end_rounded) and should not be included, set flag for linspace</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="o">==</span> <span class="n">end_rounded</span><span class="p">:</span>
+            <span class="n">b_include_end_rounded</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># generate sequence</span>
+    <span class="k">if</span> <span class="n">b_include_end_rounded</span><span class="p">:</span>
+        <span class="n">n_values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">end_rounded</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end_rounded</span><span class="p">,</span> <span class="n">n_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">end_rounded</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end_rounded</span><span class="p">,</span> <span class="n">n_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">sequence</span></div>
+
+
+<div class="viewcode-block" id="integrate_poisson_group_into_pops"><a class="viewcode-back" href="../p_util.html#p_util.integrate_poisson_group_into_pops">[docs]</a><span class="k">def</span> <span class="nf">integrate_poisson_group_into_pops</span><span class="p">(</span><span class="n">spikemons</span><span class="p">,</span> <span class="n">spikemon_poisson</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">pop_id_poisson</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Integrate poisson group into neuron populations for spike monitor data and info dict (synapse indices and pop id)</span>
+
+<span class="sd">    :param spikemons: (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2...get_states()</span>
+<span class="sd">    :type spikemons: SimpleNamespace or dict or list</span>
+<span class="sd">    :param spikemon_poisson: single(!) SimpleNamespace from file or dict from b2...get_states() w/ poisson group spikes</span>
+<span class="sd">    :type spikemon_poisson: SimpleNamespace or dict or list</span>
+<span class="sd">    :param info: dictionary or list of dicts containing additional information about simulation (one dict per run)</span>
+<span class="sd">    :type info: dict or list</span>
+<span class="sd">    :param config: dictionary of model parameters, as loaded from .json configuration file</span>
+<span class="sd">    :type config: dict</span>
+<span class="sd">    :param pop_id_poisson: [default=None] ID (name) for poisson group population. Default: load fron config</span>
+<span class="sd">    :type pop_id_poisson: str</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - spikemons_integrated: spike monitor data with integrated poisson group spikes</span>
+<span class="sd">        - info_integrated: info dict with integrated poisson group info</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">        - spikemons_integrated: SimpleNamespace or dict or list</span>
+<span class="sd">        - info_integrated: dict or list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if spikemons and info contain a single object, convert them to lists</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">spikemons</span> <span class="o">=</span> <span class="p">[</span><span class="n">spikemons</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemon_poisson</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">spikemon_poisson</span> <span class="o">=</span> <span class="p">[</span><span class="n">spikemon_poisson</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spikemon_poisson</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+            <span class="s2">&quot;p_util.integrate_poisson_group_into_pops(): only implemented for single poisson group&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">info</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">b2</span><span class="o">.</span><span class="n">monitors</span><span class="o">.</span><span class="n">spikemonitor</span><span class="o">.</span><span class="n">SpikeMonitor</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">spikemons</span><span class="p">)</span> <span class="ow">or</span> \
+        <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">spikemons</span><span class="p">),</span> \
+        <span class="s2">&quot;spikemons must be a list of b2.SpikeMonitor or (if loaded through p_io.load_monitors) SimpleNamespace objects&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">b2</span><span class="o">.</span><span class="n">monitors</span><span class="o">.</span><span class="n">spikemonitor</span><span class="o">.</span><span class="n">SpikeMonitor</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">spikemon_poisson</span><span class="p">)</span> <span class="ow">or</span> \
+        <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">spikemon_poisson</span><span class="p">),</span> \
+        <span class="s2">&quot;spikemon_poisson must be a list of b2.SpikeMonitor or (if loaded through p_io.load_monitors) SimpleNamespaces&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">info</span><span class="p">),</span> \
+        <span class="s2">&quot;info must be a dictionary or list of dictionaries&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">),</span> \
+        <span class="s2">&quot;spikemons and info must have the same number of elements&quot;</span>
+
+    <span class="c1"># misc parameters</span>
+    <span class="n">n_nrn_psn</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;poisson_group&#39;</span><span class="p">][</span><span class="s1">&#39;n_neurons&#39;</span><span class="p">]</span>
+    <span class="n">spikemons_integrated</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span>
+    <span class="n">info_integrated</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pop_id_poisson</span><span class="p">:</span>
+        <span class="n">pop_id_poisson</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;poisson_group&#39;</span><span class="p">][</span><span class="s1">&#39;population_id&#39;</span><span class="p">]</span>
+
+    <span class="c1"># loop through runs</span>
+    <span class="k">for</span> <span class="n">mon</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spikemons_integrated</span><span class="p">)):</span>
+        <span class="c1"># concatenate poisson spikes with regular population spikes</span>
+        <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span> <span class="o">+</span> <span class="n">n_nrn_psn</span>
+        <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">spikemon_poisson</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">spikemon_poisson</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">t</span><span class="p">))</span>
+        <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">spikemon_poisson</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">))</span>
+        <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">spikemon_poisson</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="n">spikemons_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">]</span><span class="o">.</span><span class="n">N</span>
+
+        <span class="c1"># add poisson population to info</span>
+        <span class="n">syn_post_idx_psn</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;poisson_group&#39;</span><span class="p">][</span><span class="s1">&#39;syn_post_idx&#39;</span><span class="p">]]</span>
+        <span class="n">n_syn_psn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">syn_post_idx_psn</span><span class="p">)</span>
+        <span class="n">conn_prob_psn</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;poisson_group&#39;</span><span class="p">][</span><span class="s1">&#39;connection_probability&#39;</span><span class="p">]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;n_populations&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">pop_id_poisson</span><span class="p">]</span> <span class="o">+</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_ids&#39;</span><span class="p">]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_nrn_psn</span><span class="p">]</span> <span class="o">+</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;population_sizes&#39;</span><span class="p">]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_pre_idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_syn_psn</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_pre_idx&#39;</span><span class="p">]]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_post_idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">syn_post_idx_psn</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_post_idx&#39;</span><span class="p">]]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_psn&#39;</span><span class="p">][</span><span class="s1">&#39;w&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_weight&#39;</span><span class="p">]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_delay&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_psn&#39;</span><span class="p">][</span><span class="s1">&#39;delay&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;syn_delay&#39;</span><span class="p">]</span>
+        <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;connection_probability&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conn_prob_psn</span> <span class="o">+</span> <span class="n">info_integrated</span><span class="p">[</span><span class="n">mon</span><span class="p">][</span><span class="s1">&#39;connection_probability&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">spikemons_integrated</span><span class="p">,</span> <span class="n">info_integrated</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

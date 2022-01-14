@@ -1,0 +1,1135 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_plot module &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="p_util module" href="p_util.html" />
+    <link rel="prev" title="p_macro module" href="p_macro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_all.html">run_all module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fig_ms.html">fig_ms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lif.html">lif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_analysis.html">p_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_input.html">p_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_io.html">p_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_macro.html">p_macro module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">p_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_util.html">p_util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>p_plot module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/p_plot.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-p_plot">
+<span id="p-plot-module"></span><h1>p_plot module<a class="headerlink" href="#module-p_plot" title="Permalink to this headline">¶</a></h1>
+<p>Various functions for plotting model properties and results, as well as recorded data. [call-time-model]</p>
+<dl class="py function">
+<dt id="p_plot.abline">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">abline</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slope</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intercept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#abline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.abline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a line from slope and intercept</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.arrow">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">arrow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax_handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tip_xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_width_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.85,</span> <span class="pre">0.85,</span> <span class="pre">0.85)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bidirectional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#arrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.arrow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot an arrow in axis ax_handle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax_handle</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – Handle of the axis in which to plot the arrow</p></li>
+<li><p><strong>base_xy</strong> (<em>list</em><em> or </em><em>tuple</em>) – 2-element list/tuple of x- and y-coordinates of the arrow base</p></li>
+<li><p><strong>tip_xy</strong> (<em>list</em><em> or </em><em>tuple</em>) – 2-element list/tuple of x- and y-coordinates of the arrow tip</p></li>
+<li><p><strong>margin</strong> (<em>float</em>) – shorten the arrow on both sides by margin</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – width of the arrow tail (passed to plt.arrow())</p></li>
+<li><p><strong>head_length</strong> (<em>float</em>) – length of the arrow head (passed to plt.arrow())</p></li>
+<li><p><strong>head_width_factor</strong> (<em>float</em>) – arrow head width will be width * head_width_factor</p></li>
+<li><p><strong>color</strong> (<em>list</em><em> or </em><em>str</em>) – arrow color (passed to plt.arrow() as facecolor and edgecolor)</p></li>
+<li><p><strong>bidirectional</strong> (<em>bool</em>) – if true, arrow will have heads on both sides</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – label for the arrow which will be displayed in the legend</p></li>
+<li><p><strong>clip_on</strong> (<em>bool</em>) – if False, portions of the arrow outside of the axis will be visible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>midpoint_xy: x- and y-coordinates of the arow midpoint (can be used e.g. for text annotations)</p></li>
+<li><p>angle_deg: angle of the arrow in degrees</p></li>
+<li><p>arrow_handle: handle of the arrow object (a FancyArrow object)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>midpoint_xy: tuple</p></li>
+<li><p>angle_deg: numpy.ndarray</p></li>
+<li><p>arrow_handle: matplotlib.patches.FancyArrow</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.dot_plot">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">dot_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_paired</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_jitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#dot_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.dot_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dot plot of one or more groups (x-axis).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em>) – list of lists of values to be plotted. one sublist per group. first group is at x=0, second at x=1…</p></li>
+<li><p><strong>group_names</strong> (<em>list</em>) – list of group names (strings) that are used as x-tick labels. in order of sublists in values</p></li>
+<li><p><strong>x_label</strong> (<em>str</em>) – x-axis label</p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) – y-axis label</p></li>
+<li><p><strong>value_colors</strong> (<em>list</em><em> or </em><em>None</em>) – (list of) list(s) of color values, one color for each value. either one sublist per group, or
+one list that gets duplicated for each group. in that case it must be at least as long as the largest group</p></li>
+<li><p><strong>marker_size</strong> (<em>list</em><em> or </em><em>int</em>) – (list of) sizes of dots, one int per value OR one int that will be repeated for all points</p></li>
+<li><p><strong>b_paired</strong> (<em>bool</em>) – if True, values in sublists of values are considered paired, i.e. values[0][0] &lt;-&gt; values[1][0] …
+lines are drawn that connect paried values between groups</p></li>
+<li><p><strong>b_mean</strong> (<em>bool</em>) – if True, the group means are plotted as horizontal lines</p></li>
+<li><p><strong>b_jitter</strong> (<em>bool</em>) – if True, nearby dots are jittered along the x-axis to avoid overlap</p></li>
+<li><p><strong>jitter_thresh</strong> (<em>float</em>) – threshold distance between two consecutive (sorted) y-values, below which dots are to be
+jittered. If None, the threshold will be automatically calculated depending on the data.</p></li>
+<li><p><strong>jitter_offset</strong> (<em>float</em>) – amount by which each dot is offset on the x-axis</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the psths are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>ax: axis handles, one sublist per figure</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>ax: matplotlib.axes._subplots.AxesSubplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.format_fig">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">format_fig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_size_inches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_remove_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_remove_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_make_ticklabel_font_sansserif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#format_fig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.format_fig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format figures/axes after plotting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle_fig</strong> (<em>matplotlib.figure.Figure</em>) – (list of) handle(s) of figures to be formatted</p></li>
+<li><p><strong>handle_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – (list of) handle(s) of axes to be formatted</p></li>
+<li><p><strong>fig_size_inches</strong> (<em>tuple</em><em> or </em><em>list</em>) – tuple (x, y) determining the size of the figure</p></li>
+<li><p><strong>x_label</strong> (<em>str</em>) – new x-axis label</p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) – new y-axis label</p></li>
+<li><p><strong>b_remove_box</strong> (<em>bool</em><em> or </em><em>int</em>) – remove the top and right frame lines while keeping the axes intact</p></li>
+<li><p><strong>b_remove_legend</strong> (<em>bool</em><em> or </em><em>int</em>) – self explanatory</p></li>
+<li><p><strong>b_make_ticklabel_font_sansserif</strong> (<em>bool</em><em> or </em><em>int</em>) – make ticklabels font sans-serif (maybe necessary with latex text formatting)
+for technical reasons, ticklabels get removed if there is no axis label. to keep ticklabels in this case, set
+the axis label to a whitespce beforehand, e.g.: ax.set_xlabel(‘ ‘)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.get_color_list">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">get_color_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_map_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#get_color_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.get_color_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of 3-element lists containing RGB values (0-1) of n_colors length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_colors</strong> (<em>int</em>) – number of list entries (colors) needed</p></li>
+<li><p><strong>color_map_in</strong> (<em>[</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] color map (list of 3-element lists) that should be repeated to get n_colors</p></li>
+<li><p><strong>i_colors</strong> (<em>list</em><em> or </em><em>None</em>) – [default=None] list of indices to colors of the colormap (i.e. order of colors) of length n_colors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>color_map_out: list of 3-element lists containing RGB values (0-1) of (at least) n_colors length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[float, float, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.histogram_plot">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">histogram_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#histogram_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.histogram_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a histogram of one or more groups of values (data).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em>) – list of list(s) of values, one sublist per group</p></li>
+<li><p><strong>group_names</strong> (<em>list</em>) – list of strings of group names</p></li>
+<li><p><strong>group_colors</strong> (<em>list</em>) – list of strings of group names</p></li>
+<li><p><strong>x_label</strong> (<em>str</em>) – x-axis label</p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) – y-axis label</p></li>
+<li><p><strong>binsize</strong> (<em>int</em><em> or </em><em>float</em>) – size of the histogram bins in the unit of the data</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the psths are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>ax: axis handles, one sublist per figure</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>ax: matplotlib.axes._subplots.AxesSubplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.jitter_dots">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">jitter_dots</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter_thresh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#jitter_dots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.jitter_dots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Jitter nearby dots (e.g. for a dot plot) along the x-axis to avoid overlap</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_values</strong> (<em>list</em>) – list of values that determine closeness (e.g. y-axis values)</p></li>
+<li><p><strong>x_value</strong> (<em>int</em><em> or </em><em>float</em>) – original x-axis value, around which dots will be jittered</p></li>
+<li><p><strong>jitter_thresh</strong> (<em>float</em>) – threshold distance between two consecutive (sorted) y-values, below which dots are to be
+jittered.</p></li>
+<li><p><strong>jitter_offset</strong> (<em>float</em>) – amount by which each dot is offset on the x-axis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>x_values: list of one x-value for each y-value. either the original value, or one slightly offset</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>x_values: list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_burst_onsets">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_burst_onsets</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_burst_onsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_burst_onsets" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spiketimes_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of lists of spike times of the neurons (sublist: neuron, subsublist: trial)</p></li>
+<li><p><strong>offset_ms</strong> (<em>list</em>) – [default=0] list of recording offsets, one per neuron</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_circuit_diagram">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_circuit_diagram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_syn_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_circuit_diagram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_circuit_diagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a circuit diagram with each neuron population (in info_dict) represented by a circle and each synaptic
+connection represented as lines between them with triangles for postive synaptic weights (excitatory) and circles
+for negative (inhibitory)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – pyplot axis handle in which the circuit diagram should be plotted</p></li>
+<li><p><strong>info_dict</strong> (<em>dict</em>) – dictionary as created by the simulation (e.g. lif.py). Do not pass the list that is saved by
+the simulation, but only a single element (i.e. dict).</p></li>
+<li><p><strong>b_weight</strong> (<em>bool</em>) – [default=True] plot synaptic weight values next to connecting lines</p></li>
+<li><p><strong>b_delay</strong> (<em>bool</em>) – [default=True] plot synaptic delay values next to connecting lines</p></li>
+<li><p><strong>b_probability</strong> (<em>bool</em>) – [default=True] plot synaptic connection probability values next to connecting lines</p></li>
+<li><p><strong>b_syn_idx</strong> (<em>bool</em>) – [default=False] plot synapse index next to connecting lines</p></li>
+<li><p><strong>line_colors</strong> (<em>tuple</em>) – [default=(1,1,…)] tuple of length==n_synapses, consisting of an index to C_COLORS_GREY
+(defined in this file) for each synpase, setting the color for the respective connection line. 1 == black</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_colormap_values">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_colormap_values</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmap</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_colormap_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_colormap_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot RGB values of a colormap across the full range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cmap</strong> – colormap as returned by plt.cm.get_cmap()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_connection_matrix">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_connection_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_connection_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_connection_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix plots of the synaptic connections between the neurons of two populations (one figure per population pair)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connectivity</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries containing synaptic connectivity information
+(one dict per connection between populations)</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (only first dict used)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>fig: list of figure handles</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[matplotlib.figure.Figure]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_connection_matrix_generator">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_connection_matrix_generator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connectivity_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_connection_matrix_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_connection_matrix_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix plots of the synaptic connections between the neurons of two populations (one figure per population pair)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connectivity_generator</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries containing spikegenerator connectivity information
+(one dict per connection between spikegenerator and population)</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (only first dict used)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>fig: list of figure handles</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[matplotlib.figure.Figure]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_fi_curve">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_fi_curve</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_fi_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_fi_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot frequency response curve for varying input current (F-I curve). Needs results of a simulation with range
+of amplitudes for input step current, i.e. multiple simulation runs with varying input amplitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary as loaded from .json configuration file</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axis: axis handle</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axis: matplotlib.axes._subplots.AxesSubplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_input_current">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_input_current</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_input_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_input_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot input current as generated by p_input_setup currents from a .json config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary as loaded from .json configuration file</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>marker_linestyle</strong> (<em>str</em>) – linestyle for event marker (default: ‘–’ = dashed line)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_isi_histogram">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_isi_histogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_ms_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_subplots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_handle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_isi_histogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_isi_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the inter-spike interval (ISI) histograms of one or more neurons/traces in a single figure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spiketimes_ms_in</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – list of list(s) of spiketimes (in milliseconds). One sublist per trace. If None,
+spiketimes will be calculated</p></li>
+<li><p><strong>b_subplots</strong> (<em>bool</em>) – [default=False] if multiple traces were passed, plot the histograms in separate subplots,
+rather than one overall histogram of all ISIs</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – figure title to be plotted above histogram</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – alpha-level of the histogram bars. set to e.g. 0.5 if plotting multiple histograms in same axis</p></li>
+<li><p><strong>axis_handle</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – [default=None] handle of axis to plot in. if None, create a new figure.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – [default=’’] label for histogram (useful if plotting multiple histograms into same axis).
+note: legend has to be added to axis after function call!</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker for a event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle (if one was created in this function)</p></li>
+<li><p>axes: list of axis handles</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure or None</p></li>
+<li><p>axes: [matplotlib.axes._subplots.AxesSubplot]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_psp_psc">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_psp_psc</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_share_y_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_maxmin_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_derivative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_psp_psc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_psp_psc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot voltage traces (post-synaptic potential) and synaptic currents (post-synaptic current) for all neurons.
+Works for simulations in which each neuron recieves a single spike at t=0 from a separate spikegenerator.
+on_pre equations must be excitatory first, inhibitory second (see usage of on_pre_idx_gen below).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary as loaded from .json configuration file</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>b_share_y_axis</strong> (<em>bool</em>) – [default=True] if true, all voltage trace subplots share the same y-axis limits</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>b_maxmin_marker</strong> (<em>bool</em>) – [default=False] mark maximum and minimum of each trace (if above/below initial voltage)</p></li>
+<li><p><strong>b_derivative</strong> (<em>bool</em>) – plot derivative of each trace, rescaled and shifted to trace plot</p></li>
+<li><p><strong>i_colors</strong> (<em>list</em><em> or </em><em>None</em>) – [default=None] list of indices to colors of the colormap (i.e. order of colors) of length n_colors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle(s)</p></li>
+<li><p>axes: axis handles, one sublist per figure</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: [matplotlib.figure.Figure]</p></li>
+<li><p>axes: [[matplotlib.axes._subplots.AxesSubplot]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_psths">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_psths</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_plot_average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_baseline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_peak_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_normalize_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_psths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_psths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot multiple peri-stimulus time histograms (psth) into a single figure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_values</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – (list of) list(s) of time values of psth bins (left value), as returned by p_analysis.get_psth()</p></li>
+<li><p><strong>psths</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] (list of) psth(s) as returned by p_analysis.get_psth(). pass either psths,
+psths_smooth or both</p></li>
+<li><p><strong>psths_smooth</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] list of smoothed psth as returned by p_analysis.get_psth()</p></li>
+<li><p><strong>labels</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>None</em>) – [default=None] (list of) string(s) of labels for the different psths (e.g. neurons). Set entries
+to None to exclude them from the legend (e.g.: [‘bla’, None, ‘bla’])</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>marker_linestyle</strong> (<em>str</em>) – linestyle for event marker (default: ‘–’ = dashed line)</p></li>
+<li><p><strong>colors</strong> (<em>list</em><em> or </em><em>None</em>) – list of color values, one color for each psth</p></li>
+<li><p><strong>linewidth</strong> (<em>list</em><em> or </em><em>None</em>) – (list of) linewidth values, one color for each psth</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>b_plot_average</strong> (<em>bool</em>) – [default=False] plot the average of all psths</p></li>
+<li><p><strong>t_baseline</strong> (<em>list</em><em> or </em><em>tuple</em><em> or </em><em>None</em>) – time interval [beginning, end] during which to calculate average baseline activity.</p></li>
+<li><p><strong>t_peak_range</strong> (<em>list</em><em> or </em><em>tuple</em><em> or </em><em>None</em>) – time interval [beginning, end] in which to detect peak activity.</p></li>
+<li><p><strong>b_normalize_rate</strong> (<em>bool</em>) – if True, psths will be normalized so that baseline activity is 1.</p></li>
+<li><p><strong>b_markers</strong> (<em>bool</em>) – if True, additional markers will be plotted (baseline, peak, …)</p></li>
+<li><p><strong>b_legend</strong> (<em>bool</em>) – if True, add legend</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the psths are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axis: axis handle</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axis: matplotlib.axes._subplots.AxesSubplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_sensitivity_traces">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_sensitivity_traces</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_lo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditions_met</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_cond</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_baseline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_spikes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">9)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_sensitivity_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_sensitivity_traces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate 2d matrix of subplots of traces in parameter space of two varied parameters, that visualizes where
+certain conditions are met. Run p_analysis.check_conditions() first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>list</em>) – list of dict(s) containing StateMonitor data from b2…get_states()</p></li>
+<li><p><strong>spikemons</strong> (<em>list</em>) – list of dict(s) containing SpikeMonitor data from b2…get_states()</p></li>
+<li><p><strong>infos</strong> (<em>list</em>) – list of dict(s) containing additional information about simulation (as created by run_simulation())</p></li>
+<li><p><strong>config_lo</strong> (<em>dict</em>) – config dict as loaded from .json file (output directory), contains lower limits of all params</p></li>
+<li><p><strong>conditions_met</strong> (<em>numpy.ndarray</em>) – numpy array of dimension c*x*y as returned by p_analysis.check_conditions()</p></li>
+<li><p><strong>x_values</strong> (<em>list</em>) – values of the first varied parameter (usually last parameter in cfg list), used for x-tick-labels</p></li>
+<li><p><strong>y_values</strong> (<em>list</em>) – values of the second varied parameter (usually first parameter in cfg list), used for y-tick-labels</p></li>
+<li><p><strong>baseline_cond</strong> (<em>tuple</em><em> or </em><em>list</em>) – condition for baseline membrane potential. tuple of lower and upper limit for condition to
+be considered met.</p></li>
+<li><p><strong>t_baseline</strong> (<em>tuple</em><em> or </em><em>list</em>) – time window in which the baseline membrane potential condition was checked (start, end)</p></li>
+<li><p><strong>t_spikes</strong> (<em>tuple</em><em> or </em><em>list</em>) – time window in which the number of spikes condition was checked (start, end)</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em>) – x-axis label</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – y-axis label</p></li>
+<li><p><strong>xlims</strong> (<em>tuple</em><em> or </em><em>list</em>) – x-axis limits (lower, upper)</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em> or </em><em>list</em>) – size of figure in inches (width, height)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axes: list of axis handles</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axes: [matplotlib.axes._subplots.AxesSubplot]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_spikes_mod">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_spikes_mod</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_spikes_mod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_spikes_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot spiketimes of all model neurons with one subplot per population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>dot_size</strong> (<em>int</em><em> or </em><em>float</em>) – [default=2] size for spike markers in dot raster plot</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>b_circuit_weight</strong> (<em>bool</em>) – [default=True] plot synaptic weight values next to connecting lines in circuit diagram</p></li>
+<li><p><strong>b_circuit_delay</strong> (<em>bool</em>) – [default=True] plot synaptic delay values next to connecting lines</p></li>
+<li><p><strong>b_circuit_probability</strong> (<em>bool</em>) – [default=True] plot synaptic connection probability values next to connecting lines</p></li>
+<li><p><strong>b_circuit_idx</strong> (<em>bool</em>) – [default=True] plot synapse index next to connecting lines</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle(s)</p></li>
+<li><p>axes: axis handles, one sublist per figure</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: [matplotlib.figure.Figure]</p></li>
+<li><p>axes: [[matplotlib.axes._subplots.AxesSubplot]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_spikes_psth">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_spikes_psth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recording_offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psth_dt_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_smoothed_psth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_spikes_psth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_spikes_psth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot all spiketimes of one or more neurons/trials of one neuron into one subplot, with the
+peri-stimulus time histogram in a separate subplot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spiketimes_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times of the neurons (one sublist per neuron or trial)</p></li>
+<li><p><strong>duration_ms</strong> (<em>int</em><em> or </em><em>float</em>) – total duration of recording / simulation and therefore of psth</p></li>
+<li><p><strong>dot_size</strong> (<em>int</em><em> or </em><em>float</em>) – [default=2] size for spike markers in dot raster plot</p></li>
+<li><p><strong>recording_offset_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=0] plots of recording data will start at this timepoint into the recording [ms]</p></li>
+<li><p><strong>psth_dt_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=5] time bin [ms] for the peri-stimulus-time histogram (psth)</p></li>
+<li><p><strong>plot_duration</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] if not None, this determins the right hand x-axis limit for the plots</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>b_smoothed_psth</strong> (<em>bool</em>) – [default=True] also plot smoothed psth as dotted line</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axes: list of axis handles</p></li>
+<li><p>t_values: list of time values of psth bins (left edges) in milliseconds as returned by p_analysis.get_psth()</p></li>
+<li><p>psth: list of estimated spike rates per time bin as returned by p_analysis.get_psth()</p></li>
+<li><p>psth_smooth: same as psth, but smoothed using Savitzky-Golay filter (None if b_smoothed_psth==False)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axes: [matplotlib.axes._subplots.AxesSubplot]</p></li>
+<li><p>t_values: [float]</p></li>
+<li><p>psth: [float]</p></li>
+<li><p>psth_smooth: [float] or None</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_spikes_psth_comparison">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_spikes_psth_comparison</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_mod_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_pop_oi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_rec_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_values_mod</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_values_rec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths_rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths_mod_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths_rec_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recording_offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_spikes_psth_comparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_spikes_psth_comparison" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot spiketimes of all trials of a recorded neuron (spiketimes_rec_ms) into one subplot and spiketimes of all
+model neurons from one population (idx_pop_oi) into a second subplot. Plot peri-stimulus time histograms for both
+in a separate subplot. One figure per spikemon (i.e. model run)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spiketimes_mod_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times of the model neurons (one sublist per neuron or trial)</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>idx_pop_oi</strong> (<em>int</em>) – index of the model neuron population whose neurons are to be plotted</p></li>
+<li><p><strong>spiketimes_rec_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times of the recorded neurons (one sublist per neuron or trial)</p></li>
+<li><p><strong>t_values_mod</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – (list of) list(s) of time values of psth bins (left edges) in milliseconds for model neurons</p></li>
+<li><p><strong>t_values_rec</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – (list of) list(s) of time values of psth bins (left edges) in milliseconds for recorded neurons</p></li>
+<li><p><strong>psths_mod</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] (list of) psth(s) for model neurons, as returned by p_analysis.get_psth(). pass
+either psths_mod, psths_mod_smoothed or both.</p></li>
+<li><p><strong>psths_rec</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] (list of) psth(s) for recorded neurons, as returned by p_analysis.get_psth(). pass
+either psths_rec, psths_rec_smoothed or both.</p></li>
+<li><p><strong>psths_mod_smooth</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] smoothed psth(s) for model neurons as returned by p_analysis.get_psth()</p></li>
+<li><p><strong>psths_rec_smooth</strong> (<em>[</em><em>float</em><em>] or </em><em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] smoothed psth(s) for recorded neurons as returned by p_analysis.get_psth()</p></li>
+<li><p><strong>dot_size</strong> (<em>int</em><em> or </em><em>float</em>) – [default=2] size for spike markers in dot raster plot</p></li>
+<li><p><strong>recording_offset_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=0] plots of recording data will start at this timepoint into the recording [ms]</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle(s)</p></li>
+<li><p>axes: list of list of axis handles</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: [matplotlib.figure.Figure]</p></li>
+<li><p>axes: [[matplotlib.axes._subplots.AxesSubplot]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_t_first_spike_1d">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_t_first_spike_1d</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron_idx_abs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_index_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_mons_colored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_t_first_spike_1d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_t_first_spike_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the timepoint in the simulation when a neuron fires its first spike in dependence on the
+free parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary as loaded from .json configuration file</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>neuron_idx_abs</strong> (<em>int</em>) – absoluteindex of the neuron whose spike time is to be plotted</p></li>
+<li><p><strong>param_index_y</strong> (<em>int</em>) – index to the values (synapse or population) of the free parameter - for y-axis in the plot</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint of an event in milliseconds. Marker will be drawn at 0 and
+all spiketimes will be negatively offset by this value.</p></li>
+<li><p><strong>dot_size</strong> (<em>int</em><em> or </em><em>float</em>) – size for points in plot</p></li>
+<li><p><strong>idx_mons_colored</strong> – list of indices to monitors (runs) for which dots should be emphasized by color</p></li>
+<li><p><strong>colors</strong> – list of color values for the emphasized monitors, same length as idx_mons_colored</p></li>
+<li><p><strong>param_unit</strong> (<em>brian2.units.fundamentalunits.Unit</em><em> or </em><em>None</em>) – brian2 unit (e.g. brian2.pA) in which to display the free parameter (y-axis). if None, use the
+unit as stated in config[‘parameter_units’].</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the psths are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>list or None</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list or None</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axis: axis handle</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axis: matplotlib.axes._subplots.AxesSubplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_t_first_spike_1d_jamming">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_t_first_spike_1d_jamming</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron_idx_abs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_index_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_playback_onset_to_t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_mons_colored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_t_first_spike_1d_jamming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_t_first_spike_1d_jamming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the timepoint in the simulation when a neuron fires its first spike in dependence on the
+free parameter. Compared to plot_t_first_spike_1d(), x- and y-axis are switched and x-axis is reversed. If,
+for example the free parameter is a timing parameter (e.g. input current t_start), this switches the relation, i.e.
+shows the delay of the neuron of interest spike from the point of view of its own spike relative to t_start (x-axis)
+instead of from the point of view of t_start in relation to its own spike.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary as loaded from .json configuration file</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>neuron_idx_abs</strong> (<em>int</em>) – absolute index of the neuron whose spike time is to be plotted</p></li>
+<li><p><strong>param_index_y</strong> (<em>int</em>) – index to the values (synapse or population) of the free parameter - for y-axis in the plot</p></li>
+<li><p><strong>idx_t_start</strong> (<em>int</em>) – index to the value of t_start that is changing as a free parameter (e.g. start of ramp)</p></li>
+<li><p><strong>lat_playback_onset_to_t_start</strong> (<em>int</em>) – time in ms between supposed playback onset and t_start value at idx_t_start.
+adjusts x-axis values</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>dot_size</strong> (<em>int</em><em> or </em><em>float</em>) – size for points in plot</p></li>
+<li><p><strong>marker_linestyle</strong> (<em>str</em>) – linestyle for event marker (default: ‘–’ = dashed line)</p></li>
+<li><p><strong>idx_mons_colored</strong> – list of indices to monitors (runs) for which dots should be emphasized by color</p></li>
+<li><p><strong>colors</strong> – list of color values for the emphasized monitors, same length as idx_mons_colored</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the psths are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>list or None</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list or None</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axis: axis handle</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axis: matplotlib.axes._subplots.AxesSubplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_traces_mod">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_traces_mod</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_spike_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_average_aggregate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_traces_mod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_traces_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot voltage traces of ALL model neurons of one run into one figure, one subplot per neuron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>b_spike_threshold</strong> (<em>bool</em>) – [default=True] if true plots the spike threshold (value from info) as gray dotted line</p></li>
+<li><p><strong>b_average_aggregate</strong> (<em>bool</em>) – if true, treat statemons as aggregate of parex and plot all traces in single figure</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>marker_linestyle</strong> (<em>str</em>) – linestyle for event marker (default: ‘–’ = dashed line)</p></li>
+<li><p><strong>t_offset_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=0] time value in milliseconds to offset the plot by (e.g. to align to an event)</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>trace_color</strong> (<em>list</em><em> or </em><em>None</em>) – single color value to use for all traces</p></li>
+<li><p><strong>average_color</strong> (<em>list</em><em> or </em><em>None</em>) – single color value to use for trace average</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the traces are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle(s)</p></li>
+<li><p>axes: axis handles, one sublist per figure</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: [matplotlib.figure.Figure]</p></li>
+<li><p>axes: [[matplotlib.axes._subplots.AxesSubplot]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_traces_per_run">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_traces_per_run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_spike_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">virtual_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_maxmin_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_max_min_from_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_clipon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidth_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_traces_per_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_traces_per_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot voltage trace of membrane potential for multiple runs with a varying (free) parameter in one figure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary as loaded from .json configuration file</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>neuron_idx</strong> (<em>int</em><em> or </em><em>list</em>) – [default=0] index of the neuron(s) for which the data should be plotted. Can be single integer
+or list of integers with length==number of populations. If a single value is passed and the data contain several
+populations (as per info), then the single value will be used for all populations (e.g. 0 means the first neuron
+of each population will be plotted).</p></li>
+<li><p><strong>population_idx</strong> (<em>int</em><em> or </em><em>list</em><em> or </em><em>None</em>) – [default=None] index or list of indices of the population(s) for which traces are plotted.
+If None, plot the nth nrn of all pops.</p></li>
+<li><p><strong>b_spike_threshold</strong> (<em>bool</em>) – [default=True] if true plots the spike threshold (value from info) as gray dotted line</p></li>
+<li><p><strong>virtual_threshold</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>None</em>) – [default=None] if not None, plot spike threshold here [mV] instead of the actual value</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>t_offset_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=0] time value in milliseconds to offset the plot by (e.g. to align to an event)</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>b_maxmin_marker</strong> (<em>bool</em>) – [default=False] mark maximum and minimum of each trace (if above/below initial voltage)</p></li>
+<li><p><strong>find_max_min_from_ms</strong> (<em>int</em>) – [default=0] look for maximum/minimum in trace after this time in milliseconds.
+only used if b_maxmin_marker is True. Should equal onset of presynaptic spike, as it’s used in rise time calc</p></li>
+<li><p><strong>b_legend</strong> (<em>bool</em>) – [default=True] add legend to plot</p></li>
+<li><p><strong>b_clipon</strong> (<em>bool</em>) – [default=True] if False, allows to plot beyond axis limits</p></li>
+<li><p><strong>linewidth_traces</strong> (<em>float</em><em> or </em><em>int</em>) – [default=1.5] linewidth for voltage traces</p></li>
+<li><p><strong>colormap</strong> (<em>str</em>) – [default=’viridis’ (defined by CMAP_NAME_CONTINUOUS)] name of matplotlib color map to use for trcs</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the psths are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axes: list of axis handles</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axes: [matplotlib.axes._subplots.AxesSubplot]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_traces_rec">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_traces_rec</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_ms_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_frequency_khz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_detect_spikes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_detect_onsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_subplots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_plot_raw_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_plot_smoothed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_plot_derivative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_plot_average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_n_in_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_offset_by_average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_average_mean_2std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_std_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_baseline_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_color_smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xkcd:orangered'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_offset_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_traces_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_traces_rec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot one or more recorded voltage traces in a single figure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traces</strong> (<em>np.ndarray</em><em> or </em><em>list</em>) – (list of) numpy ndarray(s) of voltage traces</p></li>
+<li><p><strong>spiketimes_ms_in</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>] or </em><em>None</em>) – [default=None] optional list of spiketimes (see return). If None and b_detect_spikes=True,
+spiketimes will be calculated</p></li>
+<li><p><strong>sampling_frequency_khz</strong> (<em>int</em><em> or </em><em>float</em>) – [default=40] sampling frequency of traces in kHz</p></li>
+<li><p><strong>b_detect_spikes</strong> (<em>bool</em>) – [default=False] detect spikes and mark spike peaks in plot</p></li>
+<li><p><strong>b_detect_onsets</strong> (<em>bool</em>) – [default=False] detect and mark spike onsets</p></li>
+<li><p><strong>b_subplots</strong> (<em>bool</em>) – [default=False] if multiple traces were passed, plot them in separate subplots, not overlaid</p></li>
+<li><p><strong>b_plot_raw_traces</strong> (<em>bool</em>) – [default=True] plot individual raw traces (turn of if e.g. only plotting average)</p></li>
+<li><p><strong>b_plot_smoothed</strong> (<em>bool</em>) – [default=False] plot the smoothed traces (required to plot derivative)</p></li>
+<li><p><strong>b_plot_derivative</strong> (<em>bool</em>) – [default=False] plot the derivative of each trace (depends on b_plot_smoothed)</p></li>
+<li><p><strong>b_plot_average</strong> (<em>bool</em>) – [default=False] plot average of traces (if b_subplots is false)</p></li>
+<li><p><strong>b_n_in_legend</strong> (<em>bool</em>) – [default=True] if False, don’t plot number of traces in legend</p></li>
+<li><p><strong>b_offset_by_average</strong> (<em>bool</em>) – [default=False] offset each individual trace by its average (e.g. to correct for drift)</p></li>
+<li><p><strong>b_average_mean_2std</strong> (<em>bool</em>) – [default=False] plot horizontal lines for mean and 2 * standard deviation of average
+within t_baseline</p></li>
+<li><p><strong>b_std_interval</strong> (<em>bool</em>) – [default=False] plot interval +/- 1 standard deviation around average</p></li>
+<li><p><strong>t_baseline_ms</strong> (<em>list</em><em> or </em><em>None</em>) – [default=None] two-element list of start and end in milliseconds of baseline for mean &amp; std</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>marker_linestyle</strong> (<em>str</em>) – linestyle for event marker (default: ‘–’ = dashed line)</p></li>
+<li><p><strong>trace_color_smooth</strong> (<em>list</em><em> or </em><em>str</em><em> or </em><em>None</em>) – single color value to use for all smoothed traces</p></li>
+<li><p><strong>average_color</strong> (<em>list</em><em> or </em><em>str</em><em> or </em><em>None</em>) – single color value to use for trace average</p></li>
+<li><p><strong>t_offset_ms</strong> (<em>int</em><em> or </em><em>float</em>) – [default=0] time value in milliseconds to offset the plot by (e.g. to align to an event)</p></li>
+<li><p><strong>h_ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – handle to the axis in which the traces are to be plotted. if None (default) create new figure. if a
+handle is passed, this function does not have return values. Only works if b_subplots==False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle</p></li>
+<li><p>axes: list of axis handles</p></li>
+<li><p>spiketimes_ms_calculated: list of list(s) of spike times (in milliseconds). One sublist per trace.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: matplotlib.figure.Figure</p></li>
+<li><p>axes: [matplotlib.axes._subplots.AxesSubplot]</p></li>
+<li><p>spiketimes_ms_calculated: [[float]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_plot.plot_traces_spikes_mod">
+<code class="sig-prename descclassname"><span class="pre">p_plot.</span></code><code class="sig-name descname"><span class="pre">plot_traces_spikes_mod</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artificial_spike_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_spike_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_share_y_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_event_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_const_span_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_black_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_circuit_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_maxmin_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_derivative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_plot.html#plot_traces_spikes_mod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_plot.plot_traces_spikes_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot voltage trace of membrane potential for one model neuron per population in one subplot each, as well as
+one subplot containing spike times from all neurons. An additional subplot contains a network diagram. One figure
+is created for each brian2 StateMonitor object in argument statemons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 StateMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>spikemons</strong> (<em>SimpleNamespace</em><em> or </em><em>dict</em><em> or </em><em>list</em>) – (list of) brian2 SpikeMonitor - like(!) SimpleNamespaces from file or dicts from b2…get_states()</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dicts containing additional information about simulation (one dict per run)</p></li>
+<li><p><strong>neuron_idx</strong> (<em>int</em><em> or </em><em>list</em>) – [default=0] index of the neuron(s) for which the data should be plotted. Can be single integer
+or list of integers with length==number of populations. If a single value is passed and the data contain several
+populations (as per info), then the single value will be used for all populations (e.g. 0 means the first neuron
+of each population will be plotted).</p></li>
+<li><p><strong>artificial_spike_height</strong> (<em>int</em><em> or </em><em>float</em>) – [default=0] height in mV of vertical lines representing spikes. 0 means no lines.</p></li>
+<li><p><strong>b_spike_threshold</strong> (<em>bool</em>) – [default=True] if true plots the spike threshold (value from info) as gray dotted line</p></li>
+<li><p><strong>b_share_y_axis</strong> (<em>bool</em>) – [default=True] if true, all voltage trace subplots share the same y-axis limits</p></li>
+<li><p><strong>t_const_event_marker</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=None] timepoint at which to plot a vertical line as marker</p></li>
+<li><p><strong>t_const_span_marker</strong> (<em>[</em><em>int</em><em>, </em><em>int</em><em>] or </em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em>) – [default=None] timespan (list of x_min and x_max) at which to plot a shaded rectangle</p></li>
+<li><p><strong>b_black_background</strong> (<em>bool</em>) – [default=False] plot on black background</p></li>
+<li><p><strong>b_circuit_weight</strong> (<em>bool</em>) – [default=True] plot synaptic weight values next to connecting lines in circuit diagram</p></li>
+<li><p><strong>b_circuit_delay</strong> (<em>bool</em>) – [default=True] plot synaptic delay values next to connecting lines</p></li>
+<li><p><strong>b_circuit_probability</strong> (<em>bool</em>) – [default=True] plot synaptic connection probability values next to connecting lines</p></li>
+<li><p><strong>b_circuit_idx</strong> (<em>bool</em>) – [default=False] plot synapse index next to connecting lines</p></li>
+<li><p><strong>b_maxmin_marker</strong> (<em>bool</em>) – [default=False] mark maximum and minimum of each trace (if above/below initial voltage)</p></li>
+<li><p><strong>b_derivative</strong> (<em>bool</em>) – plot derivative of each trace, rescaled and shifted to trace plot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>fig: figure handle(s)</p></li>
+<li><p>axes: axis handles, one sublist per figure</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fig: [matplotlib.figure.Figure]</p></li>
+<li><p>axes: [[matplotlib.axes._subplots.AxesSubplot]]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="p_util.html" class="btn btn-neutral float-right" title="p_util module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="p_macro.html" class="btn btn-neutral float-left" title="p_macro module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

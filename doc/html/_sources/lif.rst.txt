@@ -1,0 +1,7 @@
+lif module
+==========
+
+.. automodule:: lif
+   :members:
+   :undoc-members:
+   :show-inheritance:

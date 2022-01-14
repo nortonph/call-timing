@@ -1,0 +1,7 @@
+p\_plot module
+==============
+
+.. automodule:: p_plot
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>fig_ms module &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="lif module" href="lif.html" />
+    <link rel="prev" title="run_all module" href="run_all.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_all.html">run_all module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">fig_ms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lif.html">lif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_analysis.html">p_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_input.html">p_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_io.html">p_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_macro.html">p_macro module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_plot.html">p_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_util.html">p_util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>fig_ms module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/fig_ms.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-fig_ms">
+<span id="fig-ms-module"></span><h1>fig_ms module<a class="headerlink" href="#module-fig_ms" title="Permalink to this headline">¶</a></h1>
+<p>Functions that generate the figures for the manuscript. Main function: generate_figures(). [call-time-model]</p>
+<dl class="py function">
+<dt id="fig_ms.circuit_diagram">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">circuit_diagram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h_ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">letters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">letter_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_rectangle_xywh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidth_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#circuit_diagram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.circuit_diagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a circuit diagram in axis h_ax, consisting of populations represented as colored circles, whose positions
+and colors are given by x, y and colors (index to those is population id). Connections between populations
+are drawn according to connectivity: one tuple of pre and post population id per connection. Arrowheads for each
+(triangle/circle) are given by connection_type (-1/1 corresponds to excitatory/inhibitory).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h_ax</strong> – axis handle</p></li>
+<li><p><strong>x</strong> – list of x-axis positions for the populations. one value per population.</p></li>
+<li><p><strong>y</strong> – list of y-axis positions for the populations. one value per population.</p></li>
+<li><p><strong>colors</strong> – list of color values for the population circles . one value (e.g. RGB tuple) per population.
+where the value is None, the corresponding array in currents will be plotted instead of a population circle.</p></li>
+<li><p><strong>connectivity</strong> – list of 2-element tuples givin id of pre- and post-population (corresponding to x/y indices)</p></li>
+<li><p><strong>connection_type</strong> – list of negative (inhibitory) or positive (excitatory) floats with same length as
+connectivity (n connections). Absolute size of the floats or ints determins line width of the connecting lines.</p></li>
+<li><p><strong>connection_colors</strong> – list of color values for the connecting lines with same length as connectivity.</p></li>
+<li><p><strong>letters</strong> – optional list of strings (letters/symbols) or Nones, one per population, to be printed in the circle</p></li>
+<li><p><strong>letter_size</strong> – font size of the letters</p></li>
+<li><p><strong>currents</strong> – optional list of arrays of input currents. list length should be number of populations. should be
+None except where a missing colors value (i.e. None) indicates that a current should be plotted instead of a pop
+circle. minimum should be 0 for proper scaling.</p></li>
+<li><p><strong>x_lim</strong> – x-axis limits. if None (default), adjust automatically</p></li>
+<li><p><strong>y_lim</strong> – y-axis limits. if None (default), adjust automatically</p></li>
+<li><p><strong>region_rectangle_xywh</strong> – list of x, y, width, height values for a gray rectangle indicating a brain region.
+x and y are the positions of the bottom left population (circle) in the region. width/height is the number of
+populations in x/y direction included in the region, minus one (i.e. single population at 1, 1: [1, 1, 0, 0])</p></li>
+<li><p><strong>region_label</strong> – string label for region, to be plotted below rectangle</p></li>
+<li><p><strong>linestyle</strong> – list of strings of linestyles for the connecting lines (e.g. ‘–’, ‘:’). default: ‘-‘</p></li>
+<li><p><strong>linewidth_circle</strong> – float linewidth used for all circles (neurons/populations). Default = 2. Current: - 0.5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.fig_s_current">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">fig_s_current</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states_curr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_curr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_curr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#fig_s_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.fig_s_current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.fig_s_depolarized">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">fig_s_depolarized</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traces_playback_aligned</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#fig_s_depolarized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.fig_s_depolarized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.fig_s_prespike_ramp">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">fig_s_prespike_ramp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states_ag0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_ag0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_ag0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_ag1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_ag1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_ag1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_ag2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_ag2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_ag2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_ag1_lowin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_ag1_lowin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_ag1_lowin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_ag2_lowin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_ag2_lowin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_ag2_lowin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_gabazine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_gabazine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#fig_s_prespike_ramp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.fig_s_prespike_ramp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.fig_s_psp">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">fig_s_psp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states_psp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_psp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_psp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#fig_s_psp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.fig_s_psp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.fig_s_sensitivity">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">fig_s_sensitivity</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name_sens_lo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id_sens</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_marked_sim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_mark_weight_sims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#fig_s_sensitivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.fig_s_sensitivity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.figure1">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">figure1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_hy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_hy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_ag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_ag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_ag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_rec_example</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_rec_int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_rec_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_rec_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_zf_calling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_bubble</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#figure1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.figure1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.figure2">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">figure2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_m0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_m0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_m0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_m0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_m2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_m2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_m2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_m2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_m0_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_m0_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_m0_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_m1_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_m1_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_m1_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_m2_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_m2_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_m2_nospike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_rec_example</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_gabazine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_gabazine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#figure2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.figure2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.figure3">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">figure3</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_nexus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psths_nexus_matlab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nexus_responsive</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nexus_putativeint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nexus_putativeint_responsive</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nexus_responses</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#figure3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.figure3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.figure4">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">figure4</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spikes_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_agg_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_agg_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_nexus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_playback_aligned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces_nif</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_nif</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppr_win</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_zf_listening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_bubble</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_speaker</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#figure4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.figure4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.figure5">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">figure5</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_jam_ft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_jam_ft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_jam_ft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_jam_ft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_spiking</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiketimes_gabazine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_onset_times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppr_win</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#figure5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.figure5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.generate_figures">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">generate_figures</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_save_figures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#generate_figures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.generate_figures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function that loads data, calls the functions that plot the individual figures, and saves those.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>b_save_figures</strong> (<em>bool</em>) – If False, figures will not be saved.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.get_suppression_window">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">get_suppression_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_jam_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_jam_ft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_jam_ft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_jam_ft</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#get_suppression_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.get_suppression_window" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.load_model_data">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">load_model_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#load_model_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.load_model_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get simulation results from .pkl file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – model name (filename of output pickle file without “.pkl” ending)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>output variables (monitors, connectivity, config, info) as returned by p_io.load_monitors()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="fig_ms.load_recording_data">
+<code class="sig-prename descclassname"><span class="pre">fig_ms.</span></code><code class="sig-name descname"><span class="pre">load_recording_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_traces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_spiketimes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fig_ms.html#load_recording_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fig_ms.load_recording_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get voltage traces from all .mat files in path_to_traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_traces</strong> (<em>str</em><em> or </em><em>None</em>) – path to directory containing .mat files of recorded traces</p></li>
+<li><p><strong>path_to_spiketimes</strong> (<em>str</em><em> or </em><em>None</em>) – path to directory containing .pkl files with spiketimes of recorded traces</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>traces_rec: list of lists of recorded traces, one sub-list per neuron, one sub-sub-list per trial</p></li>
+<li><p>trace_filenames: list of filenames of the read out .mat files</p></li>
+<li><p>spiketimes_rec: list of lists of spiketimes, one sub-list per neuron, one sub-sub-list per trial</p></li>
+<li><p>spiketimes_filenames: list of filenames of the read out .pkl files</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>traces_rec: list</p></li>
+<li><p>trace_filenames: list</p></li>
+<li><p>spiketimes_rec: list</p></li>
+<li><p>spiketimes_filenames: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="lif.html" class="btn btn-neutral float-right" title="lif module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="run_all.html" class="btn btn-neutral float-left" title="run_all module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

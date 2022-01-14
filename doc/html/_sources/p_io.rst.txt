@@ -1,0 +1,7 @@
+p\_io module
+============
+
+.. automodule:: p_io
+   :members:
+   :undoc-members:
+   :show-inheritance:

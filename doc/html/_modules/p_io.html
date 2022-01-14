@@ -1,0 +1,1155 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_io &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>p_io</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for p_io</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions for writing/reading data and figures to/from the hard drive, as well as logging. [call-time-model]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>  <span class="c1"># used for datetime string in main log file</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">socket</span>  <span class="c1"># used to get computer name for main log file</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
+<span class="kn">from</span> <span class="nn">fcn</span> <span class="kn">import</span> <span class="n">p_util</span>
+
+<span class="c1"># &quot;global&quot; variables</span>
+<span class="n">BASE_PATH_CODE</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">BASE_PATH_OUTPUT</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># change this to an absolute path to save output data (.pkl files) and figures there</span>
+
+
+<div class="viewcode-block" id="create_path_to_file"><a class="viewcode-back" href="../p_io.html#p_io.create_path_to_file">[docs]</a><span class="k">def</span> <span class="nf">create_path_to_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check whether all directories in the path to the file exist and if not, create them.</span>
+
+<span class="sd">    :param filename: filename (full path) to be checked</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">split_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+    <span class="n">path_to_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split_filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">path_to_file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># todo (for compatibility with Python &lt; 3.2): remove &quot;exist_ok=True&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;o created directories in the path to file (&quot;</span> <span class="o">+</span> <span class="n">path_to_file</span> <span class="o">+</span> <span class="s2">&quot;) that did not exist before.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_file_list"><a class="viewcode-back" href="../p_io.html#p_io.get_file_list">[docs]</a><span class="k">def</span> <span class="nf">get_file_list</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">file_ending</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a (sorted) list of all filenames in a directory.</span>
+
+<span class="sd">    :param pathname: full path of directory containing the files whose names are to be returned</span>
+<span class="sd">    :type pathname: str</span>
+<span class="sd">    :param file_ending: returned list will only contain filenames ending on this. can be a string or a list of strings,</span>
+<span class="sd">        e.g. [&#39;.png&#39;, &#39;.jpg&#39;]</span>
+<span class="sd">    :type file_ending: str or list</span>
+<span class="sd">    :return: file_list: list of filenames</span>
+<span class="sd">    :rtype: file_list: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if file_ending contains a single entry, convert it to a list</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">file_ending</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">file_ending</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_ending</span><span class="p">]</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">pathname</span><span class="p">),</span> <span class="s1">&#39;ERROR: directory &#39;</span> <span class="o">+</span> <span class="n">pathname</span> <span class="o">+</span> <span class="s1">&#39; was not found.&#39;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">file_ending</span><span class="p">),</span> <span class="s2">&quot;file_ending must be a string or list of strings&quot;</span>
+
+    <span class="c1"># normalize path string into proper OS string</span>
+    <span class="n">pathname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+
+    <span class="c1"># get list of filenames</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">file_ending</span><span class="p">])]</span>
+    <span class="n">file_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">file_list</span></div>
+
+
+<div class="viewcode-block" id="get_ids_from_file_list"><a class="viewcode-back" href="../p_io.html#p_io.get_ids_from_file_list">[docs]</a><span class="k">def</span> <span class="nf">get_ids_from_file_list</span><span class="p">(</span><span class="n">file_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a list of filenames with the format *_x.*, where x is a number, and returns a list of all x as integers.</span>
+
+<span class="sd">    :param file_list: list of filenames in the format *_x.*</span>
+<span class="sd">    :type file_list: list</span>
+<span class="sd">    :return: ids: list of integers of the ids found in the file_list</span>
+<span class="sd">    :rtype: ids: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">]),</span> \
+        <span class="s2">&quot;argument file_list must be a list of strings (filenames with the format *_x.*, where x is a number)&quot;</span>
+
+    <span class="c1"># loop through files and extract ids</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">filename_no_ending</span> <span class="o">=</span> <span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">b_keep_ending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">filename_no_ending</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">ids</span></div>
+
+
+<div class="viewcode-block" id="get_filename_from_path"><a class="viewcode-back" href="../p_io.html#p_io.get_filename_from_path">[docs]</a><span class="k">def</span> <span class="nf">get_filename_from_path</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">b_keep_ending</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Splits full path string (e.g. &quot;/path/to/filename.end&quot;) and returns the file name (&quot;filename.end&quot; or &quot;filename&quot;).</span>
+
+<span class="sd">    :param full_path: full path to file</span>
+<span class="sd">    :type full_path: str</span>
+<span class="sd">    :param b_keep_ending: if False, remove file ending (everything including and following the last &#39;.&#39; in the filename)</span>
+<span class="sd">    :type b_keep_ending: bool</span>
+<span class="sd">    :return:    - pathname: pathname without filename</span>
+<span class="sd">                - filename: filename with or without ending</span>
+<span class="sd">    :rtype:     - pathname: str</span>
+<span class="sd">                - filename: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;argument &#39;full_path&#39; must be a string.&quot;</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">full_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">),</span> <span class="s2">&quot;filename seems to be missing from full_path: &quot;</span> <span class="o">+</span> <span class="n">full_path</span>
+
+    <span class="c1"># normalize path string into proper OS string</span>
+    <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
+
+    <span class="c1"># split path by path seperator</span>
+    <span class="n">split_path</span> <span class="o">=</span> <span class="n">full_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+    <span class="n">pathname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split_path</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">filename_with_ending</span> <span class="o">=</span> <span class="n">split_path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># remove file ending</span>
+    <span class="k">if</span> <span class="n">b_keep_ending</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filename_with_ending</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename_with_ending</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename_with_ending</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">filename</span></div>
+
+
+<div class="viewcode-block" id="load_config"><a class="viewcode-back" href="../p_io.html#p_io.load_config">[docs]</a><span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">model_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load model parameters from config file (.json)</span>
+
+<span class="sd">    :param model_name: filename of parameter config file (ending .json can be omitted from string). First checks if</span>
+<span class="sd">        model_name is the filename (full path and ending on .json) of an existing file. filename_out will be None in</span>
+<span class="sd">        that case. If not, it looks for the file in the default cfg directory.</span>
+<span class="sd">    :type model_name: str</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - config: dictionary of model parameters, as loaded from .json configuration file</span>
+<span class="sd">        - filename_cfg: filename (full path) of the config file, including .json extension</span>
+<span class="sd">        - filename_out; filename of the pickle file to be generated for simulation output. None, if full path was passed</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">        - config: str</span>
+<span class="sd">        - filename_cfg: str</span>
+<span class="sd">        - filename_out: str or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;argument &#39;model_name&#39; must be a string&quot;</span>
+
+    <span class="c1"># filenames for config file to load (.json) and pickle file for saved results (.pkl)</span>
+    <span class="k">if</span> <span class="n">model_name</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">model_name</span><span class="p">):</span>
+            <span class="n">filename_cfg</span> <span class="o">=</span> <span class="n">model_name</span>
+            <span class="n">filename_out</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename_cfg</span> <span class="o">=</span> <span class="n">BASE_PATH_CODE</span> <span class="o">+</span> <span class="s1">&#39;cfg&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">model_name</span>
+            <span class="n">filename_out</span> <span class="o">=</span> <span class="n">BASE_PATH_OUTPUT</span> <span class="o">+</span> <span class="s1">&#39;out&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">model_name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filename_cfg</span> <span class="o">=</span> <span class="n">BASE_PATH_CODE</span> <span class="o">+</span> <span class="s1">&#39;cfg&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+        <span class="n">filename_out</span> <span class="o">=</span> <span class="n">BASE_PATH_OUTPUT</span> <span class="o">+</span> <span class="s1">&#39;out&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span>
+
+    <span class="c1"># load model config file (.json)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_cfg</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: &#39;</span> <span class="o">+</span> <span class="n">filename_cfg</span> <span class="o">+</span> <span class="s1">&#39; was not found.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: &#39;</span> <span class="o">+</span> <span class="n">filename_cfg</span> <span class="o">+</span> <span class="s1">&#39; was found but could not be read. Is it a properly formatted .json file?&#39;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">filename_cfg</span><span class="p">,</span> <span class="n">filename_out</span></div>
+
+
+<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../p_io.html#p_io.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform some checks on the contents of the model configuration file (e.g. are number of parameter values</span>
+<span class="sd">    consistent with the number of populations/synapses, etc.)</span>
+
+<span class="sd">    :param config: dictionary of model parameters, as loaded from .json configuration file</span>
+<span class="sd">    :type config: dict</span>
+<span class="sd">    :param model_name: filename of .json config file (or model name, i.e. filename without extension)</span>
+<span class="sd">    :type model_name: str</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n_pops</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">][</span><span class="s1">&#39;population_id&#39;</span><span class="p">])</span>
+    <span class="n">n_syns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;synapse&#39;</span><span class="p">][</span><span class="s1">&#39;syn_pre_idx&#39;</span><span class="p">])</span>
+    <span class="n">free_parameter_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;free_parameter_stepsize&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="c1">#    assert len(config[&#39;misc&#39;][&#39;n_neurons_per_pop&#39;]) == len(config[&#39;misc&#39;][&#39;population_id&#39;]), \</span>
+<span class="c1">#        model_name + &quot;: n_neurons_per_pop must have same number of elements as population_id&quot;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;wnoise_cv&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="s1">&#39;wnoise_dt&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">],</span> \
+            <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: if wnoise_cv in input_current, wnoise_dt is also needed&quot;</span>
+        <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">][</span><span class="s1">&#39;wnoise_dt&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: wnoise_dt in input_current must be a positive integer or float&quot;</span>
+
+    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_nrn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">free_parameter_keys</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_nrn&#39; contains a&quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot; list of lists, but is not a free parameter (i.e. listed in &#39;free_parameters_stepsize&#39;)&quot;</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">n_pops</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span> \
+                <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: free parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_nrn&#39; must be a list of two &quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;lists (lower and upper bounds of parameter range) with each list containing &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_pops</span><span class="p">)</span> <span class="o">+</span> \
+                <span class="s2">&quot; values (number of populations, i.e. elements in misc[&#39;population_id&#39;])&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_pops</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_nrn&#39; must be list of &quot;</span> <span class="o">+</span> \
+                <span class="nb">str</span><span class="p">(</span><span class="n">n_pops</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; values (number of populations, i.e. elements in misc[&#39;population_id&#39;]).&quot;</span>
+
+    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">free_parameter_keys</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_syn&#39; contains a&quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot; list of lists, but is not a free parameter (i.e. listed in &#39;free_parameters_stepsize&#39;)&quot;</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">n_syns</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span> \
+                <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: free parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_syn&#39; must be a list of two &quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;lists (lower and upper bounds of parameter range) with each list containing &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_syns</span><span class="p">)</span> <span class="o">+</span> \
+                <span class="s2">&quot; values (number of synapses, i.e. elements in synapse[&#39;syn_pre_idx&#39;])&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_syns</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_syn&#39; must be list of &quot;</span> <span class="o">+</span> \
+                <span class="nb">str</span><span class="p">(</span><span class="n">n_syns</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; values (number of synapses, i.e. elements in synapse[&#39;syn_pre_idx&#39;]).&quot;</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">free_parameter_keys</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_nrn&#39;</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_nrn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_nrn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> \
+                <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_nrn&#39; listed as free parameter (in &#39;free_parameter_stepsize&quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;&#39;) and must therefore be a list of two lists (lower and upper bounds of parameter range)&quot;</span>
+        <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> \
+                <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_syn&#39; listed as free parameter (in &#39;free_parameter_stepsize&quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;&#39;) and must therefore be a list of two lists (lower and upper bounds of parameter range)&quot;</span>
+            <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_syn&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]))]),</span> \
+                <span class="s2">&quot;second free parameter value cannot be smaller than first&quot;</span>
+        <span class="k">elif</span> <span class="s1">&#39;parameters_gen&#39;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_gen&#39;</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_gen&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;parameters_gen&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> \
+                <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;parameters_gen&#39; listed as free parameter (in &#39;free_parameter_stepsize&quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;&#39;) and must therefore be a list of two lists (lower and upper bounds of parameter range)&quot;</span>
+        <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;offset_range&#39;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">+</span> \
+                <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &#39;input_current&#39; listed as free parameter (in &#39;free_parameter_stepsize&quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;&#39;) and must therefore be a list of two lists (lower and upper bounds of parameter range)&quot;</span>
+        <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> \
+                <span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;input_current&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">),</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s2">&quot;: parameter &#39;&quot;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s2">&quot;&#39; in &quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;&#39;input_current&#39; listed as free parameter (in &#39;free_parameter_stepsize&#39;) and must therefore be a &quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;list of (two) lists (lower and upper bounds of parameter range) of list (currents of respective pop)&quot;</span></div>
+
+
+<div class="viewcode-block" id="reformat_config"><a class="viewcode-back" href="../p_io.html#p_io.reformat_config">[docs]</a><span class="k">def</span> <span class="nf">reformat_config</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">b_create_backup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads an automatically generated .json config file (e.g. using p_macro.config()) and removes certain newlines and</span>
+<span class="sd">    other whitespaces for better readability. overwrites the original .json file after (optionally) creating a backup.</span>
+
+<span class="sd">    :param filename: filename (full path) of the .json config file to be reformatted.</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :param b_create_backup: crates a backup file in the same path before overwriting the original. appends</span>
+<span class="sd">        &#39;_unformatted&#39; to the filename.</span>
+<span class="sd">    :type b_create_backup: bool</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">newline_got_stripped_from_last_line</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">out_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">stripped</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># removes whitespaces from beginning and end</span>
+            <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&quot;ode&quot;&#39;</span><span class="p">):</span>
+                <span class="n">out_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">())</span>
+                <span class="n">newline_got_stripped_from_last_line</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">or</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                <span class="n">out_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">newline_got_stripped_from_last_line</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">newline_got_stripped_from_last_line</span><span class="p">:</span>
+                    <span class="c1"># remove whitespaces (tabs) at beginning because this line got merged with the previous line</span>
+                    <span class="n">out_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">out_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">newline_got_stripped_from_last_line</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">b_create_backup</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_unformatted.json&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out_lines</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_param_exploration_configs"><a class="viewcode-back" href="../p_io.html#p_io.get_param_exploration_configs">[docs]</a><span class="k">def</span> <span class="nf">get_param_exploration_configs</span><span class="p">(</span><span class="n">config_lo</span><span class="p">,</span> <span class="n">config_hi</span><span class="p">,</span> <span class="n">b_generate_configs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes two config files and returns a config file for each unique combination of parameter values, interpolated</span>
+<span class="sd">    between the values of config_lo and config_hi, incremented by the values in config_hi[&#39;step_size&#39;] for each param.</span>
+
+<span class="sd">    :param config_lo: regular config file as loaded from .json, containing lower limits of all parameters</span>
+<span class="sd">    :type config_lo: dict</span>
+<span class="sd">    :param config_hi: config file containing the upper limits for only those parameters that should be varied. Needs to</span>
+<span class="sd">        contain an additional dict &#39;step_size&#39; that has names of all explored parameters as keys and as values the</span>
+<span class="sd">        amount by which the parameter values are to be interpolated between those in config_lo and config_hi</span>
+<span class="sd">    :type config_hi: dict</span>
+<span class="sd">    :param b_generate_configs: set False if &#39;configs&#39; and &#39;log_lines&#39; are not actually needed. both will be an</span>
+<span class="sd">        empty list in that case</span>
+<span class="sd">    :type b_generate_configs: bool</span>
+<span class="sd">    :return:    - configs: list of config dictionaries</span>
+<span class="sd">                - log_lines: list of one line of text for each config with explored parameter values for log file</span>
+<span class="sd">                - combinations: list of unique combinations of values for the explored parameters (len==len(configs))</span>
+<span class="sd">                - combo_param_names: list of names of all explored parameters, each repeated, so that</span>
+<span class="sd">                    combo_param_names[i] is the name of the parameter whose value is at combinations[sim][i]</span>
+<span class="sd">                - all_values_per_param: list of lists, each sublist containing all unique values of the respective</span>
+<span class="sd">                    parameter. len==len(combo_param_names)</span>
+<span class="sd">    :rtype: - configs: list</span>
+<span class="sd">            - log_lines: list</span>
+<span class="sd">            - combinations: list</span>
+<span class="sd">            - combo_param_names: list</span>
+<span class="sd">            - all_values_per_param: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_lo</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_hi</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="s1">&#39;config_lo and config_hi must both be dicts&#39;</span>
+    <span class="k">assert</span> <span class="s1">&#39;step_size&#39;</span> <span class="ow">in</span> <span class="n">config_hi</span><span class="p">,</span> <span class="s2">&quot;config_hi must contain a key &#39;step_size&#39; with stepsizes for all explored params&quot;</span>
+
+    <span class="c1"># get names of top level entries (sub-dicts) in config_hi, i.e. groups that contain parameters to be explored</span>
+    <span class="n">param_dict_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config_hi</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">param_dict_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;step_size&#39;</span><span class="p">)</span>
+
+    <span class="c1"># for each top level dict, get names and number of values of all parameters to be explored</span>
+    <span class="n">param_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_values_per_param</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_values_per_param</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">combo_param_names</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># will hold the parameter name for each explored value (value in sublist of combinations)</span>
+    <span class="k">for</span> <span class="n">i_dict</span><span class="p">,</span> <span class="n">dict_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">param_dict_names</span><span class="p">):</span>
+        <span class="n">param_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">config_hi</span><span class="p">[</span><span class="n">dict_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="n">n_values_per_param</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">[</span><span class="n">i_dict</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_hi</span><span class="p">[</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">n_values_per_param</span><span class="p">[</span><span class="n">i_dict</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config_lo</span><span class="p">[</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]))</span>
+                <span class="n">param_values_lo</span> <span class="o">=</span> <span class="n">config_lo</span><span class="p">[</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]</span>
+                <span class="n">param_values_hi</span> <span class="o">=</span> <span class="n">config_hi</span><span class="p">[</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]</span>
+                <span class="n">step_sizes</span> <span class="o">=</span> <span class="n">config_hi</span><span class="p">[</span><span class="s1">&#39;step_size&#39;</span><span class="p">][</span><span class="n">par</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_values_per_param</span><span class="p">[</span><span class="n">i_dict</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">param_values_lo</span> <span class="o">=</span> <span class="p">[</span><span class="n">config_lo</span><span class="p">[</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]]</span>
+                <span class="n">param_values_hi</span> <span class="o">=</span> <span class="p">[</span><span class="n">config_hi</span><span class="p">[</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]]</span>
+                <span class="n">step_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">config_hi</span><span class="p">[</span><span class="s1">&#39;step_size&#39;</span><span class="p">][</span><span class="n">par</span><span class="p">]]</span>
+
+            <span class="c1"># loop through all values and create a list of all (interpolated) values between lower and upper limit</span>
+            <span class="k">for</span> <span class="n">i_val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_values_lo</span><span class="p">)):</span>
+                <span class="n">combo_param_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+                <span class="n">val_lo</span> <span class="o">=</span> <span class="n">param_values_lo</span><span class="p">[</span><span class="n">i_val</span><span class="p">]</span>
+                <span class="n">val_hi</span> <span class="o">=</span> <span class="n">param_values_hi</span><span class="p">[</span><span class="n">i_val</span><span class="p">]</span>
+                <span class="n">difference</span> <span class="o">=</span> <span class="n">val_hi</span> <span class="o">-</span> <span class="n">val_lo</span>
+                <span class="n">stepsize</span> <span class="o">=</span> <span class="n">step_sizes</span><span class="p">[</span><span class="n">i_val</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">stepsize</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">par</span> <span class="o">==</span> <span class="s1">&#39;n_neurons_per_pop&#39;</span><span class="p">:</span>
+                        <span class="n">all_values_per_param</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">val_lo</span><span class="p">,</span> <span class="n">val_hi</span><span class="p">,</span>
+                                                                <span class="nb">round</span><span class="p">(</span><span class="n">difference</span> <span class="o">/</span> <span class="n">stepsize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">all_values_per_param</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">val_lo</span><span class="p">,</span> <span class="n">val_hi</span><span class="p">,</span>
+                                                                <span class="nb">round</span><span class="p">(</span><span class="n">difference</span> <span class="o">/</span> <span class="n">stepsize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">all_values_per_param</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">val_lo</span><span class="p">])</span>
+
+    <span class="c1"># generate all unique combinations of values for the explored parameters</span>
+    <span class="n">combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">all_values_per_param</span><span class="p">))</span>
+
+    <span class="c1"># loop through all combinations and generate a config dict with the respective values</span>
+    <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">log_lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">b_generate_configs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i_conf</span><span class="p">,</span> <span class="n">combo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
+            <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config_lo</span><span class="p">))</span>
+            <span class="n">log_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i_conf</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">{&#39;</span><span class="p">)</span>
+            <span class="n">val_count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i_dict</span><span class="p">,</span> <span class="n">dict_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">param_dict_names</span><span class="p">):</span>
+                <span class="n">log_lines</span><span class="p">[</span><span class="n">i_conf</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dict_name</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span>
+                <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">[</span><span class="n">i_dict</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">configs</span><span class="p">[</span><span class="n">i_conf</span><span class="p">][</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="n">param_values</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span><span class="n">i_conf</span><span class="p">][</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">param_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">configs</span><span class="p">[</span><span class="n">i_conf</span><span class="p">][</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]]</span>
+                    <span class="n">log_lines</span><span class="p">[</span><span class="n">i_conf</span><span class="p">]</span> <span class="o">+=</span> <span class="n">par</span> <span class="o">+</span> <span class="s1">&#39;:[&#39;</span>
+                    <span class="k">for</span> <span class="n">i_val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_values</span><span class="p">)):</span>
+                        <span class="n">log_lines</span><span class="p">[</span><span class="n">i_conf</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">combo</span><span class="p">[</span><span class="n">val_count</span><span class="p">],</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">configs</span><span class="p">[</span><span class="n">i_conf</span><span class="p">][</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                            <span class="n">configs</span><span class="p">[</span><span class="n">i_conf</span><span class="p">][</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">][</span><span class="n">i_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">combo</span><span class="p">[</span><span class="n">val_count</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">configs</span><span class="p">[</span><span class="n">i_conf</span><span class="p">][</span><span class="n">dict_name</span><span class="p">][</span><span class="n">par</span><span class="p">]</span> <span class="o">=</span> <span class="n">combo</span><span class="p">[</span><span class="n">val_count</span><span class="p">]</span>
+                        <span class="n">val_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">log_lines</span><span class="p">[</span><span class="n">i_conf</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;]</span><span class="se">\t</span><span class="s1">&#39;</span>
+            <span class="n">log_lines</span><span class="p">[</span><span class="n">i_conf</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\b\n</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">configs</span><span class="p">,</span> <span class="n">log_lines</span><span class="p">,</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">combo_param_names</span><span class="p">,</span> <span class="n">all_values_per_param</span></div>
+
+
+<div class="viewcode-block" id="save_monitors"><a class="viewcode-back" href="../p_io.html#p_io.save_monitors">[docs]</a><span class="k">def</span> <span class="nf">save_monitors</span><span class="p">(</span><span class="n">statemons</span><span class="p">,</span> <span class="n">spikemons</span><span class="p">,</span> <span class="n">spikes_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save states of brian2 StateMonitors and SpikeMonitors to binary file, using pickle. (Load with load_monitors())</span>
+
+<span class="sd">    :param statemons: dictionary or list of dictionaries returned by brian2.StateMonitor.get_states()</span>
+<span class="sd">    :type statemons: dict or list</span>
+<span class="sd">    :param spikemons: dictionary or list of dictionaries returned by brian2.SpikeMonitor.get_states()</span>
+<span class="sd">    :type spikemons: dict or list</span>
+<span class="sd">    :param spikes_poisson: dict returned by b2.SpikeMonitor.get_states() containing spikes of poisson_group or None</span>
+<span class="sd">    :type spikes_poisson: dict or None</span>
+<span class="sd">    :param connectivity: dictionary or list of dictionaries containing synaptic connectivity information</span>
+<span class="sd">    :type connectivity: dict or list</span>
+<span class="sd">    :param connectivity_generator: dictionary or list of dictionaries containing spikegenerator connectivity information</span>
+<span class="sd">    :type connectivity_generator: dict or list</span>
+<span class="sd">    :param config: dictionary of model parameters, as loaded from .json configuration file</span>
+<span class="sd">    :type config: dict</span>
+<span class="sd">    :param info: dictionary or list of dictionaries containing information about simulation, created by run_simulation()</span>
+<span class="sd">    :type info: dict or list</span>
+<span class="sd">    :param filename: filename (full path) of output file</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :return: log_message: success message for logging</span>
+<span class="sd">    :rtype: log_message: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if statemons and spikemons contain a single object (dictionary), convert them to lists</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">statemons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">statemons</span> <span class="o">=</span> <span class="p">[</span><span class="n">statemons</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">spikemons</span> <span class="o">=</span> <span class="p">[</span><span class="n">spikemons</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">connectivity</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">connectivity</span> <span class="o">=</span> <span class="p">[</span><span class="n">connectivity</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">connectivity_generator</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">connectivity_generator</span> <span class="o">=</span> <span class="p">[</span><span class="n">connectivity_generator</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">info</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">statemons</span><span class="p">),</span> \
+        <span class="s2">&quot;statemons must be a dictionary or list of dictionaries returned by brian2.SpikeMonitor.get_states()&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">spikemons</span><span class="p">),</span> \
+        <span class="s2">&quot;spikemons must be a dictionary or list of dictionaries returned by brian2.SpikeMonitor.get_states()&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">connectivity</span><span class="p">),</span> \
+        <span class="s2">&quot;connectivity must be a dictionary or list of dictionaries&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">info</span><span class="p">),</span> \
+        <span class="s2">&quot;info must be a dictionary or list of dictionaries&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">statemons</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">len</span><span class="p">(</span><span class="n">spikemons</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">),</span> \
+        <span class="s2">&quot;statemons, spikemons and info must all have the same number of elements&quot;</span>
+
+    <span class="c1"># check whether all directories in the path to the file exist and if not, create them</span>
+    <span class="n">create_path_to_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># open output file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_out</span><span class="p">:</span>
+        <span class="c1"># dump data to file</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="n">statemons</span><span class="p">,</span> <span class="n">spikemons</span><span class="p">,</span> <span class="n">spikes_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span><span class="p">],</span>
+                    <span class="n">file_out</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot;o monitor data and info saved as &quot;</span> <span class="o">+</span> <span class="n">filename</span></div>
+
+
+<div class="viewcode-block" id="load_monitors"><a class="viewcode-back" href="../p_io.html#p_io.load_monitors">[docs]</a><span class="k">def</span> <span class="nf">load_monitors</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">b_silent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">b_return_first_element_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load states of brian2 StateMonitors and SpikeMonitors from binary file, using pickle. (Save with save_monitors())</span>
+<span class="sd">    Dictionaries containing the states will be converted to SimpleNamespaces and returned as statemons and spikemons.</span>
+
+<span class="sd">    :param filename: filename (full path) of input file created by p_io.save_monitors(), containing brian2 monitor data</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :param b_silent: if True, don&#39;t print success</span>
+<span class="sd">    :type b_silent: bool</span>
+<span class="sd">    :param b_return_first_element_only: if True, return not the whole lists, but only the first element of each list</span>
+<span class="sd">    :type b_return_first_element_only: bool</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - statemons: list of brian2 StateMonitor - like(!) SimpleNamespaces retrieved from the file</span>
+<span class="sd">        - spikemons: list of brian2 SpikeMonitor - like(!) SimpleNamespaces retrieved from the file</span>
+<span class="sd">        - spikemon_poisson: brian2 SpikeMonitor - like(!) SimpleNamespace containing spikes of poisson_group or None</span>
+<span class="sd">        - connectivity: list of dictionaries containing synaptic connectivity information</span>
+<span class="sd">        - connectivity_generator: list of dictionaries containing spikegenerator connectivity information (can be empty)</span>
+<span class="sd">        - config: dictionary as loaded from .json configuration file</span>
+<span class="sd">        - info: list of dictionaries containing additional information about simulation, created by run_simulation()</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">        - statemons: [SimpleNamespace]</span>
+<span class="sd">        - spikemons: [SimpleNamespace]</span>
+<span class="sd">        - spikemon_poisson: SimpleNamespace or None</span>
+<span class="sd">        - connectivity: [dict]</span>
+<span class="sd">        - connectivity_generator: [dict]</span>
+<span class="sd">        - config: dict</span>
+<span class="sd">        - info: [dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># open input file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_in</span><span class="p">:</span>
+        <span class="c1"># load dictionaries containing monitor states from file</span>
+        <span class="n">state_dicts</span><span class="p">,</span> <span class="n">spike_dicts</span><span class="p">,</span> <span class="n">spike_dict_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span> \
+            <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_in</span><span class="p">)</span>
+
+    <span class="n">statemons</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spikemons</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># loop through dictionaries and convert data structure to something similar to brian2 Monitor objects</span>
+    <span class="k">for</span> <span class="n">statemon</span><span class="p">,</span> <span class="n">spikemon</span><span class="p">,</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">state_dicts</span><span class="p">,</span> <span class="n">spike_dicts</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">statemon</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">statemon</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">statemon</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">statemon</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">spikemon</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spikemon</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">spikemon</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">spikemon</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">statemons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="o">**</span><span class="n">statemon</span><span class="p">))</span>
+        <span class="n">spikemons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="o">**</span><span class="n">spikemon</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">spike_dict_poisson</span><span class="p">:</span>
+        <span class="n">spikemon_poisson</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="o">**</span><span class="n">spike_dict_poisson</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spikemon_poisson</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">b_silent</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;i monitor data and info loaded from &quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">b_return_first_element_only</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&gt; WARNING: load_monitors() only returned the first element of each list (e.g. statemon)&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">b_return_first_element_only</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">connectivity_generator</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">statemons</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spikemons</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spikemon_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> \
+                   <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">statemons</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spikemons</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spikemon_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">connectivity_generator</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">config</span><span class="p">,</span> \
+                   <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">statemons</span><span class="p">,</span> <span class="n">spikemons</span><span class="p">,</span> <span class="n">spikemon_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="aggregate_monitors_from_parex"><a class="viewcode-back" href="../p_io.html#p_io.aggregate_monitors_from_parex">[docs]</a><span class="k">def</span> <span class="nf">aggregate_monitors_from_parex</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">idx_nrn_to_subset_abs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Collect output data from a parameter exploration (all .pkl files in directory) and aggregate all state monitors,</span>
+<span class="sd">    spike monitors, info dicts, etc. into a multi-run list for each, for further analysis. Returns are similar to</span>
+<span class="sd">    load_monitors(), but each element in the lists (e.g. spikemons) is the ouput of a different parex simulation.</span>
+<span class="sd">    Optionally return only the data of a single neuron to save memory, given by idx_nrn_to_subset_abs.</span>
+
+<span class="sd">    :param pathname: full PATH to directory containing .pkl output files of a parameter exploration run</span>
+<span class="sd">    :type pathname: str</span>
+<span class="sd">    :param idx_nrn_to_subset_abs: absolute index to the neuron for which spike- and state-data should be extracted and</span>
+<span class="sd">        returned. if None, whole monitors will be returned (potentially very memory intensive - avoid if not needed)</span>
+<span class="sd">    :type idx_nrn_to_subset_abs: int or None</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - statemons: list of brian2 StateMonitor - like(!) SimpleNamespaces aggregated from the files in pathname</span>
+<span class="sd">        - spikemons: list of brian2 SpikeMonitor - like(!) SimpleNamespaces aggregated from the files</span>
+<span class="sd">        - spikemon_poisson: list of brian2 SpikeMonitor-like SimpleNamespace containing spikes of poisson_group or Nones</span>
+<span class="sd">        - connectivity: list of dictionaries containing synaptic connectivity information</span>
+<span class="sd">        - connectivity_generator: list of dictionaries containing spikegenerator connectivity information (can be empty)</span>
+<span class="sd">        - config: list of dictionaries as loaded from .json configuration file</span>
+<span class="sd">        - info: list of dictionaries containing additional information about simulation, created by run_simulation()</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">        - statemons: [SimpleNamespace]</span>
+<span class="sd">        - spikemons: [SimpleNamespace]</span>
+<span class="sd">        - spikemon_poisson: [SimpleNamespace] or [None]</span>
+<span class="sd">        - connectivity: [dict]</span>
+<span class="sd">        - connectivity_generator: [dict]</span>
+<span class="sd">        - config: [dict]</span>
+<span class="sd">        - info: [dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># get list of .pkl files</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="n">get_file_list</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+    <span class="n">pathname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span>
+
+    <span class="c1"># declare variables as empty lists</span>
+    <span class="n">statemons</span><span class="p">,</span> <span class="n">spikemons</span><span class="p">,</span> <span class="n">spikemon_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span> \
+        <span class="o">=</span> <span class="p">([</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file_list</span><span class="p">):</span>
+        <span class="n">statemon_c</span><span class="p">,</span> <span class="n">spikemon_c</span><span class="p">,</span> <span class="n">spikemon_poisson</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">connectivity</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">connectivity_generator</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">info_c</span> \
+            <span class="o">=</span> <span class="n">load_monitors</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">pathname</span><span class="p">,</span> <span class="n">filename</span><span class="p">)),</span> <span class="n">b_silent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">b_return_first_element_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx_nrn_to_subset_abs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">statemon_sub</span><span class="p">,</span> <span class="n">spikemon_sub</span><span class="p">,</span> <span class="n">info_sub</span> <span class="o">=</span> <span class="n">p_util</span><span class="o">.</span><span class="n">subset_neuron_from_monitors</span><span class="p">([</span><span class="n">statemon_c</span><span class="p">],</span> <span class="p">[</span><span class="n">spikemon_c</span><span class="p">],</span>
+                                                                                      <span class="p">[</span><span class="n">info_c</span><span class="p">],</span> <span class="n">idx_nrn_to_subset_abs</span><span class="p">)</span>
+            <span class="n">statemons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">statemon_sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">spikemons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spikemon_sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">info_sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">statemons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">statemon_c</span>
+            <span class="n">spikemons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spikemon_c</span>
+            <span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">info_c</span>
+
+    <span class="k">return</span> <span class="n">statemons</span><span class="p">,</span> <span class="n">spikemons</span><span class="p">,</span> <span class="n">spikemon_poisson</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">connectivity_generator</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="save_figures"><a class="viewcode-back" href="../p_io.html#p_io.save_figures">[docs]</a><span class="k">def</span> <span class="nf">save_figures</span><span class="p">(</span><span class="n">figure_handles</span><span class="p">,</span> <span class="n">base_filename</span><span class="p">,</span> <span class="n">figure_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">box_mrgns</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=-</span><span class="mi">999</span><span class="p">,</span>
+                 <span class="n">b_close_figures</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">b_watermark</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Saves figures identified by their figure handles in a format supported by the active backend for pyplot,</span>
+<span class="sd">    e.g. png, pdf, ...</span>
+
+<span class="sd">    :param figure_handles: handle or list of handles to the figure(s) to be plotted</span>
+<span class="sd">    :type figure_handles: matplotlib.figure.Figure or list</span>
+<span class="sd">    :param base_filename: filename (full path) of the figure (without extension). If multiple handles are passed,</span>
+<span class="sd">        base_filename is appended with a running number (three digits, zero-padded)</span>
+<span class="sd">    :type base_filename: str</span>
+<span class="sd">    :param figure_format: [default=&#39;png&#39;] format supported by the active backend for pyplot, in which the figure is to</span>
+<span class="sd">        be saved (e.g. &#39;png&#39; or &#39;pdf&#39;). This will also serve as the filename extension. Can be a list of formats.</span>
+<span class="sd">    :type figure_format: str or list</span>
+<span class="sd">    :param dpi: [default=300] dots per inch of saved figure. None: use system default</span>
+<span class="sd">    :type dpi: int or float or None</span>
+<span class="sd">    :param box_mrgns: [default=&#39;tight&#39;] set to None to disable &quot;tight&quot; bbox (useful for pixel-perfect conn matrix)</span>
+<span class="sd">    :type box_mrgns: str or None</span>
+<span class="sd">    :param run_id: integer identifier for the simulation run this figure was produced from. gets embedded as metadata</span>
+<span class="sd">        under key &#39;Title&#39;. Default if no run_id was passed: -999.</span>
+<span class="sd">    :type run_id: int</span>
+<span class="sd">    :param b_close_figures: [default=False] if true, figure windows will be closed after saving</span>
+<span class="sd">    :type b_close_figures: bool</span>
+<span class="sd">    :param b_watermark: [default=False] if true, plot the run_id as a watermark in the bottom right corner of the figure</span>
+<span class="sd">    :type b_watermark: bool</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if figure_handles contains a single handle, convert it to a list</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">figure_handles</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">figure_handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">figure_handles</span><span class="p">]</span>
+
+    <span class="c1"># if figure_format contains a single string, convert it to a list</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">figure_format</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">figure_format</span> <span class="o">=</span> <span class="p">[</span><span class="n">figure_format</span><span class="p">]</span>
+
+    <span class="c1"># check whether all directories in the path to the file exist and if not, create them</span>
+    <span class="n">create_path_to_file</span><span class="p">(</span><span class="n">base_filename</span><span class="p">)</span>
+
+    <span class="c1"># save figure(s)</span>
+    <span class="k">for</span> <span class="n">i_format</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">figure_format</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">figure_handles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">b_watermark</span> <span class="ow">and</span> <span class="n">run_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">figure_handles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                                       <span class="n">transform</span><span class="o">=</span><span class="n">figure_handles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">])</span>
+            <span class="n">figure_handles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">base_filename</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">figure_format</span><span class="p">[</span><span class="n">i_format</span><span class="p">],</span>
+                                      <span class="nb">format</span><span class="o">=</span><span class="n">figure_format</span><span class="p">[</span><span class="n">i_format</span><span class="p">],</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">box_mrgns</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+                                      <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Title&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)})</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;o figure saved as &quot;</span> <span class="o">+</span> <span class="n">base_filename</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">figure_format</span><span class="p">[</span><span class="n">i_format</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">b_close_figures</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">figure_handles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">figure_handles</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">b_watermark</span> <span class="ow">and</span> <span class="n">run_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">figure_handles</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                                           <span class="n">transform</span><span class="o">=</span><span class="n">figure_handles</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">])</span>
+                <span class="n">figure_handles</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">base_filename</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">figure_format</span><span class="p">[</span><span class="n">i_format</span><span class="p">],</span>
+                                          <span class="nb">format</span><span class="o">=</span><span class="n">figure_format</span><span class="p">[</span><span class="n">i_format</span><span class="p">],</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">box_mrgns</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+                                          <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Title&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)})</span>
+                <span class="k">if</span> <span class="n">b_close_figures</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">figure_handles</span><span class="p">[</span><span class="n">f</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;o figures saved as &quot;</span> <span class="o">+</span> <span class="n">base_filename</span> <span class="o">+</span> <span class="s1">&#39;_***.&#39;</span> <span class="o">+</span> <span class="n">figure_format</span><span class="p">[</span><span class="n">i_format</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="load_traces_from_mat"><a class="viewcode-back" href="../p_io.html#p_io.load_traces_from_mat">[docs]</a><span class="k">def</span> <span class="nf">load_traces_from_mat</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load voltage traces from .mat file (electroGUI format)</span>
+
+<span class="sd">    :param filename: filename of a matlab .mat file containing traces (cell array &quot;traces&quot; with one cell per trial)</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :return: traces: list of numpy.arrays of voltage traces (each array corresponds to a &quot;traces&quot; cell, i.e. trial)</span>
+<span class="sd">    :rtype: [np.ndarray]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># load event stream matrix from .mat file</span>
+    <span class="n">recording_mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">traces</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">recording_mat</span><span class="p">[</span><span class="s1">&#39;traces&#39;</span><span class="p">])[</span><span class="n">trc</span><span class="p">])</span> <span class="k">for</span> <span class="n">trc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">recording_mat</span><span class="p">[</span><span class="s1">&#39;traces&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;i traces loaded from &quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">traces</span></div>
+
+
+<div class="viewcode-block" id="load_neuronexus_spiketimes_from_mat"><a class="viewcode-back" href="../p_io.html#p_io.load_neuronexus_spiketimes_from_mat">[docs]</a><span class="k">def</span> <span class="nf">load_neuronexus_spiketimes_from_mat</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">neuron_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load spiketimes of extracellular recordings aligned to playback onset in seconds from Matlab .mat file. file</span>
+<span class="sd">    must contain three variables: spktms - cell array of unit-playback combinations, each cell containing one array of</span>
+<span class="sd">    aligned spiketimes for each trial; info_bslcup - cell array containing an array of indices for each unit-playback</span>
+<span class="sd">    combination of (in order): bird, location, session, channel, unit, playback; playback_name - cell array containing</span>
+<span class="sd">    the name of the playback file for each unit.</span>
+
+<span class="sd">    :param filename: filename (full path) of a matlab .mat file containing spiketimes (e.g. &#39;spks_rfrmt.mat&#39;)</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :param neuron_ids: list of integer ids, one for each unit in the .mat file. if None, use sequential numbers for ids.</span>
+<span class="sd">    :type neuron_ids: list</span>
+<span class="sd">    :return:    - spiketimes: array of aligned spiketimes of each unit-playback combination, one sub-array per trial</span>
+<span class="sd">                - info_bslcup: array of indices len(spiketimes) of: Bird, Session, Location, Channel, Unit, Playback</span>
+<span class="sd">                - playback_name: array of name of playback file for each unit-playback combination, i.e. len(spiketimes)</span>
+<span class="sd">    :rtype:     - spiketimes: numpy.ndarray</span>
+<span class="sd">                - info_bslcup: numpy.ndarray</span>
+<span class="sd">                - playback_name: numpy.ndarray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># get data from .mat file</span>
+    <span class="n">spiketimes_mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">spiketimes</span> <span class="o">=</span> <span class="n">spiketimes_mat</span><span class="p">[</span><span class="s1">&#39;spktms&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">playback_name</span> <span class="o">=</span> <span class="n">spiketimes_mat</span><span class="p">[</span><span class="s1">&#39;playback_type&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">playback_dur</span> <span class="o">=</span> <span class="n">spiketimes_mat</span><span class="p">[</span><span class="s1">&#39;playback_dur&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s1">&#39;info_bslcup&#39;</span> <span class="ow">in</span> <span class="n">spiketimes_mat</span> <span class="ow">or</span> <span class="s1">&#39;info_snp&#39;</span> <span class="ow">in</span> <span class="n">spiketimes_mat</span><span class="p">,</span> \
+        <span class="s1">&#39;neither info_bslcup nor info_snp found in &#39;</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="k">if</span> <span class="s1">&#39;info_bslcup&#39;</span> <span class="ow">in</span> <span class="n">spiketimes_mat</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">spiketimes_mat</span><span class="p">[</span><span class="s1">&#39;info_bslcup&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="s1">&#39;info_snp&#39;</span> <span class="ow">in</span> <span class="n">spiketimes_mat</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">spiketimes_mat</span><span class="p">[</span><span class="s1">&#39;info_snp&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># remove singleton dimensions</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spiketimes</span><span class="p">)):</span>
+        <span class="n">spiketimes</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">spiketimes</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spiketimes</span><span class="p">[</span><span class="n">u</span><span class="p">])):</span>
+            <span class="n">spiketimes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">spiketimes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">t</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">playback_dur</span><span class="p">)):</span>
+        <span class="n">playback_dur</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">playback_dur</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">playback_name</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">playback_name</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">playback_dur</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">playback_dur</span><span class="p">)</span>
+
+    <span class="c1"># convert values from seconds to milliseconds</span>
+    <span class="n">spiketimes</span> <span class="o">=</span> <span class="n">spiketimes</span> <span class="o">*</span> <span class="mi">1000</span>
+    <span class="n">playback_dur</span> <span class="o">=</span> <span class="n">playback_dur</span> <span class="o">*</span> <span class="mi">1000</span>
+
+    <span class="c1"># generate a sequential integer id for each unit (all unit-playback combinations from the same unit get the same id)</span>
+    <span class="n">bslcu</span> <span class="o">=</span> <span class="p">[</span><span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">))]</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">continuous_unit_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bslcu</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># assign either the supplied neuron ids, or the sequential ids</span>
+    <span class="k">if</span> <span class="n">neuron_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">unit_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">neuron_ids</span><span class="p">)[</span><span class="n">continuous_unit_idx</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">unit_id</span> <span class="o">=</span> <span class="n">continuous_unit_idx</span>
+
+    <span class="c1"># categorize each playback into a type (call, noise, ...)</span>
+    <span class="n">playback_type</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">call_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;d_a_call_norm&#39;</span><span class="p">,</span> <span class="s1">&#39;a_call_norm&#39;</span><span class="p">,</span> <span class="s1">&#39;2102call-1st_m&#39;</span><span class="p">,</span> <span class="s1">&#39;2102call-1st_15km&#39;</span><span class="p">]</span>
+    <span class="n">noise_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;b_noise_calllength_min5amp_refade&#39;</span><span class="p">,</span> <span class="s1">&#39;b_noise_calllength_min15db_refade&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;b_noise_calllength_min10db_m&#39;</span><span class="p">,</span> <span class="s1">&#39;b_noise_calllength_min25db_refade&#39;</span><span class="p">]</span>
+    <span class="n">bos_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;19_579_BOS_norm_fade&#39;</span><span class="p">,</span> <span class="s1">&#39;19_579_BOS_norm_fade_m&#39;</span><span class="p">,</span> <span class="s1">&#39;c_bos461_song_norm&#39;</span><span class="p">,</span> <span class="s1">&#39;19_401_BOS_15km&#39;</span><span class="p">]</span>
+    <span class="n">song_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;440_song_ampmin2_refade&#39;</span><span class="p">,</span> <span class="s1">&#39;440_song_ampmin2_refade_m&#39;</span><span class="p">,</span> <span class="s1">&#39;a440_song_norm&#39;</span><span class="p">]</span>
+    <span class="n">marker_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;15khz_10ms_marker&#39;</span><span class="p">,</span> <span class="s1">&#39;15khz_10ms_marker_catch&#39;</span><span class="p">]</span>
+    <span class="n">f4054_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;F4054_norm_fade&#39;</span><span class="p">,</span> <span class="s1">&#39;F4054_norm_fade_m&#39;</span><span class="p">]</span>
+    <span class="n">jam_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2102call-1st_15km_230dub&#39;</span><span class="p">,</span> <span class="s1">&#39;2102call-1st_15km_230dub_catch&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">playback_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">call_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;call&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">noise_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;noise&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">bos_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;bos&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">song_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;song&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">marker_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;marker&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">f4054_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;f4054&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">jam_names</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;jam&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">playback_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">spiketimes</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">playback_name</span><span class="p">,</span> <span class="n">playback_dur</span><span class="p">,</span> <span class="n">playback_type</span><span class="p">,</span> <span class="n">unit_id</span></div>
+
+
+<div class="viewcode-block" id="save_spiketimes_to_pkl"><a class="viewcode-back" href="../p_io.html#p_io.save_spiketimes_to_pkl">[docs]</a><span class="k">def</span> <span class="nf">save_spiketimes_to_pkl</span><span class="p">(</span><span class="n">spiketimes_ms</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save list of lists of spike times (in milliseconds; one sublist per trace) to pickle file (.pkl). Use for spikes</span>
+<span class="sd">    detected in recordings.</span>
+
+<span class="sd">    :param spiketimes_ms: list of lists of spike times (in milliseconds; one sublist per trace)</span>
+<span class="sd">    :type spiketimes_ms: [[float]]</span>
+<span class="sd">    :param filename: filename (full path) of output .pkl file</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">spiketimes_ms</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">,</span> \
+        <span class="s2">&quot;spiketimes_ms must be a list of lists of spiketimes (in milliseconds; one sublist per trace)&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">spiketimes_ms</span><span class="p">),</span> \
+        <span class="s2">&quot;spiketimes_ms must be a list of lists of spiketimes (in milliseconds; one sublist per trace)&quot;</span>
+
+    <span class="c1"># check whether all directories in the path to the file exist and if not, create them</span>
+    <span class="n">create_path_to_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># open output file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_out</span><span class="p">:</span>
+        <span class="c1"># dump data to file</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">spiketimes_ms</span><span class="p">,</span> <span class="n">file_out</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;o spiketimes saved as &quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_spiketimes_from_pkl"><a class="viewcode-back" href="../p_io.html#p_io.load_spiketimes_from_pkl">[docs]</a><span class="k">def</span> <span class="nf">load_spiketimes_from_pkl</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load list of spiketimes (in milliseconds; one sublist per trace) from pickle (.pkl) file created by</span>
+<span class="sd">    save_spiketimes_to_pkl(). Use for spikes detected in recordings. To load spiketimes from model results, use</span>
+<span class="sd">    p_io.load_monitors() and p_util.get_spiktimes_from_monitor().</span>
+
+<span class="sd">    :param filename: filename (full path) of .pkl file containing spiketimes</span>
+<span class="sd">    :type filename: str</span>
+<span class="sd">    :return: spiketimes_ms: list of lists of spike times (in milliseconds; one sublist per trace)</span>
+<span class="sd">    :rtype: [[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># open input file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_in</span><span class="p">:</span>
+        <span class="c1"># load dictionaries containing monitor states from file</span>
+        <span class="n">spiketimes_ms</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_in</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;i spiketimes loaded from &quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">spiketimes_ms</span></div>
+
+
+<div class="viewcode-block" id="create_logger"><a class="viewcode-back" href="../p_io.html#p_io.create_logger">[docs]</a><span class="k">def</span> <span class="nf">create_logger</span><span class="p">(</span><span class="n">logger_name</span><span class="p">,</span> <span class="n">filename_log</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b_log_to_console</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a logger for printing to console and/or log file, using &quot;logging&quot; from the python standard library</span>
+
+<span class="sd">    :param logger_name: name of the logger object</span>
+<span class="sd">    :type logger_name: str</span>
+<span class="sd">    :param filename_log: [default=None] filename of log file (text file, full path). if None, only log to console.</span>
+<span class="sd">        serial number will be appended.</span>
+<span class="sd">    :type filename_log: str or None</span>
+<span class="sd">    :param b_log_to_console: [default=True] set False to suppress ouput to console for this logger</span>
+<span class="sd">    :type b_log_to_console: bool</span>
+<span class="sd">    :return: log: reference to logger object</span>
+<span class="sd">    :rtype: logging.Logger</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="n">filename_log</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename_log</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;filename_log must either be None or a string&quot;</span>
+
+    <span class="c1"># create logger object</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">logger_name</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+    <span class="c1"># create formatter and add it to the handlers</span>
+    <span class="n">console_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">b_log_to_console</span><span class="p">:</span>
+        <span class="c1"># create console handler with log level DEBUG and up (i.e. all logs)</span>
+        <span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="n">console_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">console_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">console_formatter</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">filename_log</span><span class="p">:</span>
+        <span class="c1"># check whether all directories in the path to the file exist and if not, create them</span>
+        <span class="n">create_path_to_file</span><span class="p">(</span><span class="n">filename_log</span><span class="p">)</span>
+
+        <span class="c1"># create file handler with log level INFO and up (i.e. excluding DEBUG logs)</span>
+        <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">filename_log</span><span class="p">)</span>
+        <span class="n">file_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+        <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">file_formatter</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">log</span></div>
+
+
+<div class="viewcode-block" id="get_next_log_id"><a class="viewcode-back" href="../p_io.html#p_io.get_next_log_id">[docs]</a><span class="k">def</span> <span class="nf">get_next_log_id</span><span class="p">(</span><span class="n">filename_main_log</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ONLY GETS CALLED INTERNALLY. Return the next free id for run log file. opens main log (filename_main_log) and</span>
+<span class="sd">    returns the number (id) at the beginning of the last line plus one.</span>
+
+<span class="sd">    :param filename_main_log: filename of main log file (text file, full path)</span>
+<span class="sd">    :type filename_main_log: str</span>
+<span class="sd">    :return: next_id: integer id for next log file</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check inputs</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename_main_log</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;filename_main_log must be a string&quot;</span>
+
+    <span class="c1"># check if main log exist and is not empty</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">file_in</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_main_log</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="n">next_id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;! main log file &quot;</span> <span class="o">+</span> <span class="n">filename_main_log</span> <span class="o">+</span> <span class="s2">&quot; not found -&gt; starting with log id 0001&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filename_main_log</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">next_id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># as the file exists and is not empty, get the id at the beginning of the last line</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">file_in</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="n">last_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">last_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">last_line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;first characters of last line of main log file &quot;</span> <span class="o">+</span> <span class="n">filename_main_log</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span>
+                                 <span class="n">last_line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; don&#39;t translate to an integer id.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">next_id</span> <span class="o">=</span> <span class="n">last_id</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">next_id</span></div>
+
+
+<div class="viewcode-block" id="set_up_loggers"><a class="viewcode-back" href="../p_io.html#p_io.set_up_loggers">[docs]</a><span class="k">def</span> <span class="nf">set_up_loggers</span><span class="p">(</span><span class="n">base_path_output</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">b_debugging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">b_parex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">b_query_comment</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up and return two logger instances: &#39;main&#39; and &#39;run&#39;. &#39;main&#39; for ouputting one line to a log file for each</span>
+<span class="sd">    run, containing run_id, date and time, name of computer it was run on, model config used, output path and commit</span>
+<span class="sd">    hash. &#39;run&#39; outputs run info to console and log file, as well as copying the contents of the config to log file.</span>
+<span class="sd">    only the name of the &#39;run&#39; logger will be returned. use it to get the instance via logging.getLogger(log_run_name).</span>
+<span class="sd">    also returns the run_id.</span>
+
+<span class="sd">    :param base_path_output: path to directory where log files will be created/modified in a subdirectory log/</span>
+<span class="sd">    :type base_path_output: str</span>
+<span class="sd">    :param model_name: name of the model configuration, i.e. .json filename (no path) without the file extension (.json)</span>
+<span class="sd">    :type model_name: str</span>
+<span class="sd">    :param b_debugging: [default=False] if True, add flag to current line in main log file indicating debugging run</span>
+<span class="sd">    :type b_debugging: bool</span>
+<span class="sd">    :param b_parex: [default=False] if True, add flag to current line in main log file indicating parameter exploration</span>
+<span class="sd">    :type b_parex: bool</span>
+<span class="sd">    :param b_query_comment: [default=True] if False, don&#39;t ask the user to input a comment string</span>
+<span class="sd">    :type b_query_comment: bool</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - log_run_name: name of the logger instance of the python logging package to be used to ouput info during run</span>
+<span class="sd">        - run_id: integer id for tracking the simulation run in log files, etc.</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">        - log_run_name: str</span>
+<span class="sd">        - run_id: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># name for the logger instance used to ouput information during run_simulation()</span>
+    <span class="n">log_main_name</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
+    <span class="n">log_run_name</span> <span class="o">=</span> <span class="s1">&#39;run&#39;</span>
+
+    <span class="c1"># get next free log id by checking last line of the main log file (if it exists) using next_log_id in this module</span>
+    <span class="n">path_to_logfiles</span> <span class="o">=</span> <span class="n">base_path_output</span> <span class="o">+</span> <span class="s1">&#39;log&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">get_next_log_id</span><span class="p">(</span><span class="n">path_to_logfiles</span> <span class="o">+</span> <span class="s1">&#39;0000_main.log&#39;</span><span class="p">)</span>
+
+    <span class="c1"># try to get the current git commit hash to add it to the main log file. allows to retrace on which version it ran</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cur_git_commit_hash</span> <span class="o">=</span> \
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">cur_git_commit_hash</span> <span class="o">=</span> <span class="s1">&#39;could_not_get_hash&#39;</span>
+
+    <span class="c1"># create the two loggers</span>
+    <span class="n">log_main</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">log_main_name</span><span class="p">,</span> <span class="n">path_to_logfiles</span> <span class="o">+</span> <span class="s1">&#39;0000_main.log&#39;</span><span class="p">,</span> <span class="n">b_log_to_console</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">log_run</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">log_run_name</span><span class="p">,</span> <span class="n">path_to_logfiles</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.log&#39;</span><span class="p">)</span>
+
+    <span class="c1"># add line to main logger and run logger for current run</span>
+    <span class="n">log_line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">_%H:%M:%S&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> \
+        <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">base_path_output</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">cur_git_commit_hash</span>
+    <span class="k">if</span> <span class="n">b_debugging</span><span class="p">:</span>
+        <span class="n">log_line</span> <span class="o">=</span> <span class="n">log_line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">DEBUG&#39;</span>
+    <span class="k">if</span> <span class="n">b_parex</span><span class="p">:</span>
+        <span class="n">log_line</span> <span class="o">=</span> <span class="n">log_line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">PAREX&#39;</span>
+
+    <span class="c1"># optionally let the user enter a comment (e.g. what was changed in config since last run)</span>
+    <span class="k">if</span> <span class="n">b_query_comment</span><span class="p">:</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter a short comment on the current run for log files (Press Enter to skip):&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">comment</span><span class="p">:</span>
+            <span class="n">log_line</span> <span class="o">=</span> <span class="n">log_line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">comment</span>
+
+    <span class="n">log_main</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_line</span><span class="p">)</span>
+    <span class="n">log_run</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_line</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;o created logger - filename: &quot;</span> <span class="o">+</span> <span class="n">path_to_logfiles</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.log&#39;</span><span class="p">)</span>
+
+    <span class="c1"># return the name for the run logger</span>
+    <span class="k">return</span> <span class="n">log_run_name</span><span class="p">,</span> <span class="n">run_id</span></div>
+
+
+<div class="viewcode-block" id="clear_loggers"><a class="viewcode-back" href="../p_io.html#p_io.clear_loggers">[docs]</a><span class="k">def</span> <span class="nf">clear_loggers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Clear the default loggers created with set_up_loggers() (&#39;main&#39; and &#39;run&#39;) for reuse by removing all handlers</span>
+<span class="sd">    from the logger objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">log_name</span> <span class="ow">in</span> <span class="n">log_names</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">log_name</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">logger</span><span class="o">.</span><span class="n">hasHandlers</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

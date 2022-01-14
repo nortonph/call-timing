@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>p_io module &mdash; call-time-model  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/p_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="p_macro module" href="p_macro.html" />
+    <link rel="prev" title="p_input module" href="p_input.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> call-time-model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_all.html">run_all module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fig_ms.html">fig_ms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lif.html">lif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_analysis.html">p_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_input.html">p_input module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">p_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_macro.html">p_macro module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_plot.html">p_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="p_util.html">p_util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">call-time-model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>p_io module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/p_io.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-p_io">
+<span id="p-io-module"></span><h1>p_io module<a class="headerlink" href="#module-p_io" title="Permalink to this headline">¶</a></h1>
+<p>Functions for writing/reading data and figures to/from the hard drive, as well as logging. [call-time-model]</p>
+<dl class="py function">
+<dt id="p_io.aggregate_monitors_from_parex">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">aggregate_monitors_from_parex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_nrn_to_subset_abs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#aggregate_monitors_from_parex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.aggregate_monitors_from_parex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect output data from a parameter exploration (all .pkl files in directory) and aggregate all state monitors,
+spike monitors, info dicts, etc. into a multi-run list for each, for further analysis. Returns are similar to
+load_monitors(), but each element in the lists (e.g. spikemons) is the ouput of a different parex simulation.
+Optionally return only the data of a single neuron to save memory, given by idx_nrn_to_subset_abs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – full PATH to directory containing .pkl output files of a parameter exploration run</p></li>
+<li><p><strong>idx_nrn_to_subset_abs</strong> (<em>int</em><em> or </em><em>None</em>) – absolute index to the neuron for which spike- and state-data should be extracted and
+returned. if None, whole monitors will be returned (potentially very memory intensive - avoid if not needed)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>statemons: list of brian2 StateMonitor - like(!) SimpleNamespaces aggregated from the files in pathname</p></li>
+<li><p>spikemons: list of brian2 SpikeMonitor - like(!) SimpleNamespaces aggregated from the files</p></li>
+<li><p>spikemon_poisson: list of brian2 SpikeMonitor-like SimpleNamespace containing spikes of poisson_group or Nones</p></li>
+<li><p>connectivity: list of dictionaries containing synaptic connectivity information</p></li>
+<li><p>connectivity_generator: list of dictionaries containing spikegenerator connectivity information (can be empty)</p></li>
+<li><p>config: list of dictionaries as loaded from .json configuration file</p></li>
+<li><p>info: list of dictionaries containing additional information about simulation, created by run_simulation()</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>statemons: [SimpleNamespace]</p></li>
+<li><p>spikemons: [SimpleNamespace]</p></li>
+<li><p>spikemon_poisson: [SimpleNamespace] or [None]</p></li>
+<li><p>connectivity: [dict]</p></li>
+<li><p>connectivity_generator: [dict]</p></li>
+<li><p>config: [dict]</p></li>
+<li><p>info: [dict]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.check_config">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">check_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#check_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.check_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform some checks on the contents of the model configuration file (e.g. are number of parameter values
+consistent with the number of populations/synapses, etc.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters, as loaded from .json configuration file</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – filename of .json config file (or model name, i.e. filename without extension)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.clear_loggers">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">clear_loggers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#clear_loggers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.clear_loggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the default loggers created with set_up_loggers() (‘main’ and ‘run’) for reuse by removing all handlers
+from the logger objects.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.create_logger">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">create_logger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_log_to_console</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#create_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.create_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a logger for printing to console and/or log file, using “logging” from the python standard library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger_name</strong> (<em>str</em>) – name of the logger object</p></li>
+<li><p><strong>filename_log</strong> (<em>str</em><em> or </em><em>None</em>) – [default=None] filename of log file (text file, full path). if None, only log to console.
+serial number will be appended.</p></li>
+<li><p><strong>b_log_to_console</strong> (<em>bool</em>) – [default=True] set False to suppress ouput to console for this logger</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>log: reference to logger object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.create_path_to_file">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">create_path_to_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#create_path_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.create_path_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether all directories in the path to the file exist and if not, create them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – filename (full path) to be checked</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.get_file_list">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">get_file_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_ending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#get_file_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.get_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a (sorted) list of all filenames in a directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – full path of directory containing the files whose names are to be returned</p></li>
+<li><p><strong>file_ending</strong> (<em>str</em><em> or </em><em>list</em>) – returned list will only contain filenames ending on this. can be a string or a list of strings,
+e.g. [‘.png’, ‘.jpg’]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>file_list: list of filenames</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>file_list: list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.get_filename_from_path">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">get_filename_from_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_keep_ending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#get_filename_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.get_filename_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits full path string (e.g. “/path/to/filename.end”) and returns the file name (“filename.end” or “filename”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>full_path</strong> (<em>str</em>) – full path to file</p></li>
+<li><p><strong>b_keep_ending</strong> (<em>bool</em>) – if False, remove file ending (everything including and following the last ‘.’ in the filename)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>pathname: pathname without filename</p></li>
+<li><p>filename: filename with or without ending</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>pathname: str</p></li>
+<li><p>filename: str</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.get_ids_from_file_list">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">get_ids_from_file_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#get_ids_from_file_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.get_ids_from_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a list of filenames with the format <em>_x.</em>, where x is a number, and returns a list of all x as integers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_list</strong> (<em>list</em>) – list of filenames in the format <em>_x.</em></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ids: list of integers of the ids found in the file_list</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ids: list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.get_next_log_id">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">get_next_log_id</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename_main_log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#get_next_log_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.get_next_log_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>ONLY GETS CALLED INTERNALLY. Return the next free id for run log file. opens main log (filename_main_log) and
+returns the number (id) at the beginning of the last line plus one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename_main_log</strong> (<em>str</em>) – filename of main log file (text file, full path)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>next_id: integer id for next log file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.get_param_exploration_configs">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">get_param_exploration_configs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_lo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_hi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_generate_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#get_param_exploration_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.get_param_exploration_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes two config files and returns a config file for each unique combination of parameter values, interpolated
+between the values of config_lo and config_hi, incremented by the values in config_hi[‘step_size’] for each param.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_lo</strong> (<em>dict</em>) – regular config file as loaded from .json, containing lower limits of all parameters</p></li>
+<li><p><strong>config_hi</strong> (<em>dict</em>) – config file containing the upper limits for only those parameters that should be varied. Needs to
+contain an additional dict ‘step_size’ that has names of all explored parameters as keys and as values the
+amount by which the parameter values are to be interpolated between those in config_lo and config_hi</p></li>
+<li><p><strong>b_generate_configs</strong> (<em>bool</em>) – set False if ‘configs’ and ‘log_lines’ are not actually needed. both will be an
+empty list in that case</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>configs: list of config dictionaries</p></li>
+<li><p>log_lines: list of one line of text for each config with explored parameter values for log file</p></li>
+<li><p>combinations: list of unique combinations of values for the explored parameters (len==len(configs))</p></li>
+<li><dl class="simple">
+<dt>combo_param_names: list of names of all explored parameters, each repeated, so that</dt><dd><p>combo_param_names[i] is the name of the parameter whose value is at combinations[sim][i]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>all_values_per_param: list of lists, each sublist containing all unique values of the respective</dt><dd><p>parameter. len==len(combo_param_names)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>configs: list</p></li>
+<li><p>log_lines: list</p></li>
+<li><p>combinations: list</p></li>
+<li><p>combo_param_names: list</p></li>
+<li><p>all_values_per_param: list</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.load_config">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">load_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.load_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load model parameters from config file (.json)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – filename of parameter config file (ending .json can be omitted from string). First checks if
+model_name is the filename (full path and ending on .json) of an existing file. filename_out will be None in
+that case. If not, it looks for the file in the default cfg directory.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>config: dictionary of model parameters, as loaded from .json configuration file</p></li>
+<li><p>filename_cfg: filename (full path) of the config file, including .json extension</p></li>
+<li><p>filename_out; filename of the pickle file to be generated for simulation output. None, if full path was passed</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>config: str</p></li>
+<li><p>filename_cfg: str</p></li>
+<li><p>filename_out: str or None</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.load_monitors">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">load_monitors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_silent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_return_first_element_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#load_monitors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.load_monitors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load states of brian2 StateMonitors and SpikeMonitors from binary file, using pickle. (Save with save_monitors())
+Dictionaries containing the states will be converted to SimpleNamespaces and returned as statemons and spikemons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – filename (full path) of input file created by p_io.save_monitors(), containing brian2 monitor data</p></li>
+<li><p><strong>b_silent</strong> (<em>bool</em>) – if True, don’t print success</p></li>
+<li><p><strong>b_return_first_element_only</strong> (<em>bool</em>) – if True, return not the whole lists, but only the first element of each list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>statemons: list of brian2 StateMonitor - like(!) SimpleNamespaces retrieved from the file</p></li>
+<li><p>spikemons: list of brian2 SpikeMonitor - like(!) SimpleNamespaces retrieved from the file</p></li>
+<li><p>spikemon_poisson: brian2 SpikeMonitor - like(!) SimpleNamespace containing spikes of poisson_group or None</p></li>
+<li><p>connectivity: list of dictionaries containing synaptic connectivity information</p></li>
+<li><p>connectivity_generator: list of dictionaries containing spikegenerator connectivity information (can be empty)</p></li>
+<li><p>config: dictionary as loaded from .json configuration file</p></li>
+<li><p>info: list of dictionaries containing additional information about simulation, created by run_simulation()</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>statemons: [SimpleNamespace]</p></li>
+<li><p>spikemons: [SimpleNamespace]</p></li>
+<li><p>spikemon_poisson: SimpleNamespace or None</p></li>
+<li><p>connectivity: [dict]</p></li>
+<li><p>connectivity_generator: [dict]</p></li>
+<li><p>config: dict</p></li>
+<li><p>info: [dict]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.load_neuronexus_spiketimes_from_mat">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">load_neuronexus_spiketimes_from_mat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neuron_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#load_neuronexus_spiketimes_from_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.load_neuronexus_spiketimes_from_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load spiketimes of extracellular recordings aligned to playback onset in seconds from Matlab .mat file. file
+must contain three variables: spktms - cell array of unit-playback combinations, each cell containing one array of
+aligned spiketimes for each trial; info_bslcup - cell array containing an array of indices for each unit-playback
+combination of (in order): bird, location, session, channel, unit, playback; playback_name - cell array containing
+the name of the playback file for each unit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – filename (full path) of a matlab .mat file containing spiketimes (e.g. ‘spks_rfrmt.mat’)</p></li>
+<li><p><strong>neuron_ids</strong> (<em>list</em>) – list of integer ids, one for each unit in the .mat file. if None, use sequential numbers for ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>spiketimes: array of aligned spiketimes of each unit-playback combination, one sub-array per trial</p></li>
+<li><p>info_bslcup: array of indices len(spiketimes) of: Bird, Session, Location, Channel, Unit, Playback</p></li>
+<li><p>playback_name: array of name of playback file for each unit-playback combination, i.e. len(spiketimes)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>spiketimes: numpy.ndarray</p></li>
+<li><p>info_bslcup: numpy.ndarray</p></li>
+<li><p>playback_name: numpy.ndarray</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.load_spiketimes_from_pkl">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">load_spiketimes_from_pkl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#load_spiketimes_from_pkl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.load_spiketimes_from_pkl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load list of spiketimes (in milliseconds; one sublist per trace) from pickle (.pkl) file created by
+save_spiketimes_to_pkl(). Use for spikes detected in recordings. To load spiketimes from model results, use
+p_io.load_monitors() and p_util.get_spiktimes_from_monitor().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – filename (full path) of .pkl file containing spiketimes</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spiketimes_ms: list of lists of spike times (in milliseconds; one sublist per trace)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.load_traces_from_mat">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">load_traces_from_mat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#load_traces_from_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.load_traces_from_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load voltage traces from .mat file (electroGUI format)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – filename of a matlab .mat file containing traces (cell array “traces” with one cell per trial)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>traces: list of numpy.arrays of voltage traces (each array corresponds to a “traces” cell, i.e. trial)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.reformat_config">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">reformat_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_create_backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#reformat_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.reformat_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads an automatically generated .json config file (e.g. using p_macro.config()) and removes certain newlines and
+other whitespaces for better readability. overwrites the original .json file after (optionally) creating a backup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – filename (full path) of the .json config file to be reformatted.</p></li>
+<li><p><strong>b_create_backup</strong> (<em>bool</em>) – crates a backup file in the same path before overwriting the original. appends
+‘_unformatted’ to the filename.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.save_figures">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">save_figures</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure_handles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box_mrgns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_close_figures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_watermark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#save_figures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.save_figures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves figures identified by their figure handles in a format supported by the active backend for pyplot,
+e.g. png, pdf, …</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figure_handles</strong> (<em>matplotlib.figure.Figure</em><em> or </em><em>list</em>) – handle or list of handles to the figure(s) to be plotted</p></li>
+<li><p><strong>base_filename</strong> (<em>str</em>) – filename (full path) of the figure (without extension). If multiple handles are passed,
+base_filename is appended with a running number (three digits, zero-padded)</p></li>
+<li><p><strong>figure_format</strong> (<em>str</em><em> or </em><em>list</em>) – [default=’png’] format supported by the active backend for pyplot, in which the figure is to
+be saved (e.g. ‘png’ or ‘pdf’). This will also serve as the filename extension. Can be a list of formats.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>None</em>) – [default=300] dots per inch of saved figure. None: use system default</p></li>
+<li><p><strong>box_mrgns</strong> (<em>str</em><em> or </em><em>None</em>) – [default=’tight’] set to None to disable “tight” bbox (useful for pixel-perfect conn matrix)</p></li>
+<li><p><strong>run_id</strong> (<em>int</em>) – integer identifier for the simulation run this figure was produced from. gets embedded as metadata
+under key ‘Title’. Default if no run_id was passed: -999.</p></li>
+<li><p><strong>b_close_figures</strong> (<em>bool</em>) – [default=False] if true, figure windows will be closed after saving</p></li>
+<li><p><strong>b_watermark</strong> (<em>bool</em>) – [default=False] if true, plot the run_id as a watermark in the bottom right corner of the figure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.save_monitors">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">save_monitors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikemons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spikes_poisson</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#save_monitors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.save_monitors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save states of brian2 StateMonitors and SpikeMonitors to binary file, using pickle. (Load with load_monitors())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statemons</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries returned by brian2.StateMonitor.get_states()</p></li>
+<li><p><strong>spikemons</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries returned by brian2.SpikeMonitor.get_states()</p></li>
+<li><p><strong>spikes_poisson</strong> (<em>dict</em><em> or </em><em>None</em>) – dict returned by b2.SpikeMonitor.get_states() containing spikes of poisson_group or None</p></li>
+<li><p><strong>connectivity</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries containing synaptic connectivity information</p></li>
+<li><p><strong>connectivity_generator</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries containing spikegenerator connectivity information</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – dictionary of model parameters, as loaded from .json configuration file</p></li>
+<li><p><strong>info</strong> (<em>dict</em><em> or </em><em>list</em>) – dictionary or list of dictionaries containing information about simulation, created by run_simulation()</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – filename (full path) of output file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>log_message: success message for logging</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>log_message: str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.save_spiketimes_to_pkl">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">save_spiketimes_to_pkl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spiketimes_ms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#save_spiketimes_to_pkl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.save_spiketimes_to_pkl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save list of lists of spike times (in milliseconds; one sublist per trace) to pickle file (.pkl). Use for spikes
+detected in recordings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spiketimes_ms</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em>) – list of lists of spike times (in milliseconds; one sublist per trace)</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – filename (full path) of output .pkl file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="p_io.set_up_loggers">
+<code class="sig-prename descclassname"><span class="pre">p_io.</span></code><code class="sig-name descname"><span class="pre">set_up_loggers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_debugging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_parex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_query_comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/p_io.html#set_up_loggers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p_io.set_up_loggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up and return two logger instances: ‘main’ and ‘run’. ‘main’ for ouputting one line to a log file for each
+run, containing run_id, date and time, name of computer it was run on, model config used, output path and commit
+hash. ‘run’ outputs run info to console and log file, as well as copying the contents of the config to log file.
+only the name of the ‘run’ logger will be returned. use it to get the instance via logging.getLogger(log_run_name).
+also returns the run_id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path_output</strong> (<em>str</em>) – path to directory where log files will be created/modified in a subdirectory log/</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model configuration, i.e. .json filename (no path) without the file extension (.json)</p></li>
+<li><p><strong>b_debugging</strong> (<em>bool</em>) – [default=False] if True, add flag to current line in main log file indicating debugging run</p></li>
+<li><p><strong>b_parex</strong> (<em>bool</em>) – [default=False] if True, add flag to current line in main log file indicating parameter exploration</p></li>
+<li><p><strong>b_query_comment</strong> (<em>bool</em>) – [default=True] if False, don’t ask the user to input a comment string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>log_run_name: name of the logger instance of the python logging package to be used to ouput info during run</p></li>
+<li><p>run_id: integer id for tracking the simulation run in log files, etc.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>log_run_name: str</p></li>
+<li><p>run_id: int</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="p_macro.html" class="btn btn-neutral float-right" title="p_macro module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="p_input.html" class="btn btn-neutral float-left" title="p_input module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Philipp Norton.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
