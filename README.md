@@ -39,3 +39,6 @@ If you want to only redo figure generation after having successfully run all sim
 The text in the figures will be slightly different, because the published figures were created using Latex (specifically lualatex) and font Helvetica. If you have lualatex installed, you can set B_USE_LATEX to True in pub/fig_ms.py, ~line 5.
 
 If you have questions or problems, create an issue here or write to: philipp.norton [at] hu-berlin.de
+
+Published as:
+[![DOI](https://zenodo.org/badge/444039862.svg)](https://zenodo.org/badge/latestdoi/444039862)
