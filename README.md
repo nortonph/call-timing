@@ -5,6 +5,8 @@ Requires Python 3.7 and the packages listed in requirements.txt. Requires at lea
 
 Documentation for all functions and the config file format can be found in doc/html/index.html
 
+The LICENSE applies to all .py and .json files in this repository, exclusively.
+
 ## Installation using Linux and pip
 1. If not already installed, get the latest version of Python 3.7 (will not run in 3.8) through your package manager or download from https://www.python.org/downloads/
 2. Clone this repository and navigate to the main directory of your local copy (the directory containing run_all.py)
