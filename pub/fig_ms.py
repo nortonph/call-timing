@@ -49,16 +49,23 @@ FONTSIZE_L = 14
 FONTSIZE_XL = 16
 
 
-def generate_figures(b_save_figures=True):
+def generate_figures(b_save_figures=True, b_plot_fig=None):
     """Main function that loads data, calls the functions that plot the individual figures, and saves those.
 
     :param b_save_figures: If False, figures will not be saved.
     :type b_save_figures: bool
+    :param b_plot_fig: 12-element list that determines which of the 11 manuscript figures (incl. suppl. figures) to plot
+        setting b_plot_fig[n] to True (or 1), means Figure N will be plotted (see beginning of generate_figures() code
+        for ordering of figures). Set all other elements to False or None. If b_plot_fig is None, then all figures will
+        be plotted at once (requires a lot of RAM and crashes if not sufficient)
+    :type b_plot_fig: list or None
     :return:
     """
-    # selectively plot individual figures by setting the corresponding values to 1 and all others to 0:
-    # plot figures      1, 2, 3, 4, 5, sens, sens2, curr, psp, psa, depolarized
-    b_plot_fig = [None, 1, 1, 1, 1, 1, 1,    1,     1,    1,   1,   1]
+
+    if b_plot_fig is None:
+        # selectively plot individual figures by setting the corresponding values to 1 and all others to 0:
+        # plot figures      1, 2, 3, 4, 5, sens, sens2, curr, psp, psa, depolarized
+        b_plot_fig = [None, 1, 1, 1, 1, 1, 1,    1,     1,    1,   1,   1]
     dpi_fig = 600
     figure_formats = ['png', 'pdf']  # ['png', 'pdf', 'eps']
 
