@@ -2,6 +2,7 @@
 """
 
 import os
+import gc  # for manual garbage collection
 from timeit import default_timer as timer  # used to time overall execution duration
 
 import routine
@@ -114,7 +115,12 @@ if __name__ == "__main__":
             p_io.clear_loggers()
 
     if b_generate_figures:
-        fig_ms.generate_figures(b_save_figures=True)
+        # generate and save all manuscript figures sequentially
+        for f in range(1, 12, 1):
+            b_plot_fig = [None] * 12
+            b_plot_fig[f] = True
+            fig_ms.generate_figures(b_save_figures=True, b_plot_fig=b_plot_fig)
+            gc.collect()
 
     end = timer()
     print("DONE. Overall run time: " + str(round(end-start, 1)) + " seconds.")
