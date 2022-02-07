@@ -146,7 +146,7 @@ def generate_figures(b_save_figures=True, b_plot_fig=None):
     if b_plot_fig[4] or b_plot_fig[5]:
         mod1_jam_only_fw = 'ff-inh_jam_only_free-w'
         states_jam_only, spikes_jam_only, _, _, _, config_jam_only, info_jam_only = load_model_data(mod1_jam_only_fw)
-        mod1_jam_free_t = 'ff-inh_jam_free-t'  # this was single jam pop
+        mod1_jam_free_t = 'ff-inh_jam_free-t'
         states_jam_ft, spikes_jam_ft, _, _, _, config_jam_ft, info_jam_ft = load_model_data(mod1_jam_free_t)
         suppr_win = get_suppression_window(config_jam_only, spikes_jam_ft, config_jam_ft, info_jam_ft)
     if b_plot_fig[4]:
@@ -323,7 +323,7 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     n_rows_default = 2
     x_lim_traces = [-100, 125]
     x_lim_psths = [-100, 125]
-    y_lim_traces = [None, None, None, (-55, 0), (-74, 5), (-65, 15), (-85, -60)]
+    y_lim_traces = [(-68, -12), (-72, 10), (-77, -55), (-55, 0), (-74, 5), (-65, 15), (-85, -60)]
     linewidth = 2
     color_map_rec = p_plot.get_color_list(7, color_map_in=[C_COLORS_LIGHT[c] for c in COL_SEQ])
     color_map_mod = p_plot.get_color_list(7, color_map_in=[C_COLORS[c] for c in COL_SEQ])
@@ -425,12 +425,9 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
         dur_sample = 1 / samp_freqs[i]
         dur_trace = dur_sample * trc.size
         x_values = np.linspace(0, dur_trace, trc.size)
-        if i < n_rec_traces:
-            ax_trc[i].axvline(0, color=[0, 0, 0], linewidth=1, linestyle='--')
-        else:
-            ax_trc[i].plot((0, 0),
-                           (y_lim_traces[i][1] - (y_lim_traces[i][1] - y_lim_traces[i][0]) * 0.15, y_lim_traces[i][0]),
-                           color=[0, 0, 0], linewidth=1, linestyle='--')
+        ax_trc[i].plot((0, 0),
+                       (y_lim_traces[i][1] - (y_lim_traces[i][1] - y_lim_traces[i][0]) * 0.15, y_lim_traces[i][0]),
+                       color=[0, 0, 0], linewidth=1, linestyle='--')
         ax_trc[i].plot(x_values - offset_ms[i], trc, color=color_map_trc[i], linewidth=linewidth)
         # format axis
         ax_trc[i].set_xlim(x_lim_traces)
@@ -446,14 +443,12 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
     # endregion
 
     # region plot neuron descriptions ###########################################################################
-    text_nrn = ['Predicted Vocal-related Input Neuron', 'Inhibitory Interneuron', 'Premotor Neuron',
+    text_nrn = ['Inhibitory Interneuron', 'Premotor Neuron', 'Premotor Neuron (silent)',
+                'Predicted Vocal-related Input Neuron', 'Inhibitory Interneuron', 'Premotor Neuron',
                 'Premotor Neuron (silent)']
-    i_txt_color = [0, 1, 3, 2]
-    i_mod_trc = list(range(n_rec_traces, n_rec_traces + len(text_nrn)))
     for i, txt in enumerate(text_nrn):
-        ax_trc[i_mod_trc[i]].text((x_lim_traces[1] + x_lim_traces[0]) / 2, y_lim_traces[i_mod_trc[i]][1], text_nrn[i],
-                                  va='top', ha='center',
-                                  fontsize=FONTSIZE_S, fontweight='bold', color=color_map_mod[i_txt_color[i]])
+        ax_trc[i].text((x_lim_traces[1] + x_lim_traces[0]) / 2, y_lim_traces[i][1], text_nrn[i], va='top', ha='center',
+                       fontsize=FONTSIZE_S, fontweight='bold', color=color_map_trc[i])
     # endregion
 
     # region plot circuit diagrams ##############################################################################
@@ -1732,7 +1727,7 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
                                                              info_jam_only[0]['population_sizes'])
     playback_onset_mod_jam_only = config_jam_only['misc']['playback_start']
     rec_offset_ms_spiking = [[100] * 12, [100, 100, 100, 100, 100, 200, 100, 100]]  # realigned (last 100 before)
-    idx_mon_oi_mod = [22, 15, 7]
+    idx_mon_oi_mod = [22, 17, 11]
     idx_nrn_oi_mod_abs_trc = p_util.get_abs_from_rel_nrn_idx(config_jam_ft['plot']['idx_nrn_oi_relative'],
                                                              config_jam_ft['plot']['idx_pop_oi'],
                                                              info_jam_ft[0]['population_sizes'])
@@ -2163,7 +2158,7 @@ def fig_s_current(states_curr, info_curr, config_curr):
         # other settings
         axes[pop].set_xlabel(' ')
         axes[pop].set_ylabel('$\mathbf{I_e}$ [pA]')
-        # axes[pop].set_ylim(abs_min_trc, abs_max_trc)
+        axes[pop].set_ylim((70, 300))
         axes[pop].set_xlim((-100, 100))
 
     axes[1].set_xlabel('Time from call onset [ms]')
