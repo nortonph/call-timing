@@ -1974,7 +1974,7 @@ def plot_sensitivity_traces(statemons, spikemons, infos, config_lo, conditions_m
             else:
                 axes[i].set_xlabel(' ')
                 if x == round(n_gridcols/2) - 1:
-                    axes[i].set_xlabel(axes[i].get_xlabel() + '\n' + 'Time from call onset [ms]')
+                    axes[i].set_xlabel(axes[i].get_xlabel() + '\n' + 'Time from call production onset [ms]')
             if x == n_gridcols - 1:
                 axes[i].yaxis.set_ticklabels([])
                 ax_r = axes[i].twinx()
