@@ -437,7 +437,7 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
         if i_rows_trc[i] < n_rows - n_rows_default:
             ax_trc[i].set_xticklabels([])
         else:
-            ax_trc[i].set_xlabel('Time from call onset [ms]')
+            ax_trc[i].set_xlabel('Time from call production onset [ms]')
         if i_rows_trc[i] == 0:
             ax_trc[i].set_title('Model neurons', fontweight='bold')
     # endregion
@@ -516,7 +516,7 @@ def figure1(states_fw, spikes_fw, info_fw, states_hy, info_hy, states_ag, spikes
                       labels=[None] * np.floor((n_int - 1) / 2).astype(int) + ['observed'] +
                              [None] * np.ceil((n_int - 1) / 2).astype(int) + ['model'],
                       colors=color_rec + [color_map_mod[1]], linewidth=[1] * len(t_int_rec_offset) + [2])
-    ax_psth[1].set_xlabel('Time from call onset [ms]')
+    ax_psth[1].set_xlabel('Time from call production onset [ms]')
     for i in range(len(ax_psth)):
         ax_psth[i].set_title('')
         ax_psth[i].set_ylabel('Spike rate [Hz]')
@@ -720,7 +720,7 @@ def figure2(states_fw, spikes_fw, info_fw, config_fw, states_m0, spikes_m0, info
         if i % 2 == 0 and i != len(traces) - 2:
             ax_trc[i].set_xticklabels([])
         else:
-            ax_trc[i].set_xlabel('Time from call onset [ms]')
+            ax_trc[i].set_xlabel('Time from call production onset [ms]')
         # print inhibitory weights
         if i < 6:
             ax_trc[i].text(50, 0, str(int(np.rint(inh_weights[i]))) + ' pA', ha='left',
@@ -1198,8 +1198,8 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
         if a in [2, 3]:
             ax_mtrx[a].set_yticks(np.arange(10, len(psth_sorted) + 1, 10))
         ax_mtrx[a].set_ylabel(' ')
-    ax_mtrx[2].set_ylabel('Neuron Nr.\n')
-    ax_mtrx[0].set_ylabel('Neuron Nr.')
+    ax_mtrx[2].set_ylabel('Neuron\n')
+    ax_mtrx[0].set_ylabel('Neuron')
     # add colorbar
     for a in range(4):
         h_cb = plt.colorbar(
@@ -1219,7 +1219,7 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
     ax_hist[0].hist(psth_baseline_mean, 30, color='k')
     ax_hist[0].set_xlim((0, 90))
     ax_hist[0].set_xlabel('Baseline spike rate [Hz]')
-    ax_hist[0].set_ylabel('Nr. of neurons')
+    ax_hist[0].set_ylabel('N neurons')
     # endregion
 
     # region line plot ################################################################
@@ -1241,7 +1241,7 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
                                             fill=False, linewidth=0.5, linestyle='--')
     box.set_clip_on(False)
     ax_line[0].add_patch(box)
-    ax_line[0].set_ylabel('Neuron Nr.')
+    ax_line[0].set_ylabel('Neuron')
     # endregion
 
     # region horizontal bars ###########################################################################################
@@ -1304,7 +1304,7 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
         ax_bar[a].invert_yaxis()
         # ax_bar[a].get_yaxis().set_visible(False)
         # ax_bar[a].spines['left'].set_visible(False)
-        ax_bar[a].set_ylabel('Neuron Nr.')
+        ax_bar[a].set_ylabel('Neuron')
         ax_bar[a].set_xlabel('')
         ax_bar[a].set_xticklabels([])
         # add box marker for playback time
@@ -1929,7 +1929,7 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
                     va='bottom', ha='center', fontsize=FONTSIZE_XS, color=[.9, .3, 0])
     ax_brst[0].set_xlim(xlims_burst)
     ax_brst[0].set_ylim((0.5, len(idx_nrn_sort_by_tfs) + 0.5))
-    ax_brst[0].set_xlabel('Time of burst onsets from call onset [ms]')
+    ax_brst[0].set_xlabel('Time of burst onsets from\ncall production onset [ms]')
     ax_brst[0].set_ylabel('Observed premotor neuron\n(data from Benichov \& Vallentin, 2020)')
     # endregion
 
@@ -2023,6 +2023,8 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
         ax_hist.append(plt.subplot2grid((n_rows, n_cols), (i_rows_hist[p], i_cols_hist[p]),
                                         colspan=n_cols_hist, rowspan=n_rows_hist))
         ax_hist[p].axvline(0, color=[0, 0, 0], linewidth=1, linestyle=':')
+        # marker for background call level (15.75 is the average bin size from 600ms to 1000ms (i.e. playback onset)
+        ax_hist[p].axhline(15.75, color=[0, 0, 0], linewidth=0.7, linestyle='--', label='background\ncall level')
         if p == 0:
             n, _, _ = ax_hist[p].hist(call_onsets_rand, color=[.8, .8, .8], histtype='stepfilled',
                                       bins=np.arange(t_call_onset_sim_range[0], t_call_onset_sim_range[1] + 20, 20))
@@ -2075,7 +2077,11 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
     ax_hist_all[0].set_ylim((0, 150))
     ax_hist_all[0].set_ylabel('N observed\ncall onsets')
     ax_hist_all[-1].set_xlabel('Time from playback onset [ms]')
-    ax_hist_all[0].legend(framealpha=0.9)
+    # marker for background call level (15.75 is the average bin size from 600ms to 1000ms (i.e. playback onset)
+    ax_hist_all[0].axhline(15.75, color=[0, 0, 0], linewidth=0.7, linestyle='--', label='background\ncall level')
+    hndls, lbls = ax_hist_all[0].get_legend_handles_labels()
+    label_order = [1, 2, 0]
+    ax_hist_all[0].legend([hndls[i] for i in label_order], [lbls[i] for i in label_order], framealpha=0.9)
     zoom_area = matplotlib.patches.Rectangle((t_call_onset_sim_range[0], 0), width_zoom, max_bin, zorder=5,
                                              linestyle='-', linewidth=1.5, color='r', fill=False, clip_on=False)
     ax_hist_all[0].add_patch(zoom_area)
@@ -2161,7 +2167,7 @@ def fig_s_current(states_curr, info_curr, config_curr):
         axes[pop].set_ylim((70, 300))
         axes[pop].set_xlim((-100, 100))
 
-    axes[1].set_xlabel('Time from call onset [ms]')
+    axes[1].set_xlabel('Time from call production onset [ms]')
     axes[3].set_xlabel('Time from playback onset [ms]')
 
     # share x axis (time) among all  plots
