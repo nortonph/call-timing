@@ -116,8 +116,8 @@ if __name__ == "__main__":
 
     if b_generate_figures:
         # generate and save all manuscript figures sequentially
-        for f in range(1, 12, 1):
-            b_plot_fig = [None] * 12
+        for f in range(1, 13, 1):
+            b_plot_fig = [None] * 13
             b_plot_fig[f] = True
             fig_ms.generate_figures(b_save_figures=True, b_plot_fig=b_plot_fig)
             gc.collect()
