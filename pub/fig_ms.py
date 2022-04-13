@@ -19,6 +19,7 @@ import numpy as np
 import brian2 as b2
 import matplotlib.gridspec
 from scipy.stats import norm
+from scipy.special import expit
 
 import routine
 from fcn import p_io, p_util, p_plot, p_analysis
@@ -64,8 +65,8 @@ def generate_figures(b_save_figures=True, b_plot_fig=None):
 
     if b_plot_fig is None:
         # selectively plot individual figures by setting the corresponding values to 1 and all others to 0:
-        # plot figures      1, 2, 3, 4, 5, sens, sens2, curr, psp, psa, depolarized
-        b_plot_fig = [None, 1, 1, 1, 1, 1, 1,    1,     1,    1,   1,   1]
+        # plot figures      1, 2, 3, 4, 5, sens, sens2, curr, psp, psa, depolarized, thresh
+        b_plot_fig = [None, 1, 1, 1, 1, 1, 1,    1,     1,    1,   1,   1,           1]
     dpi_fig = 600
     figure_formats = ['png', 'pdf']  # ['png', 'pdf', 'eps']
 
@@ -143,7 +144,7 @@ def generate_figures(b_save_figures=True, b_plot_fig=None):
         states_ag1_lowin, spikes_ag1_lowin, _, _, _, _, info_ag1_lowin = p_io.load_monitors(mod1_agg_low_inh_path)
         mod2_agg_low_inh_path = 'out/tonic-inh_agg_low-inh_lo/aggregate/tonic-inh_agg_low-inh_lo_aggregate_subset_nrn181.pkl'
         states_ag2_lowin, spikes_ag2_lowin, _, _, _, _, info_ag2_lowin = p_io.load_monitors(mod2_agg_low_inh_path)
-    if b_plot_fig[4] or b_plot_fig[5]:
+    if b_plot_fig[4] or b_plot_fig[5] or b_plot_fig[12]:
         mod1_jam_only_fw = 'ff-inh_jam_only_free-w'
         states_jam_only, spikes_jam_only, _, _, _, config_jam_only, info_jam_only = load_model_data(mod1_jam_only_fw)
         mod1_jam_free_t = 'ff-inh_jam_free-t'
@@ -168,7 +169,7 @@ def generate_figures(b_save_figures=True, b_plot_fig=None):
     # load recording data
     if b_plot_fig[1] or b_plot_fig[2]:
         traces_example, _, spiketimes_int, _ = load_recording_data(path_to_traces_example, path_to_spiketimes_int)
-    if b_plot_fig[1] or b_plot_fig[2] or b_plot_fig[5] or b_plot_fig[10]:
+    if b_plot_fig[1] or b_plot_fig[2] or b_plot_fig[5] or b_plot_fig[10] or b_plot_fig[12]:
         traces_spiking, _, spiketimes_spiking, _ = load_recording_data(path_to_traces_spiking,
                                                                        path_to_spiketimes_spiking)
     if b_plot_fig[2] or b_plot_fig[5] or b_plot_fig[10]:
@@ -178,7 +179,7 @@ def generate_figures(b_save_figures=True, b_plot_fig=None):
         traces_nif, _, spiketimes_nif, _ = load_recording_data(path_to_traces_nif, path_to_spiketimes_nif)
 
     # load behavioral data
-    if b_plot_fig[5]:
+    if b_plot_fig[5] or b_plot_fig[12]:
         call_onset_times = scipy.io.loadmat('rec/behavioral_data/all_call_onset_times.mat')
 
     # load playback-aligned premotor traces
@@ -304,6 +305,13 @@ def generate_figures(b_save_figures=True, b_plot_fig=None):
                           b_make_ticklabel_font_sansserif=True)
         if b_save_figures:
             p_io.save_figures(fig_dep, pathname_fig + 'figS5', figure_format=figure_formats, dpi=dpi_fig,
+                              b_close_figures=True, run_id=info_fw[0]['run_id'], b_watermark=False)
+    if b_plot_fig[12]:  # supplementary figure call suppression with thresholding mechanism
+        fig_thresh, ax_thresh = fig_s_thresholding(spiketimes_spiking, call_onset_times, suppr_win)
+        p_plot.format_fig(fig_thresh, ax_thresh, b_remove_box=True, b_remove_legend=False,
+                          b_make_ticklabel_font_sansserif=True)
+        if b_save_figures:
+            p_io.save_figures(fig_thresh, pathname_fig + 'figSx', figure_format=figure_formats, dpi=dpi_fig,
                               b_close_figures=True, run_id=info_fw[0]['run_id'], b_watermark=False)
 
 
@@ -793,7 +801,7 @@ def figure2(states_fw, spikes_fw, info_fw, config_fw, states_m0, spikes_m0, info
     # set axis limits and plot
     x_lim_crc = (min([min(v) for v in x_circuit]) - 0.7, max([max(v) for v in x_circuit]) + 0.3)
     y_lim_crc = (min([min(v) for v in y_circuit]) - 0.3, max([max(v) for v in y_circuit]) + 0.7)
-    text_mod = ['No inhibition', 'Tonic inhibition', 'Feed-forward\ninhibition']
+    text_mod = ['No inhibition', 'Strictly tonic\ninhibition', 'Feed-forward\ninhibition']
     for i in range(len(x_circuit)):
         ax_crc_big.append(plt.subplot2grid((n_rows, n_cols), (i_rows_crc_big[i], i_cols_crc_big[i]),
                                            colspan=n_cols_crc_big, rowspan=n_rows_crc_big))
@@ -1260,6 +1268,18 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
                                                     for i in range(len(nexus_responses['on_minus']))
                                                     if nexus_responses['sort_order_neg'][i]
                                                     in np.array(idx_strictly_neg_to_sorted_responsive) + 1])
+    # get only the onsets of the first response of each neuron
+    neuron_ids_pos = np.unique(nexus_responses['sort_order_pos'])
+    neuron_ids_neg = np.unique(nexus_responses['sort_order_neg'])
+    on_plus_first = np.zeros(len(neuron_ids_pos))
+    on_minus_first = np.zeros(len(neuron_ids_neg))
+    for i, id in enumerate(neuron_ids_pos):
+        pos_tmp = np.where(nexus_responses['sort_order_pos'] == id)[0]
+        on_plus_first[i] = np.min(nexus_responses['on_plus'][pos_tmp])
+    for i, id in enumerate(neuron_ids_neg):
+        neg_tmp = np.where(nexus_responses['sort_order_neg'] == id)[0]
+        on_minus_first[i] = np.min(nexus_responses['on_minus'][neg_tmp])
+    # get values and plot
     for a in range(2):
         ax_bar.append(plt.subplot2grid((n_rows, n_cols), (i_rows_bar[a], i_cols_bar[a]),
                                        colspan=n_cols_bar, rowspan=n_rows_bar))
@@ -1270,6 +1290,8 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
             color_cur = [0.9, 0.1, 0.15, 0.66]
             print('mean onset time of all ' + str(len(on_cur)) + ' positive responses: ' + str(np.mean(on_cur)))
             print('stdev onset time of all ' + str(len(on_cur)) + ' positive responses: ' + str(np.std(on_cur)))
+            print('mean onset time of all first responses (' + str(len(on_plus_first)) + '): ' + str(np.mean(on_plus_first)))
+            print('stdev onset time of all first responses (positive): ' + str(np.std(on_plus_first)))
             print('mean duration of all ' + str(len(dur_cur)) + ' positive responses: ' + str(np.mean(dur_cur)))
             print('stdev duration of all ' + str(len(dur_cur)) + ' positive responses: ' + str(np.std(dur_cur)))
             print('n positive response onsets during playback: ' + str(sum(nexus_responses['on_plus'] <= 110)))
@@ -1279,6 +1301,7 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
                   + str(sum(resp_onsets_strictly_pos_responders <= 110)))
             print('expected number (if response onsets uniformly distr. in time): ' +
                   str(110 / 500 * len(id_strictly_pos_responsive)))
+            print('-------------------------------------------------------------------------')
         else:
             on_cur = nexus_responses['on_minus']
             dur_cur = nexus_responses['dur_minus']
@@ -1286,6 +1309,8 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
             color_cur = [0.1, 0.4, 0.9, 0.66]
             print('mean onset time of all ' + str(len(on_cur)) + ' negative responses: ' + str(np.mean(on_cur)))
             print('stdev onset time of all ' + str(len(on_cur)) + ' negative responses: ' + str(np.std(on_cur)))
+            print('mean onset time of all first responses (' + str(len(on_minus_first)) + '): ' + str(np.mean(on_minus_first)))
+            print('stdev onset time of all first responses (negative): ' + str(np.std(on_minus_first)))
             print('mean duration of all ' + str(len(dur_cur)) + ' negative responses: ' + str(np.mean(dur_cur)))
             print('stdev duration of all ' + str(len(dur_cur)) + ' negative responses: ' + str(np.std(dur_cur)))
             print('n negative response onsets during playback: ' + str(sum(nexus_responses['on_minus'] <= 110)))
@@ -1295,6 +1320,15 @@ def figure3(spiketimes_nexus, unit_id, psths_nexus_matlab, idx_nexus_responsive,
                   + str(sum(resp_onsets_strictly_neg_responders <= 110)))
             print('expected number (if response onsets uniformly distr. in time): ' +
                   str(110 / 500 * len(id_strictly_neg_responsive)))
+            print('-------------------------------------------------------------------------')
+            on_all = np.concatenate((nexus_responses['on_plus'], nexus_responses['on_minus']))
+            on_all_first = np.concatenate((on_plus_first, on_minus_first))
+            print('mean onset time of all ' + str(len(on_all)) + ' responses: ' + str(np.mean(on_all)))
+            print('stdev onset time of all ' + str(len(on_all)) + ' responses: ' + str(np.std(on_all)))
+            print('range of onset times of all resp.: ' + str(min(on_all)) + ' - ' + str(max(on_all)) + ' ms')
+            print('mean onset time of all ' + str(len(on_all_first)) + ' first responses: ' + str(np.mean(on_all_first)))
+            print('stdev onset time of all ' + str(len(on_all_first)) + ' first responses: ' + str(np.std(on_all_first)))
+            print('range of onset times of first resp.: ' + str(min(on_all_first)) + ' - ' + str(max(on_all_first)) + ' ms')
         for b in range(len(on_cur)):
             hor_bar = matplotlib.patches.Rectangle((on_cur[b][0], order_cur[b][0] - 0.3), dur_cur[b][0], 0.6,
                                                    color=color_cur, fill=True, clip_on=True, linewidth=0)
@@ -1996,6 +2030,18 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
     ax_ovrlp[1].set_ylabel('% suppr.')
     # endregion
 
+    # region thresholding suppression function (added during review - output same, but clearer code) #########
+    sigmoid = expit(np.arange(0, 101) - 25)
+    suppr_likelihood_thresholding = np.zeros((len(ratio_overlap_with_suppr_win), 1))
+    for t in range(len(suppr_likelihood_thresholding)):
+        suppr_likelihood_thresholding[t] = sigmoid[round(ratio_overlap_with_suppr_win[t] * 100)]
+    b_thresholding = False
+    if b_thresholding:
+        suppr_likelihood = suppr_likelihood_thresholding
+    else:
+        suppr_likelihood = ratio_overlap_with_suppr_win * 1.5
+    # endregion
+
     # region histograms of simulated and recorded call onset times ########################################
     # create pseudorandomly, uniformly distributed call onsets w/o and w/ suppression
     prng = np.random.RandomState(19)
@@ -2004,7 +2050,7 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
                              for i in range(len(call_onsets_rand))]
     call_onsets_suppr = []
     for i, c in enumerate(call_onsets_rand):
-        if prng.uniform() < (1 - ratio_overlap_with_suppr_win[idx_closest_sim_onset[i]] * 1.5):
+        if prng.uniform() < (1 - suppr_likelihood[idx_closest_sim_onset[i]]):
             call_onsets_suppr.append(c)
 
     # shift end of distribution of recorded calls to beginning (before 0)
@@ -2044,9 +2090,9 @@ def figure5(states_jam_only, spikes_jam_only, info_jam_only, config_jam_only,
         ax_hist[i].set_xlabel(' ')
         ax_hist[i].tick_params(labelbottom=False)
     ax_hist[-1].set_xlabel('Time from playback onset [ms]')
-    ax_hist[0].text(66, max_bin - 13, 'simulation\n(no suppression)', ha='center', size=FONTSIZE_S, color=[.7, .7, .7])
-    ax_hist[1].text(42, max_bin - 7, 'simulation', ha='center', size=FONTSIZE_S, color=clr[0])
-    ax_hist[2].text(41, max_bin - 7, 'control', ha='center', size=FONTSIZE_S, color=clr[1])
+    ax_hist[0].text(55, max_bin - 13, 'simulation\nno suppression', ha='center', size=FONTSIZE_S, color=[.7, .7, .7])
+    ax_hist[1].text(46, max_bin - 7, 'simulation', ha='center', size=FONTSIZE_S, color=clr[0])
+    ax_hist[2].text(43, max_bin - 7, 'control', ha='center', size=FONTSIZE_S, color=clr[1])
     ax_hist[3].text(40, max_bin - 7, 'gabazine', ha='center', size=FONTSIZE_S, color=clr[2])
     # add red borders to observed histograms
     width_zoom = sum([abs(t) for t in t_call_onset_sim_range])
@@ -2254,7 +2300,7 @@ def fig_s_prespike_ramp(states_ag0, spikes_ag0, info_ag0,
     # set axis limits and plot
     x_lim_crc = (min([min(v) for v in x_circuit]) - 0.7, max([max(v) for v in x_circuit]) + 0.3)
     y_lim_crc = (min([min(v) for v in y_circuit]) - 0.3, max([max(v) for v in y_circuit]) + 0.7)
-    text_mod = ['No inhibition', 'Tonic inhibition', 'Feed-forward\ninhibition']
+    text_mod = ['No inhibition', 'Strictly tonic\ninhibition', 'Feed-forward\ninhibition']
     for i in range(len(x_circuit)):
         ax_crc_big.append(plt.subplot2grid((n_rows, n_cols), (i_rows_crc_big[i], i_cols_crc_big[i]),
                                            colspan=n_cols_crc_big, rowspan=n_rows_crc_big))
@@ -2423,6 +2469,176 @@ def fig_s_depolarized(traces_playback_aligned):
     plt.subplots_adjust(wspace=0.4, hspace=0.8)
 
     return fig, ax_sub
+
+
+def fig_s_thresholding(spiketimes_spiking, call_onset_times, suppr_win):
+    # figure parameters
+    n_rows = 14
+    n_cols = 3
+    i_rows_thrsh = [0]
+    i_cols_thrsh = [0]
+    n_cols_thrsh = 3
+    n_rows_thrsh = 2
+    i_rows_supp = [3]
+    i_cols_supp = [0]
+    n_cols_supp = 3
+    n_rows_supp = 2
+    i_rows_hist = [6, 8, 10, 12]
+    i_cols_hist = [0, 0, 0, 0]
+    n_cols_hist = 3
+    n_rows_hist = 2
+    color_map_rec = p_plot.get_color_list(8, color_map_in=[C_COLORS_LIGHT[c] for c in COL_SEQ])
+    color_map_mod = p_plot.get_color_list(8, color_map_in=[C_COLORS[c] for c in COL_SEQ])
+
+    # set up figure
+    fig = plt.figure(figsize=(n_cols * 0.888, n_rows * 0.75))
+    matplotlib.gridspec.GridSpec(n_rows, n_cols)
+    ax_thrsh = []
+    ax_supp = []
+    ax_hist = []
+
+    # region get estimated window of succeptibilliy ("burst_suppression_win" here; same calculation as in Figure 5)
+    rec_offset_ms_spiking = [[100] * 12, [100, 100, 100, 100, 100, 200, 100, 100]]  # realigned (last 100 before)
+    t_first_spike_nrn = []
+    t_first_spike_avg = []
+    t_first_spike_std = []
+    for n, spikes_nrn in enumerate(spiketimes_spiking):
+        t_first_spike_nrn.append([])
+        for t, spikes_trial in enumerate(spikes_nrn):
+            # NOTE: hardcoded criterion to exclude post-call spikes (100ms after call onset)
+            if spikes_trial and spikes_trial[0] < rec_offset_ms_spiking[0][n] + 100:
+                t_first_spike_nrn[n].append(spikes_trial[0])
+        t_first_spike_avg.append(np.mean(t_first_spike_nrn[n]))
+        t_first_spike_std.append(np.std(t_first_spike_nrn[n]))
+    # calculate estimated time window of burst onsets susceptible to inhibitory suppression
+    min_std_left = np.min([t_first_spike_avg[v] - t_first_spike_std[v] for v in range(len(t_first_spike_avg))])
+    burst_suppression_win = (min_std_left - rec_offset_ms_spiking[0][0], -10)
+    # endregion
+
+    # region plot overlap of time window after playback in which inhibition can suppress PM bursts and estimated time
+    # window before call production in which PM suppression could cancel a call.
+    # calculate time window for each potential call onset (1ms steps) in which bursts would be succeptible to
+    # suppression (i.e. the suppression window estimated from burst onsets of recorded PMs)
+    t_call_onset_sim_range = (-60, 160)
+    x_lim_ovrlp = t_call_onset_sim_range
+    t_call_onset_sim = np.array(range(t_call_onset_sim_range[0], t_call_onset_sim_range[1] + 1))
+    burst_suppression_win_len = burst_suppression_win[1] - burst_suppression_win[0]
+    burst_windows_ms_lr = [t_call_onset_sim + burst_suppression_win[0], t_call_onset_sim + burst_suppression_win[1]]
+    t_overlap_ms = np.zeros(len(t_call_onset_sim))
+    ratio_overlap_with_suppr_win = np.zeros(len(t_call_onset_sim))
+    for i_call, t_call in enumerate(t_call_onset_sim):
+        burst_win_l = burst_windows_ms_lr[0][i_call]
+        burst_win_r = burst_windows_ms_lr[1][i_call]
+        b_burst_win_r_in_suppr_win = suppr_win[0] < burst_win_r < suppr_win[1]
+        b_burst_win_l_in_suppr_win = suppr_win[0] < burst_win_l < suppr_win[1]
+        if b_burst_win_r_in_suppr_win and not b_burst_win_l_in_suppr_win:  # late bursts suppressed
+            t_overlap_ms[i_call] = burst_win_r - suppr_win[0]
+        elif b_burst_win_r_in_suppr_win and b_burst_win_r_in_suppr_win:  # all bursts suppressed
+            t_overlap_ms[i_call] = burst_win_r - burst_win_l
+        elif b_burst_win_l_in_suppr_win and not b_burst_win_r_in_suppr_win:  # early bursts suppressed
+            t_overlap_ms[i_call] = suppr_win[1] - burst_win_l
+        elif burst_win_l < suppr_win[0] and burst_win_r > suppr_win[1]:  # middle bursts suppressed
+            t_overlap_ms[i_call] = suppr_win[1] - suppr_win[0]
+        ratio_overlap_with_suppr_win[i_call] = t_overlap_ms[i_call] / burst_suppression_win_len
+    # endregion
+
+    # region thresholding suppression function (added during review) ######################################
+    sigmoid = expit(np.arange(0, 101) - 25)
+    suppr_likelihood_linear = ratio_overlap_with_suppr_win * 1.5
+    suppr_likelihood_thresholding = np.zeros((len(ratio_overlap_with_suppr_win), 1))
+    for t in range(len(suppr_likelihood_thresholding)):
+        suppr_likelihood_thresholding[t] = sigmoid[round(ratio_overlap_with_suppr_win[t] * 100)]
+    # endregion
+
+    # region plot threshold function, suppression functions etc
+    ax_thrsh.append(plt.subplot2grid((n_rows, n_cols), (i_rows_thrsh[0], i_cols_thrsh[0]),
+                                     colspan=n_cols_thrsh, rowspan=n_rows_thrsh))
+    prob_call_linear = np.arange(len(sigmoid)) * 1.5 / 100
+    prob_call_linear[np.where(prob_call_linear > 1)[0]] = 1
+    ax_thrsh[0].plot(prob_call_linear, label='linear', color=[.5, .5, .5])
+    ax_thrsh[0].plot(sigmoid, label='thresholding', color=[.5, .5, .5], linestyle='--')
+    ax_thrsh[0].set_xlim((0, 100))
+    ax_thrsh[0].set_xlabel('% suppressed neurons')
+    ax_thrsh[0].set_ylabel('P call suppression')
+    ax_thrsh[0].legend(loc='lower right')
+    ax_supp.append(plt.subplot2grid((n_rows, n_cols), (i_rows_supp[0], i_cols_supp[0]),
+                                     colspan=n_cols_supp, rowspan=n_rows_supp))
+    ax_supp[0].plot(t_call_onset_sim, suppr_likelihood_linear, label='linear', color=[.5, .5, .5])
+    ax_supp[0].plot(t_call_onset_sim, suppr_likelihood_thresholding, label='thresholding', color=[.5, .5, .5],
+                    linestyle='--')
+    ax_supp[0].set_xlim(x_lim_ovrlp)
+    ax_supp[0].set_xlabel('Time from playback onset [ms]')
+    ax_supp[0].set_ylabel('P call suppression')
+    # endregion
+
+    # region histograms of simulated and recorded call onset times ########################################
+    # create pseudorandomly, uniformly distributed call onsets w/o and w/ suppression
+    suppr_likelihood_lin_thresh = [suppr_likelihood_linear, suppr_likelihood_thresholding]
+    call_onsets_suppr_lin_thresh = []
+    for i_method, suppr_likelihood_cur in enumerate(suppr_likelihood_lin_thresh):
+        call_onsets_suppr_lin_thresh.append([])
+        prng = np.random.RandomState(19)
+        call_onsets_rand = prng.uniform(t_call_onset_sim_range[0], t_call_onset_sim_range[1], 150)
+        idx_closest_sim_onset = [np.where(call_onsets_rand[i] < (t_call_onset_sim + 0.5))[0][0]
+                                 for i in range(len(call_onsets_rand))]
+        for i, c in enumerate(call_onsets_rand):
+            if prng.uniform() < (1 - suppr_likelihood_cur[idx_closest_sim_onset[i]]):
+                call_onsets_suppr_lin_thresh[i_method].append(c)
+    call_onsets_suppr_lin = call_onsets_suppr_lin_thresh[0]
+    call_onsets_suppr_thresh = call_onsets_suppr_lin_thresh[1]
+
+    # shift end of distribution of recorded calls to beginning (before 0)
+    i_calls_to_shift = np.where(call_onset_times['Control_1hz_call_onsets'] > 1000 + t_call_onset_sim_range[0])[0]
+    call_onsets_control = call_onset_times['Control_1hz_call_onsets'].astype(int)
+    call_onsets_control_shifted = call_onsets_control.copy()
+    call_onsets_control_shifted[i_calls_to_shift] = call_onsets_control[i_calls_to_shift] - 1000
+    i_calls_to_shift = np.where(call_onset_times['Gabazine_1hz_call_onsets'] > 1000 + t_call_onset_sim_range[0])[0]
+    call_onsets_gabazine = call_onset_times['Gabazine_1hz_call_onsets'].astype(int)
+    call_onsets_gabazine_shifted = call_onsets_gabazine.copy()
+    call_onsets_gabazine_shifted[i_calls_to_shift] = call_onsets_gabazine[i_calls_to_shift] - 1000
+    call_onsets_shifted = [call_onsets_suppr_lin, call_onsets_suppr_thresh, call_onsets_control_shifted]
+    clr = [color_map_mod[3], color_map_mod[3], color_map_rec[3]]
+    bins_n = []
+    for p in range(len(i_rows_hist)):
+        ax_hist.append(plt.subplot2grid((n_rows, n_cols), (i_rows_hist[p], i_cols_hist[p]),
+                                        colspan=n_cols_hist, rowspan=n_rows_hist))
+        ax_hist[p].axvline(0, color=[0, 0, 0], linewidth=1, linestyle=':')
+        # marker for background call level (15.75 is the average bin size from 600ms to 1000ms (i.e. playback onset)
+        ax_hist[p].axhline(15.75, color=[0, 0, 0], linewidth=0.7, linestyle='--', label='background\ncall level')
+        if p == 0:
+            n, _, _ = ax_hist[p].hist(call_onsets_rand, color=[.8, .8, .8], histtype='stepfilled',
+                                      bins=np.arange(t_call_onset_sim_range[0], t_call_onset_sim_range[1] + 20, 20))
+        else:
+            n, _, _ = ax_hist[p].hist(call_onsets_shifted[p - 1], color=clr[p - 1], histtype='stepfilled',
+                                      bins=np.arange(t_call_onset_sim_range[0], t_call_onset_sim_range[1] + 20, 20))
+        bins_n.append(n)
+        ax_hist[p].set_xlim(x_lim_ovrlp)
+        if p < 3:
+            ax_hist[p].set_ylabel('N simulated\ncall onsets')
+        else:
+            ax_hist[p].set_ylabel('N observed\ncall onsets')
+        ax_hist[p].axvline(110, color=[0, 0, 0], linewidth=1, linestyle=':')  # playback offset
+    max_bin = np.max([np.max(bins) for bins in bins_n[0:4]])  # different from fig5 due to control being last hist
+    [ax_hist[i].set_ylim((0, max_bin)) for i in range(len(ax_hist))]
+    for i in range(len(ax_hist) - 1):
+        ax_hist[i].set_xlabel(' ')
+        ax_hist[i].tick_params(labelbottom=False)
+    ax_hist[-1].set_xlabel('Time from playback onset [ms]')
+    ax_hist[0].text(55, max_bin - 13, 'simulation\nno suppression', ha='center', size=FONTSIZE_S, color=[.7, .7, .7])
+    ax_hist[1].text(55, max_bin - 13, 'simulation\n(linear)', ha='center', size=FONTSIZE_S, color=clr[0])
+    ax_hist[2].text(55, max_bin - 13, 'simulation\n(thresholding)', ha='center', size=FONTSIZE_S, color=clr[1])
+    ax_hist[3].text(55, max_bin - 7, 'control', ha='center', size=FONTSIZE_S, color=clr[2])
+    # endregion
+
+    # add sub-figure labels
+    ax_thrsh[0].annotate('A', xy=(-1.1 / n_cols_thrsh, 1.1), xycoords='axes fraction', fontweight='bold', size=FONTSIZE_XL)
+    ax_supp[0].annotate('B', xy=(-1.1 / n_cols_supp, 1.1), xycoords='axes fraction', fontweight='bold', size=FONTSIZE_XL)
+    ax_hist[0].annotate('C', xy=(-1.1 / n_cols_hist, 1.1), xycoords='axes fraction', fontweight='bold', size=FONTSIZE_XL)
+
+    # adjust subplot margins
+    plt.subplots_adjust(wspace=0.4, hspace=0.8)
+
+    return fig, ax_supp + ax_thrsh + ax_hist
 
 
 def circuit_diagram(h_ax, x, y, colors, connectivity, connection_type, connection_colors=None, letters=None,
