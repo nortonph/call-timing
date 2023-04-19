@@ -1,5 +1,5 @@
 # call-timing
-Code and data to run simulations and recreate figures from Norton et al. (2022)
+Code and data to run simulations and recreate figures from [Norton et al. (2022)](https://doi.org/10.1073/pnas.2118448119)
 
 Requires Python 3.7 and the packages listed in requirements.txt. Requires at least 8GB of RAM (ideally close all background programs before running).
 
