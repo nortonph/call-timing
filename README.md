@@ -28,7 +28,7 @@ The LICENSE applies to all .py and .json files in this repository, exclusively.
 
 7. To reproduce all simulations and figures run the script run_all.py (make sure the environment is active):
 
-`python3 run_all.py`
+`python3.7 run_all.py`
 
 8. Figures will be located in the subdirectory fig/figures
 
