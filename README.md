@@ -1,6 +1,8 @@
 # call-timing
 Code and data to run simulations and recreate figures from [Norton et al. (2022)](https://doi.org/10.1073/pnas.2118448119)
 
+![call_timing_fig1](https://github.com/user-attachments/assets/947aef81-ce64-45ac-a5b7-f2a7567d66dd)
+
 Requires Python 3.7 and the packages listed in requirements.txt. Requires at least 8GB of RAM (ideally close all background programs before running).
 
 Documentation for all functions and the config file format can be found in doc/html/index.html
